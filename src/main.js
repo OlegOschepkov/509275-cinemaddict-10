@@ -4,17 +4,6 @@ const FILMS_COUNT = 5;
 const EXTRA_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
 
-const getMenuTempl = () => `
-  <header class="header">
-    <h1 class="header__logo logo">Cinemaddict</h1>
-  
-    <section class="header__profile profile">
-      <p class="profile__rating">Movie Buff</p>
-      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    </section>
-  </header>
-`;
-
 const getFilterTempl = () => `  
   <nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
