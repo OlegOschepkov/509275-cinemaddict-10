@@ -6,6 +6,7 @@ const getGenreMarkup = (genreSingle) => {
 
 const getCommentMarkup = (comment) => {
   const {text, author, date, emoji} = comment;
+
   return (
     `
     <li class="film-details__comment">    

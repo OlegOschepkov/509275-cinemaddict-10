@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber} from '../utils/utils';
+import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, FILMS_COUNT} from '../utils/utils';
 
 const filmNames = [
   `Побег из Шоушенка`,
@@ -59,9 +59,9 @@ const filterTags = [
   `stats`
 ];
 
-const getFilmNames = () => {
+const getUniqueNames = () => {
   const nameSet = new Set();
-  while (nameSet.size < 15) {
+  while (nameSet.size < FILMS_COUNT) {
     nameSet.add(getRandomArrayItem(filmNames));
   }
   return nameSet;
@@ -69,7 +69,7 @@ const getFilmNames = () => {
 
 const today = new Date();
 const year = today.getFullYear();
-const uniqueNames = [...getFilmNames()];
+const uniqueNames = [...getUniqueNames()];
 
 const generateFilm = (i) => {
   return {

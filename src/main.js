@@ -1,5 +1,4 @@
 import {getFilterTemplate} from './components/filter';
-// import {getSortTemplate} from './components/sort';
 import {getBoardTemplate} from './components/board';
 import {getListTemplate} from './components/list';
 import {getExtraListTemplate} from './components/list-extra';
@@ -12,11 +11,10 @@ import {generateFilters} from './mock/filter';
 import {generateFilms} from './mock/films';
 import {generateExtra} from "./mock/extra";
 import {user} from './mock/user';
-import {getRandomIntegerNumber} from './utils/utils';
+import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
 import {generateComments} from "./mock/comments";
 import {generatePopup} from './mock/popup';
 
-const FILMS_COUNT = 15;
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 const EXTRA_COUNT = 2;

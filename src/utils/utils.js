@@ -40,4 +40,6 @@ const randomDate = (start, end, option) => {
   return date.toLocaleString(`en-GB`, options);
 };
 
-export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, clamp, randomDate};
+const FILMS_COUNT = 15;
+
+export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, clamp, randomDate, FILMS_COUNT};
