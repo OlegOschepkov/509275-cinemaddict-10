@@ -1,15 +1,37 @@
-export const getFilterTempl = () => `  
-  <nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-    <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
-  </nav>
-  
-  <ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>
-`;
+const getCountMarkup = (filterTag) => {
+  const count = filterTag.length;
+
+  return (
+    `${count ? `<span class="main-navigation__item-count">${count}</span>` : ``}`
+  );
+};
+
+const getFilterMarkup = (filter, isActive, films) => {
+  const {name, link} = filter;
+  const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
+
+  return (
+    `<a href="#${link}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
+        ${name} ${countMarkup}</a>`
+  );
+};
+
+const getSortMarkup = (filter, isActive) => {
+  const {sortType} = filter;
+
+  return (sortType ? `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}"">${sortType}</a></li>` : ``);
+};
+
+export const getFilterTemplate = (filters, films) => {
+  const filtersMarkup = filters.map((it, i) => getFilterMarkup(it, i === 0, films)).join(`\n`);
+  const sortMarkup = filters.map((it, i) => getSortMarkup(it, i === 0)).join(`\n`);
+
+  return (
+    `<nav class="main-navigation">
+      ${filtersMarkup}
+    </nav>
+    <ul class="sort">
+      ${sortMarkup}
+    </ul>`
+  );
+};
