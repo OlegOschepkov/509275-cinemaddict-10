@@ -18,23 +18,13 @@ const getFilterMarkup = (filter, isActive, films) => {
   );
 };
 
-const getSortMarkup = (filter, isActive) => {
-  const {sortType} = filter;
-
-  return (sortType ? `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}"">${sortType}</a></li>` : ``);
-};
-
 const getFilterTemplate = (filters, films) => {
   const filtersMarkup = filters.map((it, i) => getFilterMarkup(it, i === 0, films)).join(`\n`);
-  const sortMarkup = filters.map((it, i) => getSortMarkup(it, i === 0)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
       ${filtersMarkup}
-    </nav>
-    <ul class="sort">
-      ${sortMarkup}
-    </ul>`
+    </nav>`
   );
 };
 
