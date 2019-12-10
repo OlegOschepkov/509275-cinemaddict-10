@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomIntegerNumber, randomDate} from "../utils/utils";
+import {getRandomArrayItem, randomDate} from "../utils/utils";
 
 const comments = [
   `Interesting setting and a good cast`,
@@ -43,9 +43,9 @@ const generateComment = () => {
   };
 };
 
-const count = getRandomIntegerNumber(3, 7);
+// const count = getRandomIntegerNumber(3, 7);
 
-const generateComments = () => new Array(count).fill(``).map((it, i) => generateComment(i));
+const generateComments = (qty) => new Array(qty).fill(``).map((it, i) => generateComment(i));
 
 export {generateComments};
 

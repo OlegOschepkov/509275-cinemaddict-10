@@ -1,3 +1,5 @@
+import {createElement} from '../utils/utils';
+
 const getCountMarkup = (filterTag) => {
   const count = filterTag.length;
 
@@ -22,7 +24,7 @@ const getSortMarkup = (filter, isActive) => {
   return (sortType ? `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}"">${sortType}</a></li>` : ``);
 };
 
-export const getFilterTemplate = (filters, films) => {
+const getFilterTemplate = (filters, films) => {
   const filtersMarkup = filters.map((it, i) => getFilterMarkup(it, i === 0, films)).join(`\n`);
   const sortMarkup = filters.map((it, i) => getSortMarkup(it, i === 0)).join(`\n`);
 
@@ -35,3 +37,27 @@ export const getFilterTemplate = (filters, films) => {
     </ul>`
   );
 };
+
+export default class Filter {
+  constructor(filters, films) {
+    this._filters = filters;
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getFilterTemplate(this._filters, this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

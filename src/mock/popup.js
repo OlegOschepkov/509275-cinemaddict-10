@@ -1,23 +1,5 @@
 import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, randomDate} from '../utils/utils';
 
-const filmNames = [
-  `Побег из Шоушенка`,
-  `Зеленая миля`,
-  `Форрест Гамп`,
-  `Список Шиндлера`,
-  `1+1`,
-  `Начало`,
-  `Леон`,
-  `Король Лев`,
-  `Бойцовский клуб`,
-  `Иван Васильевич меняет профессию`,
-  `Жизнь прекрасна`,
-  `Достучаться до небес`,
-  `Крестный отец`,
-  `Криминальное чтиво`,
-  `Операция «Ы» и другие приключения Шурика`
-];
-
 const filmNamesOrigin = [
   `The Shawshank Redemption`,
   `The Green Mile`,
@@ -43,16 +25,6 @@ const descriptionParts = [
   `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
   `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
-];
-
-const posters = [
-  `images/posters/made-for-each-other.png`,
-  `images/posters/popeye-meets-sinbad.png`,
-  `images/posters/sagebrush-trail.jpg`,
-  `images/posters/santa-claus-conquers-the-martians.jpg`,
-  `images/posters/the-dance-of-life.jpg`,
-  `images/posters/the-great-flamarion.jpg`,
-  `images/posters/the-man-with-the-golden-arm.jpg`
 ];
 
 const genres = [
@@ -138,8 +110,6 @@ const today = new Date();
 
 const generatePopup = () => {
   return {
-    poster: getRandomArrayItem(posters),
-    name: getRandomArrayItem(filmNames),
     nameOrigin: getRandomArrayItem(filmNamesOrigin),
     pegi: getRandomIntegerNumber(3, 18),
     rating: getRandomNumber(0, 10),
