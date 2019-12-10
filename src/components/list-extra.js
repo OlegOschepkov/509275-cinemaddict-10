@@ -1,4 +1,6 @@
-export const getExtraListTemplate = (type) => {
+import {createElement} from '../utils/utils';
+
+const getExtraListTemplate = (type) => {
   const {extraType} = type;
 
   return (
@@ -9,3 +11,25 @@ export const getExtraListTemplate = (type) => {
   );
 };
 
+export default class Footer {
+  constructor(type) {
+    this._type = type;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getExtraListTemplate(this._type);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

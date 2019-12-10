@@ -40,6 +40,37 @@ const randomDate = (start, end, option) => {
   return date.toLocaleString(`en-GB`, options);
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
 const FILMS_COUNT = 15;
 
-export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, clamp, randomDate, FILMS_COUNT};
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, clamp, randomDate, createElement, RenderPosition, render, FILMS_COUNT, shuffle};
