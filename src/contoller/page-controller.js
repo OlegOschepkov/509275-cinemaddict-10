@@ -14,6 +14,7 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 const EXTRA_FILMS_COUNT = 2;
 
 const renderCard = (container, film) => {
+  const mainBlock = document.querySelector(`.main`);
   const cardComponent = new CardComponent(film);
   const comments = generateComments(film.comments);
   const popupData = generatePopup();
@@ -33,13 +34,14 @@ const renderCard = (container, film) => {
     }
   };
 
-  // const closeBtnMechanic = (evt) => {
-  //   evt.target.removeEventListener(`click`, closeBtnMechanic, false);
-  //   container.removeChild(cardPopupComponent.getElement());
-  // };
+  const closeBtnMechanic = (evt) => {
+    evt.target.removeEventListener(`click`, closeBtnMechanic, false);
+    container.removeChild(cardPopupComponent.getElement());
+  };
 
   const renderPopup = () => {
-    render(container, cardPopupComponent, RenderPosition.BEFOREEND);
+    render(mainBlock, cardPopupComponent, RenderPosition.BEFOREEND);
+    cardPopupComponent.setCloseHandler(closeBtnMechanic);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
@@ -117,6 +119,29 @@ export default class pageController {
           shift++;
         }
       });
+
+      // for any case
+      // if (films.reduce((acc, it) => acc + it.rating, 0) > 0) {
+      //   render(container, new ExtraListComponent(first), RenderPosition.BEFOREEND);
+      //   const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)].shift();
+      //   if (films.every((it) => it.rating === films[0].rating)) {
+      //     const filmsShuffled = shuffle(films);
+      //     renderExtraFilms(extraListBlock, filmsShuffled);
+      //   } else {
+      //     renderExtraFilms(extraListBlock, films.slice().sort((a, b) => b.rating - a.rating));
+      //   }
+      // }
+      // if (films.reduce((acc, it) => acc + it.comments, 0) > 0) {
+      //   render(container, new ExtraListComponent(second), RenderPosition.BEFOREEND);
+      //   const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)].pop();
+      //   if (films.every((it) => it.comments === films[0].comments)) {
+      //     const filmsShuffled = shuffle(films);
+      //     renderExtraFilms(extraListBlock, filmsShuffled);
+      //   } else {
+      //     renderExtraFilms(extraListBlock, films.slice().sort((a, b) => b.comments - a.comments));
+      //   }
+      // }
+
     }
   }
 }
