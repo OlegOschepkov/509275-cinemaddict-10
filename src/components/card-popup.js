@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getGenreMarkup = (genreSingle) => {
   return (
@@ -154,28 +154,21 @@ const getCardPopupTemplate = (popupData, comments, film) => {
   );
 };
 
-export default class CardPopup {
+export default class CardPopup extends AbstractComponent {
   constructor(popupData, comments, film) {
+    super();
     this._film = film;
     this._comments = comments;
     this._popupData = popupData;
-    this._element = null;
   }
 
   getTemplate() {
     return getCardPopupTemplate(this._popupData, this._comments, this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setCloseHandler(handler) {
+    const closeBtn = this.getElement().querySelector(`.film-details__close-btn`);
+    closeBtn.addEventListener(`click`, handler);
   }
 }
 

@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getEmptyListTemplate = () => {
   return (
@@ -8,24 +8,8 @@ const getEmptyListTemplate = () => {
   );
 };
 
-export default class NoFilms {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoFilms extends AbstractComponent {
   getTemplate() {
     return getEmptyListTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

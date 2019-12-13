@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getSortMarkup = (filter, isActive) => {
   const {sortType} = filter;
@@ -16,25 +16,13 @@ const getSortTemplate = (filters) => {
   );
 };
 
-export default class Filter {
+export default class Filter extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return getSortTemplate(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
