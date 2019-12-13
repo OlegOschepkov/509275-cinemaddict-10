@@ -6,12 +6,10 @@ import {generateFilters} from './mock/filter';
 import {generateFilms} from './mock/films';
 import {generateExtra} from "./mock/extra";
 import {user} from './mock/user';
-import {getRandomIntegerNumber, FILMS_COUNT, shuffle} from './utils/utils';
-import {render, RenderPosition} from './utils/render'
-import {generateComments} from "./mock/comments";
-import {generatePopup} from './mock/popup';
+import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
+import {render, RenderPosition} from './utils/render';
 import SortComponent from "./components/sort";
-import BoardController from "./contoller/page-controller"
+import BoardController from "./contoller/page-controller";
 
 const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
@@ -26,7 +24,6 @@ user.level = getRandomIntegerNumber(0, 4);
 render(headerBlock, new UserComponent(user.level), RenderPosition.BEFOREEND);
 render(mainBlock, new FilterComponent(filters, films), RenderPosition.BEFOREEND);
 
-
 render(mainBlock, new SortComponent(filters), RenderPosition.BEFOREEND);
 // render(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 const boardBlock = new BoardComponent();
@@ -38,9 +35,6 @@ const boardController = new BoardController(boardBlock);
 const EXTRA_COUNT = 2;
 const extra = generateExtra(EXTRA_COUNT);
 
-
 boardController.render(films, extra);
-
-
 
 render(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);

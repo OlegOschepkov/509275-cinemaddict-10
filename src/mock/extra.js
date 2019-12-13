@@ -3,8 +3,8 @@ const extraNames = [
 ];
 
 const extraFlags = [
-  'rating', 'comments'
-]
+  `rating`, `comments`
+];
 
 const generateExtra = () => {
   return extraNames.map((it, i) => {
