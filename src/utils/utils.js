@@ -17,7 +17,9 @@ const getRandomNumber = (min, max) => Math.floor(min + (max * Math.random()) * 1
 
 const getRandomIntegerNumber = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
-const clamp = (val, min, max) => Math.max(Math.min(max, val), min);
+// const clamp = (val, min, max) => Math.max(Math.min(max, val), min);
+
+const getLowest = (object, val) => Object.keys(object).sort((a, b) => b - a).find((el) => el <= val);
 
 const randomDate = (start, end, option) => {
   let options = {};
@@ -51,4 +53,4 @@ const shuffle = (array) => {
   return array;
 };
 
-export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, clamp, randomDate, FILMS_COUNT, shuffle};
+export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, getLowest, randomDate, FILMS_COUNT, shuffle};
