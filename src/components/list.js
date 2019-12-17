@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getListTemplate = () =>
   `<section class="films-list">
@@ -6,24 +6,8 @@ const getListTemplate = () =>
     <div class="films-list__container"></div>
   </section>`;
 
-export default class List {
-  constructor() {
-    this._element = null;
-  }
-
+export default class List extends AbstractComponent {
   getTemplate() {
     return getListTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

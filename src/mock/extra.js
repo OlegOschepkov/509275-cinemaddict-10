@@ -1,11 +1,16 @@
-const extraTypes = [
+const extraNames = [
   `Top rated`, `Most commented`
 ];
 
+const extraFlags = [
+  `rating`, `comments`
+];
+
 const generateExtra = () => {
-  return extraTypes.map((it) => {
+  return extraNames.map((it, i) => {
     return {
-      extraType: it,
+      extraName: it,
+      extraFlag: extraFlags[i]
     };
   });
 };

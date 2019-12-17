@@ -1,35 +1,22 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getExtraListTemplate = (type) => {
-  const {extraType} = type;
-
+  // const {extraName} = type;
   return (
     `<section class="films-list--extra">
-    <h2 class="films-list__title">${extraType}</h2>
+    <h2 class="films-list__title">${type}</h2>
     <div class="films-list__container"></div>
   </section>`
   );
 };
 
-export default class Footer {
+export default class Footer extends AbstractComponent {
   constructor(type) {
+    super();
     this._type = type;
-    this._element = null;
   }
 
   getTemplate() {
     return getExtraListTemplate(this._type);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

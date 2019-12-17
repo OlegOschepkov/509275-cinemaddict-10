@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils';
+import AbstractComponent from "./abstract-component";
 
 const getCountMarkup = (filterTag) => {
   const count = filterTag.length;
@@ -28,26 +28,14 @@ const getFilterTemplate = (filters, films) => {
   );
 };
 
-export default class Filter {
+export default class Filter extends AbstractComponent {
   constructor(filters, films) {
+    super();
     this._filters = filters;
     this._films = films;
-    this._element = null;
   }
 
   getTemplate() {
     return getFilterTemplate(this._filters, this._films);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
