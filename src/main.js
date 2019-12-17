@@ -8,7 +8,7 @@ import {generateExtra} from "./mock/extra";
 import {user} from './mock/user';
 import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
 import {render, RenderPosition} from './utils/render';
-import SortComponent from "./components/sort";
+// import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
 
 const bodyBlock = document.querySelector(`body`);
@@ -19,12 +19,12 @@ const films = generateFilms(FILMS_COUNT);
 
 const filters = generateFilters();
 
-user.level = getRandomIntegerNumber(0, 4);
+user.level = getRandomIntegerNumber(0, 25);
 
 render(headerBlock, new UserComponent(user.level), RenderPosition.BEFOREEND);
 render(mainBlock, new FilterComponent(filters, films), RenderPosition.BEFOREEND);
 
-render(mainBlock, new SortComponent(filters), RenderPosition.BEFOREEND);
+// render(mainBlock, new SortComponent, RenderPosition.BEFOREEND);
 // render(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 const boardBlock = new BoardComponent();
 

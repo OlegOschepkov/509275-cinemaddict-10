@@ -1,11 +1,10 @@
-import {clamp} from '../utils/utils';
+import {getLowest} from '../utils/utils';
 
 const userLevels = {
-  [0]: `Apprentice`,
-  [1]: `Journeyman`,
-  [2]: `Master`,
-  [3]: `Grandmaster`,
-  [4]: `SecretMaster`
+  0: ``,
+  1: `novice`,
+  11: `fan`,
+  21: `movie buff`,
 };
 
 const user = {
@@ -14,7 +13,7 @@ const user = {
     return `${userLevels[this._level]}`;
   },
   set level(val) {
-    this._level = clamp(val, 0, Object.keys(userLevels).length);
+    this._level = getLowest(userLevels, val);
   }
 };
 

@@ -4,6 +4,7 @@ import CardComponent from '../components/card';
 import CardPopupComponent from '../components/card-popup';
 import LoadMoreBtnComponent from '../components/load-more-btn';
 import EmptyListComponent from '../components/empty-list';
+import SortComponent, {SortType} from '../components/sort.js';
 import {generateComments} from "../mock/comments";
 import {generatePopup} from "../mock/popup";
 import {render, RenderPosition, remove} from "../utils/render";
@@ -65,7 +66,7 @@ export default class pageController {
 
     this._emptyListComponent = new EmptyListComponent();
     this._listComponent = new ListComponent();
-    this._extraTasksListComponent = new ExtraListComponent();
+    this._sortComponent = new SortComponent();
     this._loadMoreButtonComponent = new LoadMoreBtnComponent();
   }
 
@@ -73,6 +74,7 @@ export default class pageController {
     const container = this._container.getElement();
 
     render(container, this._listComponent, RenderPosition.BEFOREEND);
+    render(container, this._sortComponent, RenderPosition.BEFOREEND);
 
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
 
@@ -86,19 +88,23 @@ export default class pageController {
       let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
       films.slice(0, showingFilmsCount).forEach((film) => renderCard(listContainer, film));
 
-      render(this._listComponent.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+      const renderLoadMoreButton = () => {
 
+        render(this._listComponent.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-      this._loadMoreButtonComponent.setClickHandler(() => {
-        const prevTasksCount = showingFilmsCount;
-        showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+        this._loadMoreButtonComponent.setClickHandler(() => {
+          const prevTasksCount = showingFilmsCount;
+          showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
-        films.slice(prevTasksCount, showingFilmsCount).forEach((film) => renderCard(listContainer, film));
+          films.slice(prevTasksCount, showingFilmsCount).forEach((film) => renderCard(listContainer, film));
 
-        if (showingFilmsCount >= films.length) {
-          remove(this._loadMoreButtonComponent);
-        }
-      });
+          if (showingFilmsCount >= films.length) {
+            remove(this._loadMoreButtonComponent);
+          }
+        });
+      };
+
+      renderLoadMoreButton();
 
       const [...extras] = type;
 
@@ -117,6 +123,32 @@ export default class pageController {
           }
         } else {
           shift++;
+        }
+      });
+
+      this._sortComponent.setSortTypeChangeHandler((sortType) => {
+        let sortedTasks = [];
+
+        switch (sortType) {
+          case SortType.DATE_DOWN:
+            sortedTasks = films.slice().sort((a, b) => b.year - a.year);
+            break;
+          case SortType.RATING_DOWN:
+            sortedTasks = films.slice().sort((a, b) => b.rating - a.rating);
+            break;
+          case SortType.DEFAULT:
+            sortedTasks = films.slice(0, showingFilmsCount);
+            break;
+        }
+
+        listContainer.innerHTML = ``;
+
+        sortedTasks.forEach((film) => renderCard(listContainer, film));
+
+        if (sortType === SortType.DEFAULT) {
+          renderLoadMoreButton();
+        } else {
+          remove(this._loadMoreButtonComponent);
         }
       });
 
@@ -141,7 +173,6 @@ export default class pageController {
       //     renderExtraFilms(extraListBlock, films.slice().sort((a, b) => b.comments - a.comments));
       //   }
       // }
-
     }
   }
 }
