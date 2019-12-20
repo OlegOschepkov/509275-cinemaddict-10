@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const getGenreMarkup = (genreSingle) => {
   return (
@@ -28,7 +28,7 @@ const getCommentMarkup = (comment) => {
 
 const getCardPopupTemplate = (popupData, comments, film) => {
   const {nameOrigin, pegi, rating, director, screenwriter, actor, fullDate, duration, country, fullDescription, genre} = popupData;
-  const {poster, name} = film;
+  const {poster, name, isFavorite, isWatched, isWatchList} = film;
   const commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
   const commentsLength = comments.length;
   const genreList = genre.split(`, `);
@@ -99,13 +99,13 @@ const getCardPopupTemplate = (popupData, comments, film) => {
             </div>
       
             <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+              <input type="checkbox" class="film-details__control-input visually-hidden ${isWatchList ? `checked` : `not`}" id="watchlist" name="watchlist" >
               <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
       
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
               <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
       
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
               <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
             </section>
           </div>
@@ -154,7 +154,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
   );
 };
 
-export default class CardPopup extends AbstractComponent {
+export default class CardPopup extends AbstractSmartComponent {
   constructor(popupData, comments, film) {
     super();
     this._film = film;
@@ -166,9 +166,37 @@ export default class CardPopup extends AbstractComponent {
     return getCardPopupTemplate(this._popupData, this._comments, this._film);
   }
 
+  update(newdata) {
+    this._film = newdata;
+    this.rerender();
+    // меняем старые данныена newdata
+  }
+
+  recoveryListeners() {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._setCloseHandler);
+  }
+
   setCloseHandler(handler) {
-    const closeBtn = this.getElement().querySelector(`.film-details__close-btn`);
-    closeBtn.addEventListener(`click`, handler);
+    this._setCloseHandler = handler;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+
+  onWatchListClick(handler) {
+    this._onWatchListClick = handler;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+  }
+
+  onFavoriteClick(handler) {
+    this._onFavoriteClick = handler;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+  }
+
+  onWatchedClick(handler) {
+    this._onWatchedClick = handler;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
   }
 }
 

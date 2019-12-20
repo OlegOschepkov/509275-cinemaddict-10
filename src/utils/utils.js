@@ -42,6 +42,19 @@ const randomDate = (start, end, option) => {
   return date.toLocaleString(`en-GB`, options);
 };
 
+const replace = (newComponent, oldComponent) => {
+  if (newComponent && oldComponent) {
+    const parentElement = oldComponent.getElement().parentElement;
+    const newElement = newComponent.getElement();
+    const oldElement = oldComponent.getElement();
+
+    const isExistElements = !!(parentElement && newElement && oldElement);
+
+    if (isExistElements && parentElement.contains(oldElement)) {
+      parentElement.replaceChild(newElement, oldElement);
+    }
+  }
+};
 
 const FILMS_COUNT = 15;
 
@@ -53,4 +66,4 @@ const shuffle = (array) => {
   return array;
 };
 
-export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, getLowest, randomDate, FILMS_COUNT, shuffle};
+export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, getLowest, randomDate, FILMS_COUNT, shuffle, replace};
