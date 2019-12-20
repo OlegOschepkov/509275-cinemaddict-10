@@ -20,7 +20,8 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
     this._popupData = null;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    // this._openPopup = this._openPopup.bind(this)
+    this.comments = null;
+    this.film = null;
   }
 
   renderCard(film) {
@@ -28,57 +29,16 @@ export default class MovieController {
     const oldPopup = this._cardPopupComponent;
 
     const container = this._container;
-    // const mainBlock = document.querySelector(`.main`);
 
     this._cardComponent = new CardComponent(film);
-    const comments = generateComments(film.comments);
+    this.comments = generateComments(film.comments);
     this._popupData = generatePopup();
-    this._cardPopupComponent = new CardPopupComponent(this._popupData, comments, film);
-
-    // const poster = this._cardComponent.getElement().querySelector(`.film-card__poster`);
-    // const title = this._cardComponent.getElement().querySelector(`.film-card__title`);
-    // const commentsBtn = this._cardComponent.getElement().querySelector(`.film-card__comments`);
-    // const popupButtons = [poster, title, commentsBtn];
-
-    // const onEscKeyDown = (evt) => {
-    //   const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    //
-    //   if (isEscKey) {
-    //     mainBlock.removeChild(this._cardPopupComponent.getElement());
-    //     document.removeEventListener(`keydown`, onEscKeyDown);
-    //   }
-    // };
-
-    // const closeBtnMechanic = (evt) => {
-    //   evt.target.removeEventListener(`click`, closeBtnMechanic, false);
-    //   mainBlock.removeChild(this._cardPopupComponent.getElement());
-    // };
-
-    // const renderPopup = () => {
-    //   this._onViewChange();
-    //   placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
-    //   this._cardPopupComponent.setCloseHandler(closeBtnMechanic);
-    //   document.addEventListener(`keydown`, this._closePopup);
-    // };
-
-    // popupButtons.forEach((it) => {
-    //   it.addEventListener(`click`, function () {
-    //     this._openPopup();
-    //     document.addEventListener(`keydown`, this._onEscKeyDown);
-    //   });
-    // });
-    //
-    // popupButtons.forEach((it) => {
-    //   it.addEventListener(`click`, function () {
-    //     this._openPopup();
-    //     document.addEventListener(`keydown`, this._onEscKeyDown);
-    //   });
-    // });
+    this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, film);
 
     this._cardComponent.onShowPopupClick(() => {
-          this._openPopup();
-          document.addEventListener(`keydown`, this._onEscKeyDown);
-    })
+      this._openPopup();
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+    });
 
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
@@ -103,11 +63,32 @@ export default class MovieController {
 
     this._cardPopupComponent.onWatchListClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this._popupData, Object.assign({}, this._popupData, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isWatchList: !film.isWatchList,
       }));
-      this._openPopup()
     });
+
+    this._cardPopupComponent.onFavoriteClick((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
+      }));
+    });
+
+    this._cardPopupComponent.onWatchedClick((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: !film.isWatched,
+      }));
+    });
+
+    // this._cardPopupComponent.onWatchListClick((evt) => {
+    //   evt.preventDefault();
+    //   this._onDataChange(this, this._popupData, Object.assign({}, this._popupData, {
+    //     isWatchList: !film.isWatchList,
+    //   }));
+    //   this._cardPopupComponent.update(this._popupData, this.comments, this.film);
+    // });
 
     if (oldPopup && oldCard) {
       replace(this._cardComponent, oldCard);
@@ -115,19 +96,13 @@ export default class MovieController {
     } else {
       placeElement(container, this._cardComponent, RenderPosition.BEFOREEND);
     }
-
-    // if (oldCard) {
-    //   replace(this._cardComponent, oldCard);
-    // } else {
-    //   placeElement(container, this._cardComponent, RenderPosition.BEFOREEND);
-    // }
   }
 
-  _onDataChange() {
-    // вообще не работает. Может из за этой строки this._onDataChange = onDataChange?
-    console.log('_onDataChange');
-    this._cardComponent.update()
-  }
+  // _onDataChange() {
+  //   // вообще не работает. Может из за этой строки this._onDataChange = onDataChange?
+  //   console.log('_onDataChange');
+  //   this._cardComponent.update()
+  // }
 
   setDefaultView() {
     console.log('setDefaultView');
@@ -138,6 +113,13 @@ export default class MovieController {
     }
   }
 
+  // update() {
+  //   console.log('update');
+  //   this._closePopup();
+  //   this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, this.film);
+  //   this._openPopup();
+  // }
+
   // _onViewChange(newCard, oldCard) {
   //   console.log('movie _onViewChange');
   //   this._mode = Mode.OPENED;
@@ -145,16 +127,16 @@ export default class MovieController {
   // }
 
   _closePopup() {
-    // this._cardPopupComponent.reset();
+    console.log('_closePopup')
     const mainBlock = document.querySelector(`.main`);
-
     mainBlock.removeChild(this._cardPopupComponent.getElement());
     this._mode = Mode.DEFAULT;
   }
 
   _openPopup() {
-    this._onViewChange();
+    console.log('_openPopup')
 
+    this._onViewChange();
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
     this._cardPopupComponent.setCloseHandler(() => this._closePopup());

@@ -75,26 +75,26 @@ export default class pageController {
 
       let shift = 0;
 
-      // extras.forEach((it, i) => {
-      //   const tag = it.extraFlag;
-      //   if (this._films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-      //     placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
-      //
-      //     const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i - shift];
-      //
-      //     if (this._films.every((elem) => elem[tag] === this._films[0][tag])) {
-      //       const filmsShuffled = shuffle(this._films);
-      //       renderExtraFilms(extraListBlock, filmsShuffled);
-      //     } else {
-      //       renderExtraFilms(extraListBlock, this._films.slice().sort((a, b) => b[tag] - a[tag]));
-      //     }
-      //   } else {
-      //     shift++;
-      //   }
-      // });
+      extras.forEach((it, i) => {
+        const tag = it.extraFlag;
+        if (this._films.reduce((acc, that) => acc + that[tag], 0) > 0) {
+          placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
 
-      this._sortComponent.setSortTypeChangeHandler((sortType, movieController) => {
+          const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i - shift];
+
+          if (this._films.every((elem) => elem[tag] === this._films[0][tag])) {
+            const filmsShuffled = shuffle(this._films);
+            renderExtraFilms(extraListBlock, filmsShuffled);
+          } else {
+            renderExtraFilms(extraListBlock, this._films.slice().sort((a, b) => b[tag] - a[tag]));
+          }
+        } else {
+          shift++;
+        }
       });
+
+      // this._sortComponent.setSortTypeChangeHandler((sortType, movieController) => {
+      // });
     }
   }
 

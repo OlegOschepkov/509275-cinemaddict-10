@@ -99,7 +99,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
             </div>
       
             <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden ${isWatchList ? `checked` : `not`}" id="watchlist" name="watchlist" >
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchList ? `checked` : ``}>
               <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
       
               <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
@@ -166,13 +166,17 @@ export default class CardPopup extends AbstractSmartComponent {
     return getCardPopupTemplate(this._popupData, this._comments, this._film);
   }
 
-  update(newdata) {
-    this._film = newdata;
+  update(popupData, comments, film) {
+    console.log('update')
+    this._film = film;
+    this.getTemplate();
     this.rerender();
+    this.recoveryListeners();
     // меняем старые данныена newdata
   }
 
   recoveryListeners() {
+    console.log('recoveryListeners')
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);
