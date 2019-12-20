@@ -61,6 +61,7 @@ export default class MovieController {
       }));
     });
 
+    // связываю клик на карточке и на попапе
     this._cardPopupComponent.onWatchListClick((evt) => {
       evt.preventDefault();
       this._onDataChange(this, film, Object.assign({}, film, {

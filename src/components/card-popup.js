@@ -172,7 +172,6 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getTemplate();
     this.rerender();
     this.recoveryListeners();
-    // меняем старые данныена newdata
   }
 
   recoveryListeners() {
