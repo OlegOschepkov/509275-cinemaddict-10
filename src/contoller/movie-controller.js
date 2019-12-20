@@ -12,7 +12,7 @@ const Mode = {
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
-    this._container = container ;
+    this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._cardComponent = null;
@@ -106,11 +106,11 @@ export default class MovieController {
   // }
 
   setDefaultView() {
-    console.log('setDefaultView');
+    // console.log(`setDefaultView`);
 
     if (this._mode !== Mode.DEFAULT) {
-      console.log('def');
-      this._closePopup()
+      // console.log(`DEFAULT`);
+      this._closePopup();
     }
   }
 
@@ -128,14 +128,14 @@ export default class MovieController {
   // }
 
   _closePopup() {
-    console.log('_closePopup')
+    // console.log(`_closePopup`);
     const mainBlock = document.querySelector(`.main`);
     mainBlock.removeChild(this._cardPopupComponent.getElement());
     this._mode = Mode.DEFAULT;
   }
 
   _openPopup() {
-    console.log('_openPopup')
+    // console.log(`_openPopup`);
 
     this._onViewChange();
     const mainBlock = document.querySelector(`.main`);

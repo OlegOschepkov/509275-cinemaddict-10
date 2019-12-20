@@ -1,12 +1,8 @@
 import ListComponent from '../components/list';
 import ExtraListComponent from '../components/list-extra';
-import CardComponent from '../components/card';
-import CardPopupComponent from '../components/card-popup';
 import LoadMoreBtnComponent from '../components/load-more-btn';
 import EmptyListComponent from '../components/empty-list';
 import SortComponent, {SortType} from '../components/sort.js';
-import {generateComments} from "../mock/comments";
-import {generatePopup} from "../mock/popup";
 import {placeElement, RenderPosition, remove} from "../utils/render";
 import {shuffle} from "../utils/utils";
 import MovieController from "./movie-controller";
@@ -98,7 +94,7 @@ export default class pageController {
     }
   }
 
-  _renderLoadMoreButton () {
+  _renderLoadMoreButton() {
     if (this._showedFilms >= this._films.length) {
       return;
     }
@@ -117,7 +113,7 @@ export default class pageController {
         remove(this._loadMoreButtonComponent);
       }
     });
-  };
+  }
 
   _onDataChange(movieController, oldData, newData) {
     const index = this._films.findIndex((it) => it === oldData);
@@ -134,7 +130,7 @@ export default class pageController {
   _onViewChange() {
     this._movieControllersAll.forEach((it) => {
       it.setDefaultView();
-    })
+    });
   }
 
   _onSortTypeChange(sortType) {

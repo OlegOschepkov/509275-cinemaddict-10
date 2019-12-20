@@ -14,14 +14,14 @@ export default class AbstractSmartComponent extends AbstractComponent {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
   }
 
-  update(newdata) {
+  update() {
     throw new Error(`Abstract method not implemented: update`);
 
     // сюда измененные данные
   }
 
   rerender() {
-    console.log('rerender')
+    // console.log(`rerender`);
     const oldElement = this.getElement();
     const parent = oldElement.parentElement;
     this.removeElement();

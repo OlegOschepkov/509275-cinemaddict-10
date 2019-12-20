@@ -167,7 +167,7 @@ export default class CardPopup extends AbstractSmartComponent {
   }
 
   update(popupData, comments, film) {
-    console.log('update')
+    // console.log(`update`);
     this._film = film;
     this.getTemplate();
     this.rerender();
@@ -175,7 +175,7 @@ export default class CardPopup extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    console.log('recoveryListeners')
+    // console.log(`recoveryListeners`);
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);

@@ -43,7 +43,7 @@ export default class Card extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._onWatchedClick);
-    console.log('recovered')
+    // console.log(`recovered`);
   }
 
   onShowPopupClick(handler) {
