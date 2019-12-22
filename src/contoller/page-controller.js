@@ -19,11 +19,11 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
   });
 };
 
-const renderExtraFilms = (elem, filmsList) => {
-  const extraListContainer = elem.querySelector(`.films-list__container`);
-  const movieCard = new MovieController(extraListContainer);
-  filmsList.slice(0, EXTRA_FILMS_COUNT).forEach((film) => movieCard.renderCard(film));
-};
+// const renderExtraFilms = (elem, filmsList, onDataChange, onViewChange) => {
+//   const extraListContainer = elem.querySelector(`.films-list__container`);
+//   const movieCard = new MovieController(extraListContainer, onDataChange, onViewChange);
+//   filmsList.slice(0, EXTRA_FILMS_COUNT).forEach((film) => movieCard.renderCard(film));
+// };
 
 export default class pageController {
   constructor(container) {
@@ -77,20 +77,22 @@ export default class pageController {
           placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
 
           const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i - shift];
+          // console.log(extraListBlock)
+          // const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+          // console.log(extraListContainer)
 
           if (this._films.every((elem) => elem[tag] === this._films[0][tag])) {
-            const filmsShuffled = shuffle(this._films);
-            renderExtraFilms(extraListBlock, filmsShuffled);
+            const filmsShuffled = shuffle(this._films).slice(0, EXTRA_FILMS_COUNT);
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange);
           } else {
-            renderExtraFilms(extraListBlock, this._films.slice().sort((a, b) => b[tag] - a[tag]));
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            renderFilms(extraListContainer, this._films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange);
           }
         } else {
           shift++;
         }
       });
-
-      // this._sortComponent.setSortTypeChangeHandler((sortType, movieController) => {
-      // });
     }
   }
 
@@ -119,12 +121,14 @@ export default class pageController {
     const index = this._films.findIndex((it) => it === oldData);
 
     if (index === -1) {
+      // console.log("not found");
       return;
     }
 
+
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
 
-    movieController.renderCard(newData);
+    movieController.update(newData);
   }
 
   _onViewChange() {

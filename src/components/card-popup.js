@@ -28,7 +28,7 @@ const getCommentMarkup = (comment) => {
 
 const getCardPopupTemplate = (popupData, comments, film) => {
   const {nameOrigin, pegi, rating, director, screenwriter, actor, fullDate, duration, country, fullDescription, genre} = popupData;
-  const {poster, name, isFavorite, isWatched, isWatchList} = film;
+  const {poster, name, isFavorite, isWatched, isWatchList, yourRating, yourEmoji} = film;
   const commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
   const commentsLength = comments.length;
   const genreList = genre.split(`, `);
@@ -57,6 +57,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
       
                   <div class="film-details__rating">
                     <p class="film-details__total-rating">${rating}</p>
+                    <p class="film-details__user-rating ${yourRating ? `yep` : `visually-hidden`}">Your rate ${yourRating}</p>
                   </div>
                 </div>
       
@@ -86,7 +87,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
                     <td class="film-details__cell">${country}</td>
                   </tr>
                   <tr class="film-details__row">
-                    <td class="film-details__term">Genres</td>
+                    <td class="film-details__term">${genreList.length > 1 ? `Genres` : `Genre`}</td>
                     <td class="film-details__cell">
                       ${genreMarkup}
                   </tr>
@@ -109,6 +110,57 @@ const getCardPopupTemplate = (popupData, comments, film) => {
               <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
             </section>
           </div>
+          
+          <div class="form-details__middle-container ${isWatched ? `yep` : `visually-hidden`}">
+            <section class="film-details__user-rating-wrap">
+              <div class="film-details__user-rating-controls">
+                <button class="film-details__watched-reset" type="button">Undo</button>
+              </div>
+      
+              <div class="film-details__user-score">
+                <div class="film-details__user-rating-poster">
+                  <img src="./images/posters/the-great-flamarion.jpg" alt="film-poster" class="film-details__user-rating-img">
+                </div>
+      
+                <section class="film-details__user-rating-inner">
+                  <h3 class="film-details__user-rating-title">The Great Flamarion</h3>
+      
+                  <p class="film-details__user-rating-feelings">How you feel it?</p>
+      
+                  <div class="film-details__user-rating-score">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
+                    <label class="film-details__user-rating-label" for="rating-1">1</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
+                    <label class="film-details__user-rating-label" for="rating-2">2</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
+                    <label class="film-details__user-rating-label" for="rating-3">3</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
+                    <label class="film-details__user-rating-label" for="rating-4">4</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
+                    <label class="film-details__user-rating-label" for="rating-5">5</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
+                    <label class="film-details__user-rating-label" for="rating-6">6</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
+                    <label class="film-details__user-rating-label" for="rating-7">7</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
+                    <label class="film-details__user-rating-label" for="rating-8">8</label>
+      
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked>
+                    <label class="film-details__user-rating-label" for="rating-9">9</label>
+      
+                  </div>
+                </section>
+              </div>
+            </section>
+          </div>
+
       
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
@@ -119,7 +171,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
               </ul>
       
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
+                <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? yourEmoji : ``}</div>
       
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -167,19 +219,22 @@ export default class CardPopup extends AbstractSmartComponent {
   }
 
   update(popupData, comments, film) {
-    // console.log(`update`);
+    // console.log(`component update`);
     this._film = film;
-    this.getTemplate();
+    this._comments = comments;
+    this._popupData = popupData;
     this.rerender();
-    this.recoveryListeners();
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`);
+    // console.log(`recoveryListeners`, this.getElement());
+    // console.log(this.getElement().querySelector(`.film-details__control-label--watchlist`), this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._setCloseHandler);
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._onEmojiClick);
+    this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, this._onYourRatingClick);
   }
 
   setCloseHandler(handler) {
@@ -200,6 +255,16 @@ export default class CardPopup extends AbstractSmartComponent {
   onWatchedClick(handler) {
     this._onWatchedClick = handler;
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+  }
+
+  onEmojiClick(handler) {
+    this._onEmojiClick = handler;
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
+  }
+
+  onYourRatingClick(handler) {
+    this._onYourRatingClick = handler;
+    this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, handler);
   }
 }
 

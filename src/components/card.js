@@ -33,27 +33,33 @@ export default class Card extends AbstractSmartComponent {
   }
 
   update(newdata) {
+    // console.log('card update')
     // не работает, так как подменяем _onDataChange в Moviecontroller на onDataChange из boardcontroller
     this._film = newdata;
+    this.getTemplate();
     this.rerender();
     // меняем старые данныена newdata
   }
 
   recoveryListeners() {
+    // console.log(`recoveryListeners`, this.getElement());
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._onWatchedClick);
-    // console.log(`recovered`);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
   }
 
   onShowPopupClick(handler) {
-    const poster = this.getElement().querySelector(`.film-card__poster`);
-    const title = this.getElement().querySelector(`.film-card__title`);
-    const commentsBtn = this.getElement().querySelector(`.film-card__comments`);
-    const popupButtons = [poster, title, commentsBtn];
-    popupButtons.forEach((it) => {
-      it.addEventListener(`click`, handler);
-    });
+    this._onShowPopupClick = handler;
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
+    // const popupButtons = [poster, title, commentsBtn];
+    // popupButtons.forEach((it) => {
+    //   it.addEventListener(`click`, this._onShowPopupClick);
+    // });
   }
 
   onWatchListClick(handler) {

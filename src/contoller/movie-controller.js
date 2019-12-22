@@ -25,15 +25,16 @@ export default class MovieController {
   }
 
   renderCard(film) {
+    this.film = film;
     const oldCard = this._cardComponent;
     const oldPopup = this._cardPopupComponent;
 
     const container = this._container;
 
-    this._cardComponent = new CardComponent(film);
-    this.comments = generateComments(film.comments);
+    this._cardComponent = new CardComponent(this.film);
+    this.comments = generateComments(this.film.comments);
     this._popupData = generatePopup();
-    this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, film);
+    this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, this.film);
 
     this._cardComponent.onShowPopupClick(() => {
       this._openPopup();
@@ -42,54 +43,66 @@ export default class MovieController {
 
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatchList: !film.isWatchList,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isWatchList: !this.film.isWatchList,
       }));
     });
 
     this._cardComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isFavorite: !film.isFavorite,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isFavorite: !this.film.isFavorite,
       }));
     });
 
     this._cardComponent.onWatchedClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatched: !film.isWatched,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isWatched: !this.film.isWatched,
       }));
     });
 
     // связываю клик на карточке и на попапе
     this._cardPopupComponent.onWatchListClick((evt) => {
+      // console.log("this._cardPopupComponent.onWatchListClick");
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatchList: !film.isWatchList,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isWatchList: !this.film.isWatchList,
       }));
     });
 
     this._cardPopupComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isFavorite: !film.isFavorite,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isFavorite: !this.film.isFavorite,
       }));
     });
 
     this._cardPopupComponent.onWatchedClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isWatched: !film.isWatched,
+      this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        isWatched: !this.film.isWatched,
+        yourRating: null
       }));
     });
 
-    // this._cardPopupComponent.onWatchListClick((evt) => {
-    //   evt.preventDefault();
-    //   this._onDataChange(this, this._popupData, Object.assign({}, this._popupData, {
-    //     isWatchList: !film.isWatchList,
-    //   }));
-    //   this._cardPopupComponent.update(this._popupData, this.comments, this.film);
-    // });
+    this._cardPopupComponent.onYourRatingClick((evt) => {
+      if (evt.target.classList.contains(`film-details__user-rating-label`)) {
+        this._onDataChange(this, this.film, Object.assign({}, this.film, {
+          yourRating: document.getElementById(evt.target.htmlFor).value,
+        }));
+      }
+    });
+
+    this._cardPopupComponent.onEmojiClick((evt) => {
+      const target = evt.target;
+      if (target.tagName === `IMG`) {
+        const emojiSrc = target.getAttribute(`src`);
+        this._onDataChange(this, this.film, Object.assign({}, this.film, {
+          yourEmoji: `<img src="${emojiSrc}" width="30" height="30" alt="emoji">`,
+        }));
+      }
+    });
 
     if (oldPopup && oldCard) {
       replace(this._cardComponent, oldCard);
@@ -98,12 +111,6 @@ export default class MovieController {
       placeElement(container, this._cardComponent, RenderPosition.BEFOREEND);
     }
   }
-
-  // _onDataChange() {
-  //   // вообще не работает. Может из за этой строки this._onDataChange = onDataChange?
-  //   console.log('_onDataChange');
-  //   this._cardComponent.update()
-  // }
 
   setDefaultView() {
     // console.log(`setDefaultView`);
@@ -114,23 +121,28 @@ export default class MovieController {
     }
   }
 
-  // update() {
-  //   console.log('update');
-  //   this._closePopup();
-  //   this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, this.film);
-  //   this._openPopup();
-  // }
+  update(newData) {
+    this.film = newData;
+    this.comments = generateComments(newData.comments);
+    this._popupData = generatePopup();
+    this._cardComponent.update(newData);
+    this._cardPopupComponent.update(this._popupData, this.comments, newData);
+  }
 
-  // _onViewChange(newCard, oldCard) {
-  //   console.log('movie _onViewChange');
-  //   this._mode = Mode.OPENED;
-  //   //должна вызываться в обработчике клика и получать на вход старую карточку фильма и измененную карточку фильма.
-  // }
+  _onViewChange() {
+    // console.log('movie _onViewChange');
+    this._mode = Mode.OPENED;
+    // должна вызываться в обработчике клика и получать на вход старую карточку фильма и измененную карточку фильма.
+  }
 
   _closePopup() {
     // console.log(`_closePopup`);
     const mainBlock = document.querySelector(`.main`);
-    mainBlock.removeChild(this._cardPopupComponent.getElement());
+    if (this._cardPopupComponent) {
+      mainBlock.removeChild(this._cardPopupComponent.getElement());
+      this._cardPopupComponent.removeElement();
+    }
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
@@ -141,7 +153,9 @@ export default class MovieController {
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
     this._cardPopupComponent.setCloseHandler(() => this._closePopup());
-    document.addEventListener(`keydown`, this._closePopup);
+    // document.addEventListener(`keydown`, this._closePopup);
+    this._cardPopupComponent.onEmojiClick();
+
     this._mode = Mode.OPENED;
   }
 
@@ -150,7 +164,6 @@ export default class MovieController {
 
     if (isEscKey) {
       this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
 
