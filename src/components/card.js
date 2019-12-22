@@ -1,7 +1,7 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const getCardTemplate = (films) => {
-  const {name, poster, description, rating, year, duration, genre, comments} = films;
+  const {name, poster, description, rating, year, duration, genre, comments, isFavorite, isWatched, isWatchList} = films;
 
   return `<article class="film-card">
             <h3 class="film-card__title">${name}</h3>
@@ -15,14 +15,14 @@ const getCardTemplate = (films) => {
             <p class="film-card__description">${description}</p>
             <a class="film-card__comments">${comments}</a>
             <form class="film-card__controls">
-              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched  film-card__controls-item--active">Mark as watched</button>
-              <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
+              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+              <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
             </form>
           </article>`;
 };
 
-export default class Card extends AbstractComponent {
+export default class Card extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
@@ -32,14 +32,48 @@ export default class Card extends AbstractComponent {
     return getCardTemplate(this._film);
   }
 
-  setPopupHandler(handler) {
-    const poster = this.getElement().querySelector(`.film-card__poster`);
-    const title = this.getElement().querySelector(`.film-card__title`);
-    const commentsBtn = this.getElement().querySelector(`.film-card__comments`);
-    const popupBtns = [poster, title, commentsBtn];
+  update(newdata) {
+    // console.log('card update')
+    // не работает, так как подменяем _onDataChange в Moviecontroller на onDataChange из boardcontroller
+    this._film = newdata;
+    this.getTemplate();
+    this.rerender();
+    // меняем старые данныена newdata
+  }
 
-    popupBtns.forEach((it) => {
-      it.addEventListener(`click`, handler);
-    });
+  recoveryListeners() {
+    // console.log(`recoveryListeners`, this.getElement());
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._onWatchListClick);
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._onFavoriteClick);
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._onWatchedClick);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
+  }
+
+  onShowPopupClick(handler) {
+    this._onShowPopupClick = handler;
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
+    // const popupButtons = [poster, title, commentsBtn];
+    // popupButtons.forEach((it) => {
+    //   it.addEventListener(`click`, this._onShowPopupClick);
+    // });
+  }
+
+  onWatchListClick(handler) {
+    this._onWatchListClick = handler;
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+  }
+
+  onFavoriteClick(handler) {
+    this._onFavoriteClick = handler;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
+
+  onWatchedClick(handler) {
+    this._onWatchedClick = handler;
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
   }
 }

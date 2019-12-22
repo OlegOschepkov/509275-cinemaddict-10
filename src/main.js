@@ -7,7 +7,7 @@ import {generateFilms} from './mock/films';
 import {generateExtra} from "./mock/extra";
 import {user} from './mock/user';
 import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
-import {render, RenderPosition} from './utils/render';
+import {placeElement, RenderPosition} from './utils/render';
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
 
@@ -21,14 +21,14 @@ const filters = generateFilters();
 
 user.level = getRandomIntegerNumber(0, 25);
 
-render(headerBlock, new UserComponent(user.level), RenderPosition.BEFOREEND);
-render(mainBlock, new FilterComponent(filters, films), RenderPosition.BEFOREEND);
+placeElement(headerBlock, new UserComponent(user.level), RenderPosition.BEFOREEND);
+placeElement(mainBlock, new FilterComponent(filters, films), RenderPosition.BEFOREEND);
 
 // render(mainBlock, new SortComponent, RenderPosition.BEFOREEND);
 // render(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 const boardBlock = new BoardComponent();
 
-render(mainBlock, boardBlock, RenderPosition.BEFOREEND);
+placeElement(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 
 const boardController = new BoardController(boardBlock);
 
@@ -37,4 +37,4 @@ const extra = generateExtra(EXTRA_COUNT);
 
 boardController.render(films, extra);
 
-render(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
+placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
