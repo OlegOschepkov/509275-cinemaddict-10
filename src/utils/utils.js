@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const getRandomArrayItem = (array) => array[getRandomIntegerNumber(0, array.length)];
 
 const getRandomArrayItems = (array, start, end, symbol) => {
@@ -22,26 +24,35 @@ const getRandomIntegerNumber = (min, max) => Math.floor(Math.random() * (max - m
 const getLowest = (object, val) => Object.keys(object).sort((a, b) => b - a).find((el) => el <= val);
 
 const randomDate = (start, end, option) => {
-  let options = {};
-  if (option) {
-    options = {
-      year: `numeric`,
-      month: `long`,
-      day: `numeric`
-    };
-  } else {
-    options = {
-      year: `numeric`,
-      month: `long`,
-      day: `numeric`,
-      hour: `numeric`,
-      minute: `numeric`
-    };
-  }
   const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return date.toLocaleString(`en-GB`, options);
+  if (option) {
+    return moment(date).format(`DD MMMM YYYY`);
+  } else {
+    return moment(date).format(`DD MMMM YYYY hh:mm A`);
+  }
 };
 
+// const randomDate = (start, end, option) => {
+//   let options = {};
+//   if (option) {
+//     options = {
+//       year: `numeric`,
+//       month: `long`,
+//       day: `numeric`
+//     };
+//   } else {
+//     options = {
+//       year: `numeric`,
+//       month: `long`,
+//       day: `numeric`,
+//       hour: `numeric`,
+//       minute: `numeric`
+//     };
+//   }
+//   const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+//   return date.toLocaleString(`en-GB`, options);
+// };
+//
 const replace = (newComponent, oldComponent) => {
   if (newComponent && oldComponent) {
     const parentElement = oldComponent.getElement().parentElement;
