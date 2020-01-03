@@ -10,12 +10,15 @@ import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
 import {placeElement, RenderPosition} from './utils/render';
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
+import FilmsModel from "models/films-model";
 
 const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
 
 const films = generateFilms(FILMS_COUNT);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
 
 const filters = generateFilters();
 

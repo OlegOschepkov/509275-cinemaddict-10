@@ -26,10 +26,11 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
 // };
 
 export default class pageController {
-  constructor(container) {
+  constructor(container, filmsModel) {
     this._container = container;
+    this._filmsModel = filmsModel;
 
-    this._films = [];
+    // this._films = [];
     this._showedFilms = [];
     this._movieControllersAll = [];
     this._emptyListComponent = new EmptyListComponent();
@@ -44,7 +45,8 @@ export default class pageController {
   }
 
   render(films, type) {
-    this._films = films;
+    this._films = this._filmsModel.getFilmsAll();
+    // this._films = this._filmsModel.getFilms();
     const container = this._container.getElement();
 
     placeElement(container, this._sortComponent, RenderPosition.BEFOREEND);
@@ -56,14 +58,14 @@ export default class pageController {
 
       placeElement(container, this._listComponent, RenderPosition.BEFOREEND);
 
-      const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
-
-      const newFilms = renderFilms(listContainer, this._films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
-      this._movieControllersAll = films.map(() => {
-        return new MovieController(listContainer, this._onDataChange, this._onViewChange);
-      });
-
-      this._showedFilms = this._showedFilms.concat(newFilms);
+      // const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
+      //
+      // const newFilms = renderFilms(listContainer, this._films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+      // this._movieControllersAll = films.map(() => {
+      //   return new MovieController(listContainer, this._onDataChange, this._onViewChange);
+      // });
+      //
+      // this._showedFilms = this._showedFilms.concat(newFilms);
 
       this._renderLoadMoreButton();
 
@@ -118,17 +120,18 @@ export default class pageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
-
-    if (index === -1) {
-      // console.log("not found");
-      return;
-    }
-
-
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
-    movieController.update(newData);
+    // перенес в модель
+    // const index = this._films.findIndex((it) => it === oldData);
+    //
+    // if (index === -1) {
+    //   // console.log("not found");
+    //   return;
+    // }
+    //
+    //
+    // this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+    //
+    // movieController.update(newData);
   }
 
   _onViewChange() {

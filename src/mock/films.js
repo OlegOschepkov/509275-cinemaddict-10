@@ -73,6 +73,7 @@ const uniqueNames = [...getUniqueNames()];
 
 const generateFilm = (i) => {
   return {
+    id: String(new Date() + Math.random()),
     name: uniqueNames[i],
     poster: getRandomArrayItem(posters),
     description: getRandomArrayItems(descriptionParts, 1, 3),
