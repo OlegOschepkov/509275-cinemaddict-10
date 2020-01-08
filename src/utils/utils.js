@@ -28,7 +28,7 @@ const randomDate = (start, end, option) => {
   if (option) {
     return moment(date).format(`DD MMMM YYYY`);
   } else {
-    return moment(date).format(`DD MMMM YYYY hh:mm A`);
+    return moment(date).format(`YYYY/MM/DD HH:MM`);
   }
 };
 

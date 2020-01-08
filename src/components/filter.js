@@ -1,25 +1,37 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
-const getCountMarkup = (filterTag) => {
-  const count = filterTag.length;
+// export const FilterType = {
+//   ALL: `All movies`,
+//   WATCHLIST: `Watchlist`,
+//   WATCHED: `History`,
+//   FAVORITES: `Favorites`,
+//   STATS: `Stats`
+// };
+
+// function getKeyByValue(value) {
+//   return Object.keys(FilterType).find(key => FilterType[key] === value);
+// }
+
+// const getCountMarkup = (filterTag) => {
+//   const count = filterTag.length;
+//
+//   return (
+//     `${count ? `<span class="main-navigation__item-count">${count}</span>` : ``}`
+//   );
+// };
+
+const getFilterMarkup = (filter, isActive) => {
+  const {name, count, link, type} = filter;
+  // const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
 
   return (
-    `${count ? `<span class="main-navigation__item-count">${count}</span>` : ``}`
+    `<a href="#${link}" data-type="${type}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
+        ${name} ${type !== `ALL` ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
   );
 };
 
-const getFilterMarkup = (filter, isActive, films) => {
-  const {name, link} = filter;
-  const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
-
-  return (
-    `<a href="#${link}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
-        ${name} ${countMarkup}</a>`
-  );
-};
-
-const getFilterTemplate = (filters, films) => {
-  const filtersMarkup = filters.map((it, i) => getFilterMarkup(it, i === 0, films)).join(`\n`);
+const getFilterTemplate = (filters, isActive) => {
+  const filtersMarkup = filters.map((it) => getFilterMarkup(it, it.type === isActive)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
@@ -28,14 +40,38 @@ const getFilterTemplate = (filters, films) => {
   );
 };
 
-export default class Filter extends AbstractComponent {
-  constructor(filters, films) {
+export class FilterComponent extends AbstractSmartComponent {
+  constructor(filters) {
     super();
     this._filters = filters;
-    this._films = films;
+    this._active = `ALL`;
+    // this._films = films;
   }
 
   getTemplate() {
-    return getFilterTemplate(this._filters, this._films);
+    // console.log(this._active)
+    return getFilterTemplate(this._filters, this._active);
+  }
+
+  setFilterChangeHandler(handler) {
+    this._setFilterChangeHandler = handler;
+
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      // const filterName = getKeyByValue(evt.target.dataset.type);
+      handler(evt.target.dataset.type);
+    });
+  }
+
+  update(newData, isActive) {
+    this._filters = newData;
+    this._active = isActive;
+    this.getTemplate();
+    this.rerender();
+    this.recoveryListeners();
+  }
+
+  recoveryListeners() {
+    this.setFilterChangeHandler(this._setFilterChangeHandler);
   }
 }
