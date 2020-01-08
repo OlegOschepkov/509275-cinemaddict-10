@@ -34,8 +34,9 @@ const emoji = [
 
 const today = new Date();
 
-const generateComment = () => {
+const generateComment = (i) => {
   return {
+    id: i + Math.random(),
     text: getRandomArrayItem(comments),
     author: getRandomArrayItem(authors),
     date: randomDate(new Date(2010, 0, 1), today, false),
@@ -43,9 +44,7 @@ const generateComment = () => {
   };
 };
 
-// const count = getRandomIntegerNumber(3, 7);
-
 const generateComments = (qty) => new Array(qty).fill(``).map((it, i) => generateComment(i));
 
-export {generateComments};
+export {generateComment, generateComments};
 
