@@ -1,7 +1,8 @@
 import {placeElement, RenderPosition} from "../utils/render";
-import {FilterComponent} from "../components/filter";
+import {FilterComponent, FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {generateFilters} from "../mock/filter";
+// import StatisticComponent from "../components/abstract-component";
 // import {generateComments} from "../mock/comments";
 // import {generatePopup} from "../mock/popup";
 
@@ -10,7 +11,7 @@ export default class FilterController {
     this._container = container;
     this._filmsModel = filmsModel;
 
-    this._activeFilterType = `ALL`;
+    this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
     this._filters = generateFilters();
 
@@ -35,7 +36,8 @@ export default class FilterController {
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+
+    this._filterComponent.onFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       placeElement(this._filterComponent, oldComponent);
@@ -86,15 +88,24 @@ export default class FilterController {
   //   const oldComponent = this._filterComponent;
   //
   //   this._filterComponent = new FilterComponent(filters);
-  //   this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+  //   this._filterComponent.onFilterChangeHandler(this._onFilterChange);
   //
   //   remove(oldComponent);
   //   placeElement(this._container, this._filterComponent, RenderPosition.AFTERBEGIN);
   // }
 
   _onFilterChange(filterType) {
-    this._filmsModel.setFilter(filterType);
-    this._activeFilterType = filterType;
-    this._filterComponent.update(this._filters, this._activeFilterType);
+    if (filterType === FilterType.STATS) {
+      this._activeFilterType = filterType;
+      this._filterComponent.update(this._filters, this._activeFilterType);
+    } else {
+      this._filmsModel.setFilter(filterType);
+      this._activeFilterType = filterType;
+      this._filterComponent.update(this._filters, this._activeFilterType);
+    }
+  }
+
+  onStatsClick(handler) {
+    this._filterComponent.onStatsClick(handler);
   }
 }

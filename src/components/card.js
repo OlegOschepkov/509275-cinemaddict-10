@@ -1,14 +1,18 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+// import {randomDuration} from "../utils/utils";
 
 const getCardTemplate = (films) => {
-  const {name, poster, description, rating, year, duration, genre, comments, isFavorite, isWatched, isWatchList} = films;
+  const {name, poster, description, rating, year, genre, duration, comments, isFavorite, isWatched, isWatchList} = films;
+  const min = parseInt((duration / (1000 * 60)) % 60, 10);
+  const hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
+  const durationHumanReadable = hours + `h ` + min + `min`;
 
   return `<article class="film-card">
             <h3 class="film-card__title">${name}</h3>
             <p class="film-card__rating">${rating}</p>
             <p class="film-card__info">
               <span class="film-card__year">${year}</span>
-              <span class="film-card__duration">${duration}</span>
+              <span class="film-card__duration">${durationHumanReadable}</span>
               <span class="film-card__genre">${genre}</span>
             </p>
             <img src="${poster}" alt="" class="film-card__poster">
@@ -33,7 +37,7 @@ export default class Card extends AbstractSmartComponent {
   }
 
   update(newdata) {
-    // console.log('card update')
+    // console.log(`card update`)
     // не работает, так как подменяем _onDataChange в Moviecontroller на onDataChange из boardcontroller
     this._film = newdata;
     this.getTemplate();

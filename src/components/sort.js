@@ -24,7 +24,7 @@ export default class Filter extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    // console.log(this._currentSortType + ' getTemplate')
+    // console.log(this._currentSortType + ` getTemplate`)
     return getSortTemplate(this._currentSortType);
   }
 
