@@ -1,18 +1,18 @@
-import FilterController from './contoller/filter-controller';
-import BoardComponent from './components/board';
-import FooterComponent from './components/footer';
-import UserComponent from './components/user';
-import StatisticComponent from './components/statistic';
-// import {generateFilters} from './mock/filter';
-import {generateFilms} from './mock/films';
+import FilterController from "./contoller/filter-controller";
+import BoardComponent from "./components/board";
+import FooterComponent from "./components/footer";
+import UserComponent from "./components/user";
+import StatisticComponent from "./components/statistic";
+// import {generateFilters} from "./mock/filter";
+import {generateFilms} from "./mock/films";
 // import {generateExtra} from "./mock/extra";
-import {user} from './mock/user';
-import {getRandomIntegerNumber, FILMS_COUNT} from './utils/utils';
-import {placeElement, RenderPosition} from './utils/render';
+import {user} from "./mock/user";
+import {getRandomIntegerNumber, FILMS_COUNT} from "./utils/utils";
+import {placeElement, RenderPosition} from "./utils/render";
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
 import FilmsModel from "./models/films-model";
-import {FilterComponent} from "./components/filter";
+// import {FilterComponent} from "./components/filter";
 
 const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
@@ -46,4 +46,4 @@ boardController.render();
 
 placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
 
-filterController.onStatsClick(boardController.toggleVisibility)
+filterController.onStatsClick(boardController.toggleVisibility);

@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, randomDate} from '../utils/utils';
+import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, randomDate} from "../utils/utils";
 
 const filmNamesOrigin = [
   `The Shawshank Redemption`,

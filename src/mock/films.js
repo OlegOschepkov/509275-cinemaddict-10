@@ -4,8 +4,9 @@ import {
   getRandomNumber,
   getRandomIntegerNumber,
   FILMS_COUNT,
-  randomDuration, getDuration, randomDate
-} from '../utils/utils';
+  randomDuration,
+  randomDate
+} from "../utils/utils";
 import {generateComments} from "./comments";
 
 const filmNames = [

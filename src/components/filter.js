@@ -64,7 +64,7 @@ export class FilterComponent extends AbstractSmartComponent {
         handler(evt.target.dataset.type);
       }
       // else if (evt.target.dataset.type === FilterType.STATS) {
-      //   console.log('hi')
+      //   console.log(`hi`)
       // }
     });
   }
@@ -89,8 +89,7 @@ export class FilterComponent extends AbstractSmartComponent {
 
       evt.preventDefault();
       if (evt.target.dataset.type === FilterType.STATS) {
-        console.log('clicked')
-        handler()
+        handler();
       }
     });
   }

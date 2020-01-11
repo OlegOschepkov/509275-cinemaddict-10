@@ -1,4 +1,4 @@
-// import {FilterType} from '../components/filter';
+// import {FilterType} from `../components/filter`;
 
 export const getFavoriteFilms = (films) => {
   return films.filter((film) => film.isFavorite);

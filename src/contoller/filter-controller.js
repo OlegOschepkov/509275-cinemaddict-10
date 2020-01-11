@@ -2,7 +2,7 @@ import {placeElement, RenderPosition} from "../utils/render";
 import {FilterComponent, FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {generateFilters} from "../mock/filter";
-import StatisticComponent from "../components/abstract-component";
+// import StatisticComponent from "../components/abstract-component";
 // import {generateComments} from "../mock/comments";
 // import {generatePopup} from "../mock/popup";
 

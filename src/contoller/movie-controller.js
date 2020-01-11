@@ -141,7 +141,7 @@ export default class MovieController {
         }
         break;
       case Mode.ADDING:
-        // console.log('hi');
+        // console.log(`hi`);
         if (oldPopup && oldCard) {
           replace(this._cardComponent, oldCard);
           replace(this._cardPopupComponent, oldPopup);

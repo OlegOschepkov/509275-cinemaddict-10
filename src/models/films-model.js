@@ -41,7 +41,7 @@ export default class FilmsModel {
     this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
     this._callHandlers(this._filterChangeHandlers);
-    //
+
     return true;
   }
 

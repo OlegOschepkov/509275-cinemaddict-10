@@ -1,14 +1,14 @@
-import ListComponent from '../components/list';
-import ExtraListComponent from '../components/list-extra';
-import LoadMoreBtnComponent from '../components/load-more-btn';
-import EmptyListComponent from '../components/empty-list';
-import SortComponent, {SortType} from '../components/sort.js';
+import ListComponent from "../components/list";
+import ExtraListComponent from "../components/list-extra";
+import LoadMoreBtnComponent from "../components/load-more-btn";
+import EmptyListComponent from "../components/empty-list";
+import SortComponent, {SortType} from "../components/sort.js";
 import {placeElement, RenderPosition, remove} from "../utils/render";
 import {shuffle} from "../utils/utils";
 import MovieController, {Mode as MovieControllerMode} from "./movie-controller";
 // import FilterController from "../contoller/filter-controller";
 import {generateExtra} from "../mock/extra";
-import StatisticComponent from "../components/statistic";
+// import StatisticComponent from "../components/statistic";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -159,7 +159,6 @@ export default class pageController {
       this._filmsModel.addComment(newData, movieController.film.id);
     } else {
       const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
-      console.log(isSuccess + ` isSuccess`)
       if (isSuccess) {
         movieController.update(newData);
         this._filterController.update();
@@ -208,7 +207,7 @@ export default class pageController {
   }
 
   _onFilterChange() {
-    if(this.hidden) {
+    if (this.hidden) {
       this.hidden = false;
       this._showComponent();
     }
@@ -224,7 +223,7 @@ export default class pageController {
   }
 
   toggleVisibility() {
-    if(!this.hidden) {
+    if (!this.hidden) {
       this._hideComponent();
     } else {
       this._showComponent();

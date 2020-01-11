@@ -1,11 +1,11 @@
-import AbstractSmartComponent  from "./abstract-smart-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
 import {getWatchedFilms} from "../utils/filter-utils";
-import {getDuration, replace} from "../utils/utils";
-import {placeElement, RenderPosition} from "../utils/render";
-import {Mode} from "../contoller/movie-controller";
+// import {getDuration, replace} from "../utils/utils";
+// import {placeElement, RenderPosition} from "../utils/render";
+// import {Mode} from "../contoller/movie-controller";
 
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
@@ -74,14 +74,12 @@ const getFavoriteGenre = (genres) => {
   let maximumFrequency = 1;
   let counter = 0;
   let genre;
-  for (let i = 0; i < genres.length; i++)
-  {
-    for (let j = i; j < genres.length; j++)
-    {
-      if (genres[i] === genres[j])
+  for (let i = 0; i < genres.length; i++) {
+    for (let j = i; j < genres.length; j++) {
+      if (genres[i] === genres[j]) {
         counter++;
-      if (maximumFrequency < counter)
-      {
+      }
+      if (maximumFrequency < counter) {
         maximumFrequency = counter;
         genre = genres[i];
       }
@@ -94,7 +92,8 @@ const getFavoriteGenre = (genres) => {
   if (genres.length === 0) {
     genre = `-`;
   }
-  return genre
+
+  return genre;
 };
 
 const createStatisticsTemplate = ({films}, user, isActive) => {
@@ -102,15 +101,15 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const userLvl = user;
   const filmsCount = getWatchedFilms(films).length;
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
-  const min = parseInt((countDuration/(1000*60))%60);
-  const hours = parseInt((countDuration/(1000*60*60))%24);
+  const min = parseInt((countDuration / (1000 * 60)) % 60, 10);
+  const hours = parseInt((countDuration / (1000 * 60 * 60)) % 24, 10);
   const genres = films.slice().map((it) => it.genre);
   // console.log(active)
 
   const favoriteGenre = getFavoriteGenre(genres);
 
-    return (
-      `<section class="statistic">
+  return (
+    `<section class="statistic">
         <p class="statistic__rank">
           Your rank
           <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -155,11 +154,11 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
           <canvas class="statistic__chart" width="1000"></canvas>
         </div>
       </section>`
-    )
+  );
 };
 
 export default class StatisticComponent extends AbstractSmartComponent {
-  constructor({films, dateFrom, dateTo}, user) {
+  constructor({films}, user) {
     super();
 
     this._films = getWatchedFilms(films);
@@ -194,7 +193,7 @@ export default class StatisticComponent extends AbstractSmartComponent {
     }
   }
 
-  rerender(films, dateFrom, dateTo) {
+  rerender(films) {
     this._filteredFilms = films;
 
     super.rerender();
@@ -210,7 +209,7 @@ export default class StatisticComponent extends AbstractSmartComponent {
 
   onInputClick() {
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, (evt) => {
-      if(evt.target.classList.contains(`statistic__filters-input`)) {
+      if (evt.target.classList.contains(`statistic__filters-input`)) {
         const type = evt.target.dataset.type;
         this._active = evt.target.id;
 
@@ -218,16 +217,16 @@ export default class StatisticComponent extends AbstractSmartComponent {
           this._filteredFilms = this._films;
           this.rerender(this._filteredFilms);
         } else if (type === `today`) {
-          this._filteredFilms= this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `day`)));
+          this._filteredFilms = this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `day`)));
           this.rerender(this._filteredFilms);
         } else if (type === `week`) {
-          this._filteredFilms= this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `week`)));
+          this._filteredFilms = this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `week`)));
           this.rerender(this._filteredFilms);
         } else if (type === `month`) {
-          this._filteredFilms= this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `month`)));
+          this._filteredFilms = this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `month`)));
           this.rerender(this._filteredFilms);
         } else if (type === `year`) {
-          this._filteredFilms= this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `year`)));
+          this._filteredFilms = this._films.slice().filter((film) => moment(film.isWatchedDate).isAfter(moment().subtract(1, `year`)));
           this.rerender(this._filteredFilms);
         }
       }
