@@ -8,6 +8,7 @@ import {shuffle} from "../utils/utils";
 import MovieController, {Mode as MovieControllerMode} from "./movie-controller";
 // import FilterController from "../contoller/filter-controller";
 import {generateExtra} from "../mock/extra";
+import StatisticComponent from "../components/statistic";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
@@ -29,7 +30,7 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
 // };
 
 export default class pageController {
-  constructor(container, filmsModel, filter) {
+  constructor(container, filmsModel, filter, statistics) {
     this._container = container;
     this._filmsModel = filmsModel;
 
@@ -40,6 +41,7 @@ export default class pageController {
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._listComponent = new ListComponent();
     this._sortComponent = new SortComponent();
+    this._statisticsBlock = statistics;
     this._filterController = filter;
     this._loadMoreButtonComponent = new LoadMoreBtnComponent();
     this._onViewChange = this._onViewChange.bind(this);
@@ -47,8 +49,11 @@ export default class pageController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._onFilterChange = this._onFilterChange.bind(this);
-    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.onFilterChangeHandler(this._onFilterChange);
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
+    this.toggleVisibility = this.toggleVisibility.bind(this);
+    this.hidden = false;
+    // this._filterController.onStatsClick(this._toggleVisibility);
     // this._creatingComment = null;
   }
 
@@ -153,8 +158,8 @@ export default class pageController {
     } else if (oldData === null) {
       this._filmsModel.addComment(newData, movieController.film.id);
     } else {
-      // console.log('isSuccess')
       const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+      console.log(isSuccess + ` isSuccess`)
       if (isSuccess) {
         movieController.update(newData);
         this._filterController.update();
@@ -203,6 +208,10 @@ export default class pageController {
   }
 
   _onFilterChange() {
+    if(this.hidden) {
+      this.hidden = false;
+      this._showComponent();
+    }
     this._removeFilms();
     this._films = this._filmsModel.getFilteredFilms();
     this._renderFilms(this._films.slice(0, SHOWING_FILMS_COUNT_ON_START));
@@ -214,15 +223,22 @@ export default class pageController {
     this._showedFilms = [];
   }
 
-  // createComment() {
-  //   if (this._creatingComment) {
-  //     return;
-  //   }
-  //
-  //   console.log('go')
-  //
-  //   const listElement = this._listComponent.getElement();
-  //   this._creatingComment = new MovieController(listElement, this._onDataChange, this._onViewChange);
-  //   this._creatingComment.render(EmptyComment, MovieControllerMode.ADDING);
-  // }
+  toggleVisibility() {
+    if(!this.hidden) {
+      this._hideComponent();
+    } else {
+      this._showComponent();
+    }
+    this.hidden = !this.hidden;
+  }
+
+  _showComponent() {
+    this._container.show();
+    this._statisticsBlock.hide();
+  }
+
+  _hideComponent() {
+    this._container.hide();
+    this._statisticsBlock.show();
+  }
 }

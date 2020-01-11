@@ -1,12 +1,12 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 
-// export const FilterType = {
-//   ALL: `All movies`,
-//   WATCHLIST: `Watchlist`,
-//   WATCHED: `History`,
-//   FAVORITES: `Favorites`,
-//   STATS: `Stats`
-// };
+export const FilterType = {
+  ALL: `ALL`,
+  WATCHLIST: `WATCHLIST`,
+  WATCHED: `WATCHED`,
+  FAVORITES: `FAVORITES`,
+  STATS: `STATS`
+};
 
 // function getKeyByValue(value) {
 //   return Object.keys(FilterType).find(key => FilterType[key] === value);
@@ -26,7 +26,7 @@ const getFilterMarkup = (filter, isActive) => {
 
   return (
     `<a href="#${link}" data-type="${type}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
-        ${name} ${type !== `ALL` ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
+        ${name} ${type !== FilterType.ALL && type !== FilterType.STATS ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
   );
 };
 
@@ -44,7 +44,7 @@ export class FilterComponent extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
-    this._active = `ALL`;
+    this._active = FilterType.ALL;
     // this._films = films;
   }
 
@@ -53,13 +53,19 @@ export class FilterComponent extends AbstractSmartComponent {
     return getFilterTemplate(this._filters, this._active);
   }
 
-  setFilterChangeHandler(handler) {
-    this._setFilterChangeHandler = handler;
+  onFilterChangeHandler(handler) {
+    this._onFilterChangeHandler = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
+
       // const filterName = getKeyByValue(evt.target.dataset.type);
-      handler(evt.target.dataset.type);
+      if (evt.target.dataset.type !== FilterType.STATS) {
+        handler(evt.target.dataset.type);
+      }
+      // else if (evt.target.dataset.type === FilterType.STATS) {
+      //   console.log('hi')
+      // }
     });
   }
 
@@ -72,6 +78,20 @@ export class FilterComponent extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setFilterChangeHandler(this._setFilterChangeHandler);
+    this.onFilterChangeHandler(this._onFilterChangeHandler);
+    this.onStatsClick(this._onStatsClick);
+  }
+
+  onStatsClick(handler) {
+    this._onStatsClick = handler;
+
+    this.getElement().addEventListener(`click`, (evt) => {
+
+      evt.preventDefault();
+      if (evt.target.dataset.type === FilterType.STATS) {
+        console.log('clicked')
+        handler()
+      }
+    });
   }
 }

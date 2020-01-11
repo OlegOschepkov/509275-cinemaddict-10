@@ -2,18 +2,23 @@
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {randomDate} from "../utils/utils";
 import he from "he";
+import {FilterType} from "../components/filter";
 
 export default class FilmsModel {
   constructor() {
     this._films = [];
 
-    this._activeFilterType = `ALL`;
+    this._activeFilterType = FilterType.ALL;
 
     this._filterChangeHandlers = [];
     this._dataChangeHandlers = [];
   }
 
   getFilteredFilms() {
+    return getFilmsByFilter(this._films, this._activeFilterType);
+  }
+
+  getFilteredByTimeFilms() {
     return getFilmsByFilter(this._films, this._activeFilterType);
   }
 
@@ -37,7 +42,7 @@ export default class FilmsModel {
     this._callHandlers(this._dataChangeHandlers);
     this._callHandlers(this._filterChangeHandlers);
     //
-    // return true;
+    return true;
   }
 
   _callHandlers(handlers) {
@@ -49,7 +54,7 @@ export default class FilmsModel {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-  setFilterChangeHandler(handler) {
+  onFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 

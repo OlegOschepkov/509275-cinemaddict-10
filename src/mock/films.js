@@ -1,4 +1,11 @@
-import {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, FILMS_COUNT} from '../utils/utils';
+import {
+  getRandomArrayItem,
+  getRandomArrayItems,
+  getRandomNumber,
+  getRandomIntegerNumber,
+  FILMS_COUNT,
+  randomDuration, getDuration, randomDate
+} from '../utils/utils';
 import {generateComments} from "./comments";
 
 const filmNames = [
@@ -69,6 +76,7 @@ const getUniqueNames = () => {
 };
 
 const falseOrTrue = () => getRandomIntegerNumber(0, 5) === 1;
+const falseOrTrueIncreased = () => getRandomIntegerNumber(0, 2) === 1;
 
 const today = new Date();
 const year = today.getFullYear();
@@ -86,13 +94,14 @@ const generateFilm = (i) => {
     description: isAllowableDescriptionLength(getRandomArrayItems(descriptionParts, 1, 3)),
     rating: getRandomNumber(0, 10),
     year: getRandomIntegerNumber(1888, year),
-    duration: getRandomIntegerNumber(0, 3) + `h ` + getRandomIntegerNumber(0, 59) + `m`,
-    genre: getRandomArrayItems(genres, 1, 3, `, `),
+    duration: randomDuration(),
+    genre: getRandomArrayItem(genres),
     comments: generateComments(getRandomIntegerNumber(0, 15)),
     filterTag: getRandomArrayItem(filterTags),
     isWatchList: falseOrTrue(),
     isFavorite: falseOrTrue(),
-    isWatched: falseOrTrue()
+    isWatched: falseOrTrueIncreased(),
+    isWatchedDate: randomDate(new Date(2019, 0, 1), today, true),
   };
 };
 
