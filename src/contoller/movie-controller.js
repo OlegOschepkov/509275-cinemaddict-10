@@ -1,8 +1,9 @@
 import CardComponent from "../components/card";
-import {generatePopup} from "../mock/popup";
+// import {generatePopup} from "../mock/popup";
 import CardPopupComponent from "../components/card-popup";
 import {placeElement, RenderPosition, remove} from "../utils/render";
 import {replace} from "../utils/utils";
+import FilmModel from "../models/film-model";
 
 export const Mode = {
   ADDING: `adding`,
@@ -16,6 +17,37 @@ export const EmptyComment = {
   emoji: [],
 };
 
+const parseFormData = (film) => {
+  return new FilmModel({
+    'id': film.id,
+    'film_info': {
+      'title': film.name,
+      'alternative_title': film.nameOrigin,
+      'total_rating': film.rating,
+      'poster': film.poster,
+      'age_rating': film.pegi,
+      'director': film.director,
+      'writers': film.screenwriter,
+      'actors': film.actors,
+      'release': {
+        'date': film.releaseDate,
+        'release_country': film.country
+      },
+      'runtime': film.duration,
+      'genre': film.genre,
+      'description': film.description,
+    },
+    'user_details': {
+      'personal_rating': film.userRating,
+      'watchlist': film.isWatchList,
+      'already_watched': film.isWatched,
+      'watching_date': film.isWatchedDate,
+      'favorite': film.isFavorite,
+    },
+    'comments': []
+  });
+};
+
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -24,12 +56,12 @@ export default class MovieController {
     this._cardComponent = null;
     this._cardPopupComponent = null;
     this._mode = Mode.DEFAULT;
-    this._popupData = null;
+    // this._popupData = null;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this.comments = null;
     this.film = null;
     this._commentId = null;
-    this._popupData = generatePopup();
+    // this._popupData = generatePopup();
   }
 
   renderCard(film, mode) {
@@ -39,7 +71,7 @@ export default class MovieController {
 
     this._cardComponent = new CardComponent(this.film);
     this.comments = this.film.comments;
-    this._cardPopupComponent = new CardPopupComponent(this._popupData, this.comments, this.film);
+    this._cardPopupComponent = new CardPopupComponent(this.film, this.comments, this.film);
 
     this._cardComponent.onShowPopupClick(() => {
       this._openPopup();
@@ -48,55 +80,85 @@ export default class MovieController {
 
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isWatchList: !this.film.isWatchList,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isWatchList = !newFilm.isWatchList;
+      this._onDataChange(this, film, newFilm);
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isWatchList: !this.film.isWatchList,
+      // }));
     });
 
     this._cardComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isFavorite: !this.film.isFavorite,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isFavorite = !newFilm.isFavorite;
+      this._onDataChange(this, film, newFilm);
+
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isFavorite: !this.film.isFavorite,
+      // }));
     });
 
     this._cardComponent.onWatchedClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isWatched: !this.film.isWatched,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isWatched = !newFilm.isWatched;
+      this._onDataChange(this, film, newFilm);
+
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isWatched: !this.film.isWatched,
+      // }));
     });
 
     // связываю клик на карточке и на попапе
     this._cardPopupComponent.onWatchListClick((evt) => {
       // console.log("this._cardPopupComponent.onWatchListClick");
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isWatchList: !this.film.isWatchList,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isWatchList = !newFilm.isWatchList;
+      this._onDataChange(this, film, newFilm);
+
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isWatchList: !this.film.isWatchList,
+      // }));
     });
 
     this._cardPopupComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isFavorite: !this.film.isFavorite,
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isFavorite = !newFilm.isFavorite;
+      this._onDataChange(this, film, newFilm);
+
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isFavorite: !this.film.isFavorite,
+      // }));
     });
 
     this._cardPopupComponent.onWatchedClick((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this.film, Object.assign({}, this.film, {
-        isWatched: !this.film.isWatched,
-        yourRating: null,
-        isWatchedDate: !new Date()
-      }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isWatched = !newFilm.isWatched;
+      newFilm.yourRating = null;
+      newFilm.isWatchedDate = !new Date();
+      this._onDataChange(this, film, newFilm);
+
+      // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+      //   isWatched: !this.film.isWatched,
+      //   yourRating: null,
+      //   isWatchedDate: !new Date()
+      // }));
     });
 
     this._cardPopupComponent.onYourRatingClick((evt) => {
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
-        this._onDataChange(this, this.film, Object.assign({}, this.film, {
-          yourRating: document.getElementById(evt.target.htmlFor).value,
-        }));
+        const newFilm = FilmModel.clone(film);
+        newFilm.yourRating = document.getElementById(evt.target.htmlFor).value;
+        this._onDataChange(this, film, newFilm);
+        // console.log(newFilm)
+
+        // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        //   yourRating: document.getElementById(evt.target.htmlFor).value,
+        // }));
       }
     });
 
@@ -104,9 +166,13 @@ export default class MovieController {
       const target = evt.target;
       if (target.tagName === `IMG`) {
         const emojiSrc = target.getAttribute(`src`);
-        this._onDataChange(this, this.film, Object.assign({}, this.film, {
-          yourEmoji: `${emojiSrc}`,
-        }));
+        const newFilm = FilmModel.clone(film);
+        newFilm.yourEmoji = `${emojiSrc}`;
+        this._onDataChange(this, film, newFilm);
+
+        // this._onDataChange(this, this.film, Object.assign({}, this.film, {
+        //   yourEmoji: `${emojiSrc}`,
+        // }));
       }
     });
 
@@ -115,7 +181,7 @@ export default class MovieController {
         evt.preventDefault();
         if (evt.target.value.length > 0) {
           this._onDataChange(this, null, evt.target.value);
-          this._cardPopupComponent.update(this._popupData, this.film);
+          this._cardPopupComponent.update(this.film, this.film);
           this._cardComponent.update(this.film);
         }
       }
@@ -126,7 +192,7 @@ export default class MovieController {
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
       evt.preventDefault();
       this._onDataChange(this, this.film, null);
-      this._cardPopupComponent.update(this._popupData, this.film);
+      this._cardPopupComponent.update(this.film, this.film);
       this._cardComponent.update(this.film);
     });
 
@@ -168,10 +234,11 @@ export default class MovieController {
   }
 
   update(newData) {
-    this.film = newData;
+    const foo = parseFormData(newData);
+    this.film = foo;
     // this.comments = generateComments(newData.comments);
-    this._cardComponent.update(newData);
-    this._cardPopupComponent.update(this._popupData, newData);
+    this._cardComponent.update(foo);
+    this._cardPopupComponent.update(this.film, foo);
   }
 
   _onViewChange() {
