@@ -1,14 +1,14 @@
 import API from "./api";
 import FilterController from "./contoller/filter-controller";
 import BoardComponent from "./components/board";
-import FooterComponent from "./components/footer";
+// import FooterComponent from "./components/footer";
 import UserComponent from "./components/user";
 import StatisticComponent from "./components/statistic";
 // import {generateFilters} from "./mock/filter";
 // import {generateFilms} from "./mock/films";
 // import {generateExtra} from "./mock/extra";
 import {user} from "./mock/user";
-import {getRandomIntegerNumber, FILMS_COUNT} from "./utils/utils";
+import {getRandomIntegerNumber} from "./utils/utils";
 import {placeElement, RenderPosition} from "./utils/render";
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
@@ -18,9 +18,8 @@ import FilmsModel from "./models/films-model";
 const AUTHORIZATION = `Basic olegoschepkov`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
-const api2 = new API(END_POINT, AUTHORIZATION);
 
-const bodyBlock = document.querySelector(`body`);
+// const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);
 

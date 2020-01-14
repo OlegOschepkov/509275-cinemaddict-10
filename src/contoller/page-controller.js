@@ -101,7 +101,7 @@ export default class pageController {
       const [...extras] = generateExtra(EXTRA_COUNT);
 
       let shift = 0;
-      console.log(this._films[0][`comments`]);
+      // console.log(this._films[0][`comments`]);
       extras.forEach((it, i) => {
         const tag = it.extraFlag;
         if (tag === `rating`) {
@@ -157,7 +157,7 @@ export default class pageController {
     if (this._showedFilms.length >= this._films.length) {
       return;
     }
-    console.log(this._loadMoreButtonComponent)
+    // console.log(this._loadMoreButtonComponent)
 
     placeElement(this._listComponent.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
@@ -192,8 +192,8 @@ export default class pageController {
             // this._removeFilms();
             // this._films = this._filmsModel.getFilms();
             // this._renderFilms(this._films.slice(0, SHOWING_FILMS_COUNT_ON_START));
-              movieController.update(newData);
-              this._filterController.update();
+            movieController.update(newData);
+            this._filterController.update();
             // movieController.update(filmModel);
             // this._filterController.update();
             // this._renderFilms(this._films);

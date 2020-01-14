@@ -1,7 +1,7 @@
 export default class CommentsModel {
   constructor(data) {
     this.id = data.id;
-    this.text= data.comment;
+    this.text = data.comment;
     this.author = data.author;
     this.date = data.date;
     this.emoji = data.emotion;

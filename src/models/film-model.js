@@ -9,11 +9,11 @@ export default class FilmModel {
     this.description = data.film_info[`description`];
     this.rating = data.film_info[`total_rating`];
     this.releaseDate = data.film_info.release[`date`];
-    this.year = moment(data.film_info.release[`date`]).format('YYYY');
+    this.year = moment(data.film_info.release[`date`]).format(`YYYY`);
     this.duration = data.film_info[`runtime`]; // изменить формулы
     this.genre = data.film_info[`genre`];
     this.commentsQuantity = data.comments.length;
-    //filterTag
+    // filterTag
     this.isWatchList = data.user_details[`watchlist`];
     this.isFavorite = data.user_details[`favorite`];
     this.isWatched = data.user_details[`already_watched`];
@@ -24,7 +24,7 @@ export default class FilmModel {
     this.director = data.film_info[`director`];
     this.screenwriter = data.film_info[`writers`];
     this.actors = data.film_info[`actors`];
-    this.fullDate = moment(data.film_info.release[`date`]).format('YYYY/MM/DD HH:MM');
+    this.fullDate = moment(data.film_info.release[`date`]).format(`YYYY/MM/DD HH:MM`);
     this.country = data.film_info.release[`release_country`];
   }
 

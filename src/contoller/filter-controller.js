@@ -19,11 +19,11 @@ export default class FilterController {
   }
 
   render() {
-    console.log('hiiiiiii2')
+    // console.log('hiiiiiii2')
 
     const container = this._container;
     const allFilms = this._filmsModel.getFilms();
-    console.log(allFilms)
+    // console.log(allFilms)
     const filters = this._filters.map((filterType) => {
       return {
         name: filterType.name,
@@ -51,7 +51,7 @@ export default class FilterController {
 
   update() {
     const allFilms = this._filmsModel.getFilms();
-    console.log('hiiiiiii')
+    // console.log('hiiiiiii')
 
     const filters = this._filters.map((filterType) => {
       return {
@@ -63,7 +63,6 @@ export default class FilterController {
       };
     });
     this._filters = filters;
-    console.log(filters)
 
     this._filterComponent.recoveryListeners(this._onFilterChange);
 

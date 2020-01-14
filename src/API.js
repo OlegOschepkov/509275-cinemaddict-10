@@ -22,7 +22,7 @@ const API = class {
   }
 
   getFilms() {
-    console.log('get')
+    // console.log('get')
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(FilmModel.parseFilms);
