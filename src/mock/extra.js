@@ -3,7 +3,7 @@ const extraNames = [
 ];
 
 const extraFlags = [
-  `rating`, `comments`
+  `rating`, `commentsQuantity`
 ];
 
 const generateExtra = () => {

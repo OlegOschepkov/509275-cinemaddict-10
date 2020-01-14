@@ -1,4 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {getHumanRadableDuration} from "../utils/utils";
 
 const getGenreMarkup = (genreSingle) => {
   return (
@@ -12,7 +13,7 @@ const getCommentMarkup = (comment) => {
   return (
     `<li class="film-details__comment" data-id="${id}">
       ${emoji ? `<span class="film-details__comment-emoji">
-          <img src="${emoji}" width="55" height="55" alt="emoji">
+          <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">
         </span>` : ``}
         <div>
           <p class="film-details__comment-text">${text}</p>
@@ -41,15 +42,16 @@ const getCommentMarkup = (comment) => {
 // };
 
 const getCardPopupTemplate = (popupData, comments, film) => {
-  const {nameOrigin, pegi, rating, director, screenwriter, actor, fullDate, duration, country, fullDescription, genre} = popupData;
+  const {nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = popupData;
   const {poster, name, isFavorite, isWatched, isWatchList, yourRating, yourEmoji} = film;
   let commentMarkup = ``;
   if (comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
   }
   const commentsLength = comments.length;
-  const genreList = genre.split(`, `);
-  const genreMarkup = genreList.map((it) => getGenreMarkup(it)).join(`\n`);
+  // const genreList = genre.split(`, `);
+  const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
+  const durationHumanReadable = getHumanRadableDuration(duration);
 
   return (
     `<section class="film-details">
@@ -89,7 +91,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Actors</td>
-                    <td class="film-details__cell">${actor}</td>
+                    <td class="film-details__cell">${actors}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
@@ -97,21 +99,21 @@ const getCardPopupTemplate = (popupData, comments, film) => {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${duration}</td>
+                    <td class="film-details__cell">${durationHumanReadable}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
                     <td class="film-details__cell">${country}</td>
                   </tr>
                   <tr class="film-details__row">
-                    <td class="film-details__term">${genreList.length > 1 ? `Genres` : `Genre`}</td>
+                    <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
                     <td class="film-details__cell">
                       ${genreMarkup}
                   </tr>
                 </table>
 
                 <p class="film-details__film-description">
-                ${fullDescription}
+                ${description}
                 </p>
               </div>
             </div>
@@ -140,7 +142,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
                 </div>
 
                 <section class="film-details__user-rating-inner">
-                  <h3 class="film-details__user-rating-title">The Great Flamarion</h3>
+                  <h3 class="film-details__user-rating-title">${name}</h3>
 
                   <p class="film-details__user-rating-feelings">How you feel it?</p>
 

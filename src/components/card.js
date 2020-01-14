@@ -1,11 +1,13 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {getHumanRadableDuration} from "../utils/utils";
 // import {randomDuration} from "../utils/utils";
 
 const getCardTemplate = (films) => {
-  const {name, poster, description, rating, year, genre, duration, comments, isFavorite, isWatched, isWatchList} = films;
-  const min = parseInt((duration / (1000 * 60)) % 60, 10);
-  const hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
-  const durationHumanReadable = hours + `h ` + min + `min`;
+  const {name, poster, description, rating, year, genre, duration, commentsQuantity, isFavorite, isWatched, isWatchList} = films;
+  // const min = parseInt(duration % 60, 10);
+  // const hours = parseInt((duration / 60) % 24, 10);
+  // const durationHumanReadable = hours + `h ` + min + `min`;
+  const durationHumanReadable = getHumanRadableDuration(duration);
 
   return `<article class="film-card">
             <h3 class="film-card__title">${name}</h3>
@@ -17,7 +19,7 @@ const getCardTemplate = (films) => {
             </p>
             <img src="${poster}" alt="" class="film-card__poster">
             <p class="film-card__description">${description}</p>
-            <a class="film-card__comments">${comments.length}</a>
+            <a class="film-card__comments">${commentsQuantity}</a>
             <form class="film-card__controls">
               <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
               <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>

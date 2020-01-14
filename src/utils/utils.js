@@ -65,6 +65,12 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
+const getHumanRadableDuration = (duration) => {
+  const min = parseInt(duration % 60, 10);
+  const hours = parseInt((duration / 60) % 24, 10);
+  return hours + `h ` + min + `min`;
+};
+
 const FILMS_COUNT = 15;
 
 const shuffle = (array) => {
@@ -75,4 +81,4 @@ const shuffle = (array) => {
   return array;
 };
 
-export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, getLowest, randomDate, FILMS_COUNT, shuffle, replace, randomDuration};
+export {getRandomArrayItem, getRandomArrayItems, getRandomNumber, getRandomIntegerNumber, getLowest, randomDate, FILMS_COUNT, shuffle, replace, randomDuration, getHumanRadableDuration};
