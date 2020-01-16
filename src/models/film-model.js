@@ -20,12 +20,19 @@ export default class FilmModel {
     this.isWatchedDate = data.user_details[`watching_date`];
     this.nameOrigin = data.film_info[`alternative_title`];
     this.pegi = data.film_info[`age_rating`];
-    this.userRating = data.user_details[`personal_rating`];
+    this.yourRating = data.user_details[`personal_rating`];
     this.director = data.film_info[`director`];
     this.screenwriter = data.film_info[`writers`];
     this.actors = data.film_info[`actors`];
     this.fullDate = moment(data.film_info.release[`date`]).format(`YYYY/MM/DD HH:MM`);
     this.country = data.film_info.release[`release_country`];
+    this.comments = [];
+    this.comments.id = data.comments.id;
+    this.comments.text = data.comments.comment;
+    this.comments.author = data.comments.author;
+    this.comments.date = data.comments.date;
+    this.comments.emoji = data.comments.emotion;
+
   }
 
   toRAW() {
@@ -49,7 +56,7 @@ export default class FilmModel {
         'description': this.description,
       },
       'user_details': {
-        'personal_rating': this.userRating,
+        'personal_rating': this.yourRating,
         'watchlist': this.isWatchList,
         'already_watched': this.isWatched,
         'watching_date': this.isWatchedDate,
@@ -67,12 +74,12 @@ export default class FilmModel {
     return data.map(FilmModel.parseFilm);
   }
 
-  // static getComments(data) {
+  // static parseComment(data) {
   //   return data.map(FilmModel.parseComments);
   // }
   //
   // static parseComments(data) {
-  //   return data.map((it) => new CommentsModel.parseComments(data));
+  //   return data.map((it) => CommentsModel.parseComments(it));
   // }
 
   static clone(data) {

@@ -41,9 +41,8 @@ const getCommentMarkup = (comment) => {
 //   };
 // };
 
-const getCardPopupTemplate = (popupData, comments, film) => {
-  const {nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = popupData;
-  const {poster, name, isFavorite, isWatched, isWatchList, yourRating, yourEmoji} = film;
+const getCardPopupTemplate = (film) => {
+  const {poster, name, isFavorite, isWatched, isWatchList, yourRating, yourEmoji, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre, comments} = film;
   let commentMarkup = ``;
   if (comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
@@ -76,7 +75,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
 
                   <div class="film-details__rating">
                     <p class="film-details__total-rating">${rating}</p>
-                    <p class="film-details__user-rating ${yourRating ? `yep` : `visually-hidden`}">Your rate ${yourRating}</p>
+                    <p class="film-details__user-rating ${isWatched ? `` : `visually-hidden`}">Your rate ${yourRating}</p>
                   </div>
                 </div>
 
@@ -130,7 +129,7 @@ const getCardPopupTemplate = (popupData, comments, film) => {
             </section>
           </div>
 
-          <div class="form-details__middle-container ${isWatched ? `yep` : `visually-hidden`}">
+          <div class="form-details__middle-container ${isWatched ? `` : `visually-hidden`}">
             <section class="film-details__user-rating-wrap">
               <div class="film-details__user-rating-controls">
                 <button class="film-details__watched-reset" type="button">Undo</button>
@@ -226,22 +225,22 @@ const getCardPopupTemplate = (popupData, comments, film) => {
 };
 
 export default class CardPopup extends AbstractSmartComponent {
-  constructor(popupData, comments, film) {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments;
-    this._popupData = popupData;
+    // this._comments = film.comments;
+    // this._popupData = this._film;
     this._deleteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return getCardPopupTemplate(this._popupData, this._comments, this._film);
+    return getCardPopupTemplate(this._film);
   }
 
-  update(popupData, film) {
+  update(film) {
     this._film = film;
-    this._comments = film.comments;
-    this._popupData = popupData;
+    // this._comments = film.comments;
+    // this._popupData = film;
     this.rerender();
     this.recoveryListeners();
   }
@@ -256,8 +255,9 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._onEmojiClick);
     this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, this._onYourRatingClick);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`click`, this._ontSubmitHandler);
-    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteButtonClickHandler);
-    // this.getElement().querySelector(`film-details__comment-delete`).addEventListener(`click`, this._onDeleteClick);
+    if (this.getElement().querySelector(`.film-details__comment-delete`)) {
+      this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteButtonClickHandler);
+    }
   }
 
   setCloseHandler(handler) {

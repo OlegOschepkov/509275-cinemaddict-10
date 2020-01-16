@@ -17,36 +17,36 @@ export const EmptyComment = {
   emoji: [],
 };
 
-const parseFormData = (film) => {
-  return new FilmModel({
-    'id': film.id,
-    'film_info': {
-      'title': film.name,
-      'alternative_title': film.nameOrigin,
-      'total_rating': film.rating,
-      'poster': film.poster,
-      'age_rating': film.pegi,
-      'director': film.director,
-      'writers': film.screenwriter,
-      'actors': film.actors,
-      'release': {
-        'date': film.releaseDate,
-        'release_country': film.country
-      },
-      'runtime': film.duration,
-      'genre': film.genre,
-      'description': film.description,
-    },
-    'user_details': {
-      'personal_rating': film.userRating,
-      'watchlist': film.isWatchList,
-      'already_watched': film.isWatched,
-      'watching_date': film.isWatchedDate,
-      'favorite': film.isFavorite,
-    },
-    'comments': []
-  });
-};
+// const parseFormData = (film) => {
+//   return new FilmModel({
+//     'id': film.id,
+//     'film_info': {
+//       'title': film.name,
+//       'alternative_title': film.nameOrigin,
+//       'total_rating': film.rating,
+//       'poster': film.poster,
+//       'age_rating': film.pegi,
+//       'director': film.director,
+//       'writers': film.screenwriter,
+//       'actors': film.actors,
+//       'release': {
+//         'date': film.releaseDate,
+//         'release_country': film.country
+//       },
+//       'runtime': film.duration,
+//       'genre': film.genre,
+//       'description': film.description,
+//     },
+//     'user_details': {
+//       'personal_rating': film.yourRating,
+//       'watchlist': film.isWatchList,
+//       'already_watched': film.isWatched,
+//       'watching_date': film.isWatchedDate,
+//       'favorite': film.isFavorite,
+//     },
+//     'comments': []
+//   });
+// };
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -56,22 +56,21 @@ export default class MovieController {
     this._cardComponent = null;
     this._cardPopupComponent = null;
     this._mode = Mode.DEFAULT;
-    // this._popupData = null;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this.comments = null;
     this.film = null;
     this._commentId = null;
-    // this._popupData = generatePopup();
   }
 
   renderCard(film, mode) {
     this.film = film;
+    // console.log(film.year)
     const oldCard = this._cardComponent;
     const oldPopup = this._cardPopupComponent;
 
     this._cardComponent = new CardComponent(this.film);
     this.comments = this.film.comments;
-    this._cardPopupComponent = new CardPopupComponent(this.film, this.comments, this.film);
+    this._cardPopupComponent = new CardPopupComponent(this.film);
 
     this._cardComponent.onShowPopupClick(() => {
       this._openPopup();
@@ -81,7 +80,7 @@ export default class MovieController {
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isWatchList = !newFilm.isWatchList;
+      newFilm.isWatchList = !film.isWatchList;
       this._onDataChange(this, film, newFilm);
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
       //   isWatchList: !this.film.isWatchList,
@@ -91,7 +90,7 @@ export default class MovieController {
     this._cardComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isFavorite = !newFilm.isFavorite;
+      newFilm.isFavorite = !film.isFavorite;
       this._onDataChange(this, film, newFilm);
 
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
@@ -102,9 +101,8 @@ export default class MovieController {
     this._cardComponent.onWatchedClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isWatched = !newFilm.isWatched;
+      newFilm.isWatched = !film.isWatched;
       this._onDataChange(this, film, newFilm);
-
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
       //   isWatched: !this.film.isWatched,
       // }));
@@ -115,9 +113,8 @@ export default class MovieController {
       // console.log("this._cardPopupComponent.onWatchListClick");
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isWatchList = !newFilm.isWatchList;
+      newFilm.isWatchList = !film.isWatchList;
       this._onDataChange(this, film, newFilm);
-
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
       //   isWatchList: !this.film.isWatchList,
       // }));
@@ -126,8 +123,9 @@ export default class MovieController {
     this._cardPopupComponent.onFavoriteClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isFavorite = !newFilm.isFavorite;
+      newFilm.isFavorite = !film.isFavorite;
       this._onDataChange(this, film, newFilm);
+      // console.log(newFilm)
 
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
       //   isFavorite: !this.film.isFavorite,
@@ -137,11 +135,10 @@ export default class MovieController {
     this._cardPopupComponent.onWatchedClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(film);
-      newFilm.isWatched = !newFilm.isWatched;
-      newFilm.yourRating = null;
+      newFilm.isWatched = !film.isWatched;
+      newFilm.yourRating = ``;
       newFilm.isWatchedDate = !new Date();
       this._onDataChange(this, film, newFilm);
-
       // this._onDataChange(this, this.film, Object.assign({}, this.film, {
       //   isWatched: !this.film.isWatched,
       //   yourRating: null,
@@ -152,10 +149,9 @@ export default class MovieController {
     this._cardPopupComponent.onYourRatingClick((evt) => {
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
         const newFilm = FilmModel.clone(film);
-        newFilm.yourRating = document.getElementById(evt.target.htmlFor).value;
+        newFilm.yourRating = parseInt(document.getElementById(evt.target.htmlFor).value, 10);
         this._onDataChange(this, film, newFilm);
         // console.log(newFilm)
-
         // this._onDataChange(this, this.film, Object.assign({}, this.film, {
         //   yourRating: document.getElementById(evt.target.htmlFor).value,
         // }));
@@ -181,8 +177,8 @@ export default class MovieController {
         evt.preventDefault();
         if (evt.target.value.length > 0) {
           this._onDataChange(this, null, evt.target.value);
-          this._cardPopupComponent.update(this.film, this.film);
-          this._cardComponent.update(this.film);
+          // this._cardPopupComponent.update(this.film);
+          // this._cardComponent.update(this.film);
         }
       }
     });
@@ -191,9 +187,10 @@ export default class MovieController {
       // console.log(evt.target.closest(`.film-details__comment`));
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
       evt.preventDefault();
-      this._onDataChange(this, this.film, null);
-      this._cardPopupComponent.update(this.film, this.film);
-      this._cardComponent.update(this.film);
+      const newFilm = FilmModel.clone(film);
+      this._onDataChange(this, newFilm, null);
+      // this._cardPopupComponent.update(newFilm);
+      // this._cardComponent.update(newFilm);
     });
 
     switch (mode) {
@@ -207,7 +204,6 @@ export default class MovieController {
         }
         break;
       case Mode.ADDING:
-        // console.log(`hi`);
         if (oldPopup && oldCard) {
           replace(this._cardComponent, oldCard);
           replace(this._cardPopupComponent, oldPopup);
@@ -216,13 +212,6 @@ export default class MovieController {
         placeElement(this._container, this._cardPopupComponent, RenderPosition.AFTERBEGIN);
         break;
     }
-
-    // if (oldPopup && oldCard) {
-    //   replace(this._cardComponent, oldCard);
-    //   replace(this._cardPopupComponent, oldPopup);
-    // } else {
-    //   placeElement(container, this._cardComponent, RenderPosition.BEFOREEND);
-    // }
   }
 
   setDefaultView() {
@@ -234,11 +223,11 @@ export default class MovieController {
   }
 
   update(newData) {
-    const foo = parseFormData(newData);
-    this.film = foo;
+    // const foo = parseFormData(newData);
+    // this.film = foo;
     // this.comments = generateComments(newData.comments);
-    this._cardComponent.update(foo);
-    this._cardPopupComponent.update(this.film, foo);
+    this._cardComponent.update(newData);
+    this._cardPopupComponent.update(newData);
   }
 
   _onViewChange() {
@@ -260,10 +249,12 @@ export default class MovieController {
 
   _openPopup() {
     // console.log(`_openPopup`);
+    // this._cardPopupComponent.update(this.film);
     this._onViewChange();
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
     this._cardPopupComponent.setCloseHandler(() => this._closePopup());
+    this._cardPopupComponent.recoveryListeners();
     // document.addEventListener(`keydown`, this._closePopup);
     // this._cardPopupComponent.onEmojiClick();
     this._mode = Mode.OPENED;
@@ -285,24 +276,4 @@ export default class MovieController {
     remove(this._cardComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
-
-  // _addNewComment() {
-  //   this._onDataChange(this, null, Object.assign({
-  //     id: 999,
-  //     author: `Some User`,
-  //     emotion: this._popupComponent._emoji,
-  //     comment: this._popupComponent._currentComment,
-  //     date: generateDateNow()
-  //   }));
-  // }
-  //
-  // _onCtrlEnterKeyDown(evt) {
-  //   const ctrlEnter = (evt.ctrlKey || evt.metaKey) && (evt.key === `Enter` || evt.key === `Ent`);
-  //
-  //   if (ctrlEnter && this._popupComponent._currentComment && this._popupComponent._emoji) {
-  //     this._addNewComment();
-  //     this._popupComponent._currentComment = null;
-  //     this._popupComponent.rerender();
-  //   }
-  // }
 }

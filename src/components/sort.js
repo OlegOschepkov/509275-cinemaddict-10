@@ -45,7 +45,7 @@ export default class Filter extends AbstractSmartComponent {
       }
 
       this._currenSortType = sortType;
-
+      // console.log(this._currenSortType);
       handler(this._currenSortType);
       this.update(this._currenSortType);
       // this.rerender();
@@ -53,7 +53,6 @@ export default class Filter extends AbstractSmartComponent {
   }
 
   update() {
-    // console.log(this._currenSortType);
     this.getTemplate();
     this.rerender();
     this.recoveryListeners();

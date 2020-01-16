@@ -12,13 +12,11 @@ const getUniqItems = (item, index, array) => {
 };
 
 const calcUniqCountGenre = (films, genre) => {
-  return films.filter((it) => it.genre === genre).length;
+  return films.filter((it) => it === genre).length;
 };
 
 const renderChart = (colorsCtx, films) => {
-  const genres = films
-    .map((film) => film.genre)
-    .filter(getUniqItems);
+  const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
 
   Chart.defaults.scale.ticks.beginAtZero = true;
 
@@ -28,7 +26,7 @@ const renderChart = (colorsCtx, films) => {
     data: {
       labels: genres,
       datasets: [{
-        data: genres.map((genre) => calcUniqCountGenre(films, genre)),
+        data: films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).map((genre) => calcUniqCountGenre(films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)), genre)),
         backgroundColor: `#ffe125`
       }]
     },
@@ -101,12 +99,11 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const userLvl = user;
   const filmsCount = getWatchedFilms(films).length;
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
-  const min = parseInt((countDuration / (1000 * 60)) % 60, 10);
-  const hours = parseInt((countDuration / (1000 * 60 * 60)) % 24, 10);
-  const genres = films.slice().map((it) => it.genre);
-  // console.log(active)
-
+  const min = parseInt(countDuration % 60, 10);
+  const hours = parseInt((countDuration / 60) % 24, 10);
+  const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
   const favoriteGenre = getFavoriteGenre(genres);
+  // console.log(countDuration)
 
   return (
     `<section class="statistic">
@@ -172,6 +169,7 @@ export default class StatisticComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
+    // console.log(this._films)
     return createStatisticsTemplate({films: this._filteredFilms}, this._level, this._active);
   }
 

@@ -8,18 +8,6 @@ export const FilterType = {
   STATS: `STATS`
 };
 
-// function getKeyByValue(value) {
-//   return Object.keys(FilterType).find(key => FilterType[key] === value);
-// }
-
-// const getCountMarkup = (filterTag) => {
-//   const count = filterTag.length;
-//
-//   return (
-//     `${count ? `<span class="main-navigation__item-count">${count}</span>` : ``}`
-//   );
-// };
-
 const getFilterMarkup = (filter, isActive) => {
   const {name, count, link, type} = filter;
   // const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
@@ -83,10 +71,11 @@ export class FilterComponent extends AbstractSmartComponent {
   }
 
   onStatsClick(handler) {
+
     this._onStatsClick = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {
-
+      // console.log(handler)
       evt.preventDefault();
       if (evt.target.dataset.type === FilterType.STATS) {
         handler();

@@ -1,3 +1,5 @@
+// import FilmModel from "./film-model";
+
 export default class CommentsModel {
   constructor(data) {
     this.id = data.id;
@@ -7,11 +9,36 @@ export default class CommentsModel {
     this.emoji = data.emotion;
   }
 
+  toRAW() {
+    return {
+      'comment': this.text,
+      'author': `guest`,
+      'date': new Date(),
+      'emotion': this.emoji
+    };
+  }
+
+  // addComment(comment, id) {
+  //   return this._load({
+  //     url: `comments/${id.id}`,
+  //     method: Method.PUT,
+  //     body: JSON.stringify(CommentsModel.toRAW()),
+  //     headers: new Headers({'Content-Type': `application/json`})
+  //   })
+  //     .then((response) => response.json())
+  //     .then(FilmModel.parseFilm);
+  // }
+  //
+  // deleteComment(id) {
+  //   return this._load({url: `comments/${id}`, method: Method.DELETE});
+  // }
+
   static parseComment(data) {
     return new CommentsModel(data);
   }
 
   parseComments(data) {
+    // console.log(data)
     return data.map(CommentsModel.parseComment);
   }
 }
