@@ -1,4 +1,5 @@
 import FilmModel from "./models/film-model";
+import CommentsModel from "./models/comments-model";
 
 const Method = {
   GET: `GET`,
@@ -15,6 +16,14 @@ const checkStatus = (response) => {
   }
 };
 
+// const onError = (response) => {
+//   if (response.status >= 200 && response.status < 300) {
+//     return response;
+//   } else {
+//     throw new Error(`${response.status}: ${response.statusText}`);
+//   }
+// };
+
 const API = class {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -22,7 +31,6 @@ const API = class {
   }
 
   getFilms() {
-    // console.log('get')
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(FilmModel.parseFilms);
@@ -30,8 +38,7 @@ const API = class {
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
-      .then((response) => response.json())
-      .then(FilmModel.parseComments);
+      .then((response) => response.json());
   }
 
   updateFilm(id, data) {
@@ -53,6 +60,28 @@ const API = class {
       .catch((err) => {
         throw err;
       });
+  }
+
+  addComment(id, comment) {
+    const commentsModel = new CommentsModel(comment);
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.POST,
+      body: JSON.stringify(commentsModel.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(() => id);
+    // .then(CommentsModel.parseComments);
+  }
+
+  deleteComment(id, comment) {
+    return this._load({
+      url: `comments/${comment}`,
+      method: Method.DELETE,
+      // body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(() => id);
   }
 };
 

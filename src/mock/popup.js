@@ -113,7 +113,7 @@ const generatePopup = () => {
     nameOrigin: getRandomArrayItem(filmNamesOrigin),
     pegi: getRandomIntegerNumber(3, 18),
     rating: getRandomNumber(0, 10),
-    userRating: getRandomNumber(0, 10),
+    yourRating: getRandomNumber(0, 10),
     director: getUniqueNames(directors, 1, 2),
     screenwriter: getUniqueNames(screenwriters, 1, 3),
     actor: getUniqueNames(actors, 1, 10),

@@ -51,7 +51,6 @@ export default class FilterController {
 
   update() {
     const allFilms = this._filmsModel.getFilms();
-    // console.log('hiiiiiii')
 
     const filters = this._filters.map((filterType) => {
       return {
@@ -69,34 +68,6 @@ export default class FilterController {
     // this._filmsModel = newData;
     this._filterComponent.update(filters, this._activeFilterType);
   }
-
-  // _onDataChange() {
-  //   this.render();
-  // }
-
-  // update(container, newController) {
-  //
-  //   this._container = container;
-  //   const allFilms = newController.getFilms();
-  //
-  //   const filters = this._filters.map((filterType) => {
-  //     return {
-  //       name: filterType.name,
-  //       type: filterType.type,
-  //       count: getFilmsByFilter(allFilms, filterType.type).length,
-  //       checked: filterType.type === this._activeFilterType,
-  //       link: filterType.link,
-  //     };
-  //   });
-  //
-  //   const oldComponent = this._filterComponent;
-  //
-  //   this._filterComponent = new FilterComponent(filters);
-  //   this._filterComponent.onFilterChangeHandler(this._onFilterChange);
-  //
-  //   remove(oldComponent);
-  //   placeElement(this._container, this._filterComponent, RenderPosition.AFTERBEGIN);
-  // }
 
   _onFilterChange(filterType) {
     if (filterType === FilterType.STATS) {

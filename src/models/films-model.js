@@ -28,7 +28,7 @@ export default class FilmsModel {
   }
 
   setFilms(films) {
-    this._films = Array.from(films);
+    this._films = films;
   }
 
   updateFilm(id, newFilm) {
@@ -60,7 +60,7 @@ export default class FilmsModel {
   }
 
   addComment(comment, filmId) {
-    const index = this._films.findIndex((it) => it.id === filmId);
+    const index = this._films.findIndex((it) => it.id === filmId.film.id);
 
     if (index === -1) {
       return false;
@@ -71,18 +71,17 @@ export default class FilmsModel {
     const safeText = he.encode(comment);
     const newComment = {
       id: Math.random(),
-      text: safeText,
+      comment: safeText,
       author: `Guest`,
       date: randomDate(new Date(2010, 0, 1), new Date(), false),
-      emoji: thatFilm.yourEmoji ? thatFilm.yourEmoji : ``
+      emotion: thatFilm.yourEmoji ? thatFilm.yourEmoji : ``
     };
-    thatFilm.comments.unshift(newComment);
-
-    return true;
+    // thatFilm.comments.unshift(newComment);
+    // здесь отправить на сервер
+    return newComment;
   }
 
   removeComment(film, commentId) {
-
     const index = this._films.findIndex((it) => it.id === film.id);
 
     if (index === -1) {
@@ -91,14 +90,15 @@ export default class FilmsModel {
 
     const thatFilm = this._films[index];
 
-    const indexComment = thatFilm.comments.findIndex((comment) => comment.id === Number(commentId));
+    const indexComment = thatFilm.comments.findIndex((comment) => comment.id === commentId);
 
     if (indexComment === -1) {
       return false;
     }
 
     thatFilm.comments = [].concat(thatFilm.comments.slice(0, indexComment), thatFilm.comments.slice(indexComment + 1));
+    // console.log(thatFilm.comments)
 
-    return true;
+    return commentId;
   }
 }
