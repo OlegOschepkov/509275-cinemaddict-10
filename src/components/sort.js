@@ -55,7 +55,7 @@ export default class Filter extends AbstractSmartComponent {
   update() {
     this.getTemplate();
     this.rerender();
-    this.recoveryListeners();
+    // this.recoveryListeners();
   }
 
   recoveryListeners() {

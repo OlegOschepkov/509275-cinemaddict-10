@@ -9,6 +9,7 @@ import MovieController, {Mode as MovieControllerMode} from "./movie-controller";
 // import CommentsModel from "../models/comments-model";
 // import FilterController from "../contoller/filter-controller";
 import {generateExtra} from "../mock/extra";
+import CommentsModel from "../models/comments-model";
 // import StatisticComponent from "../components/statistic";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -16,10 +17,10 @@ const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 const EXTRA_COUNT = 2;
 const EXTRA_FILMS_COUNT = 2;
 
-const renderFilms = (filmListElement, films, onDataChange, onViewChange) => {
+const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) => {
   // console.log(films);
   return films.map((film) => {
-    const filmController = new MovieController(filmListElement, onDataChange, onViewChange);
+    const filmController = new MovieController(filmListElement, onDataChange, onViewChange, api);
     // api.getComments(film.id)
     //   .then((comments) => {
     //     const commentsModel = new CommentsModel(comments);
@@ -151,23 +152,48 @@ export default class pageController {
   _onDataChange(movieController, oldData, newData) {
     if (newData === null) {
       // this._filmsModel.removeComment(oldData, movieController._commentId);
-      this._api.deleteComment(movieController.film.id, this._filmsModel.removeComment(oldData, movieController._commentId))
-        .then((filmModel) => {
-          this._api.getComments(filmModel.id)
+      this._api.deleteComment(movieController.film.id, oldData)
+        .then((filmId) => {
+          this._api.getComments(filmId)
             .then((comments) => {
-              filmModel.comments = comments;
-              movieController.update(filmModel);
-              this._filterController.update();
+              const newComments = CommentsModel.parseComments(comments);
+              movieController.update(movieController.film, newComments);
+
+              // this._cardPopupComponent.update(this.film, this.comments);
+
+              // filmModel.comments = comments;
+              // movieController.update(filmModel);
+              // this._filterController.update();
+            })
+            .catch(() => {
+              movieController.shake();
             });
         });
+
+      // .then((filmModel) => {
+      //   this._api.getComments(filmModel.id)
+      //     .then((comments) => {
+      //       filmModel.comments = comments;
+      //       movieController.update(filmModel);
+      //       this._filterController.update();
+      //     });
+      // });
     } else if (oldData === null) {
+      // movieController.toggleDisable();
       this._api.addComment(movieController.film.id, this._filmsModel.addComment(newData, movieController))
-        .then((filmModel) => {
-          this._api.getComments(filmModel.id)
+        .then((filmId) => {
+          this._api.getComments(filmId)
             .then((comments) => {
-              filmModel.comments = comments;
-              movieController.update(filmModel);
-              this._filterController.update();
+              const newComments = CommentsModel.parseComments(comments);
+              movieController.update(movieController.film, newComments);
+              // this._cardPopupComponent.update(this.film, this.comments);
+
+              // filmModel.comments = comments;
+              // movieController.update(filmModel);
+              // this._filterController.update();
+            })
+            .catch(() => {
+              movieController.shake();
             });
         });
     } else {

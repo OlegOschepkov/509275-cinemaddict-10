@@ -13,7 +13,7 @@ import {placeElement, RenderPosition} from "./utils/render";
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
 import FilmsModel from "./models/films-model";
-import CommentsModel from "./models/comments-model";
+// import CommentsModel from "./models/comments-model";
 // import {Mode as MovieControllerMode} from "./contoller/movie-controller";
 // import {FilterComponent} from "./components/filter";
 
@@ -43,13 +43,13 @@ placeElement(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 
 api.getFilms()
   .then((films) => {
-    films.map((it) => {
-      api.getComments(it.id)
-        .then((comments) => {
-          const commentsModel = new CommentsModel(comments);
-          it.comments = commentsModel.parseComments(comments);
-        });
-    });
+    // films.map((it) => {
+    //   api.getComments(it.id)
+    //     .then((comments) => {
+    //       const commentsModel = new CommentsModel(comments);
+    //       it.comments = commentsModel.parseComments(comments);
+    //     });
+    // });
     // console.log(films)
     filmsModel.setFilms(films);
     filterController.update();

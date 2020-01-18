@@ -16,6 +16,14 @@ const checkStatus = (response) => {
   }
 };
 
+// const onError = (response) => {
+//   if (response.status >= 200 && response.status < 300) {
+//     return response;
+//   } else {
+//     throw new Error(`${response.status}: ${response.statusText}`);
+//   }
+// };
+
 const API = class {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -34,7 +42,6 @@ const API = class {
   }
 
   updateFilm(id, data) {
-    // console.log(JSON.stringify(data.toRAW()));
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
@@ -57,29 +64,24 @@ const API = class {
 
   addComment(id, comment) {
     const commentsModel = new CommentsModel(comment);
-    // console.log(JSON.stringify(commentsModel.toRAW()));
     return this._load({
       url: `comments/${id}`,
-      method: Method.PUT,
+      method: Method.POST,
       body: JSON.stringify(commentsModel.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => response.json())
-      .then(FilmModel.parseFilm);
+      .then(() => id);
+    // .then(CommentsModel.parseComments);
   }
 
   deleteComment(id, comment) {
-    // console.log(comment);
     return this._load({
-      url: `comments/${id}`,
+      url: `comments/${comment}`,
       method: Method.DELETE,
-      body: JSON.stringify(comment),
+      // body: JSON.stringify(comment),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then((response) => response.json())
-      .then(FilmModel.parseFilm);
-
-    // return this._load({url: `comments/${id}`, method: Method.DELETE});
+      .then(() => id);
   }
 };
 

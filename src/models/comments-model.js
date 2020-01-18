@@ -11,10 +11,11 @@ export default class CommentsModel {
 
   toRAW() {
     return {
+      // 'id': 11111111,
       'comment': this.text,
-      'author': `guest`,
+      // 'author': `guest`,
       'date': new Date(),
-      'emotion': this.emoji
+      'emotion': `smile`
     };
   }
 
@@ -37,8 +38,13 @@ export default class CommentsModel {
     return new CommentsModel(data);
   }
 
-  parseComments(data) {
+  static parseComments(data) {
     // console.log(data)
-    return data.map(CommentsModel.parseComment);
+    if (data.length) {
+      return data.map(CommentsModel.parseComment);
+    } else {
+      // console.log([].push(data))
+      return new CommentsModel(data);
+    }
   }
 }

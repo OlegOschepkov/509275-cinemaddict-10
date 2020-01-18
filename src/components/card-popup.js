@@ -41,13 +41,15 @@ const getCommentMarkup = (comment) => {
 //   };
 // };
 
-const getCardPopupTemplate = (film) => {
-  const {poster, name, isFavorite, isWatched, isWatchList, yourRating, yourEmoji, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre, comments} = film;
+const getCardPopupTemplate = (film, comments, emoji) => {
+  const {poster, name, isFavorite, isWatched, isWatchList, yourRating, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = film;
   let commentMarkup = ``;
-  if (comments.length > 0) {
+  let commentsLength = 0;
+  const yourEmoji = emoji;
+  if (comments && comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
+    commentsLength = comments.length;
   }
-  const commentsLength = comments.length;
   // const genreList = genre.split(`, `);
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
   const durationHumanReadable = getHumanRadableDuration(duration);
@@ -225,28 +227,28 @@ const getCardPopupTemplate = (film) => {
 };
 
 export default class CardPopup extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
-    // this._comments = film.comments;
+    this._comments = comments;
     // this._popupData = this._film;
     this._deleteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return getCardPopupTemplate(this._film);
+    return getCardPopupTemplate(this._film, this._comments);
   }
 
-  update(film) {
+  update(film, comments) {
     this._film = film;
-    // this._comments = film.comments;
+    this._comments = comments;
     // this._popupData = film;
     this.rerender();
-    this.recoveryListeners();
+    // this.recoveryListeners();
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`, this.getElement());
+    // console.log(`recoveryListeners`);
     // console.log(this.getElement().querySelector(`.film-details__control-label--watchlist`), this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
@@ -254,9 +256,11 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._setCloseHandler);
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._onEmojiClick);
     this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, this._onYourRatingClick);
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`click`, this._ontSubmitHandler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._ontSubmitHandler);
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
-      this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteButtonClickHandler);
+      [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
+        it.addEventListener(`click`, this._deleteButtonClickHandler);
+      });
     }
   }
 
@@ -298,12 +302,18 @@ export default class CardPopup extends AbstractSmartComponent {
   onDeleteButtonClickHandler(handler) {
     this._deleteButtonClickHandler = handler;
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
-      this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, handler);
+      [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
+        it.addEventListener(`click`, handler);
+      });
     }
   }
 
   removeElement() {
     super.removeElement();
+  }
+
+  disableToggle() {
+    this.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`readonly`, true);
   }
 
   // onDeleteClick(handler) {

@@ -62,7 +62,7 @@ export class FilterComponent extends AbstractSmartComponent {
     this._active = isActive;
     this.getTemplate();
     this.rerender();
-    this.recoveryListeners();
+    // this.recoveryListeners();
   }
 
   recoveryListeners() {

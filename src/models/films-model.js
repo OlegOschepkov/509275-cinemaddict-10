@@ -82,8 +82,6 @@ export default class FilmsModel {
   }
 
   removeComment(film, commentId) {
-    // console.log(commentId)
-
     const index = this._films.findIndex((it) => it.id === film.id);
 
     if (index === -1) {
