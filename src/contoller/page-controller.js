@@ -165,11 +165,10 @@ export default class pageController {
               // movieController.update(filmModel);
               // this._filterController.update();
             })
-            .catch(() => {
-              movieController.shake();
-            });
+        })
+        .catch(() => {
+          movieController.shake(true);
         });
-
       // .then((filmModel) => {
       //   this._api.getComments(filmModel.id)
       //     .then((comments) => {
@@ -192,10 +191,11 @@ export default class pageController {
               // movieController.update(filmModel);
               // this._filterController.update();
             })
-            .catch(() => {
-              movieController.shake();
-            });
+        })
+        .catch(() => {
+          movieController.shake(true);
         });
+
     } else {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
@@ -211,12 +211,17 @@ export default class pageController {
                 filmModel.comments = comments;
                 movieController.update(filmModel);
                 this._filterController.update();
-              });
+              })
+
             // this._filterController.update();
 
             // this._renderFilms(this._films);
           }
+        })
+        .catch(() => {
+          movieController.shake();
         });
+
       // const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
       // if (isSuccess) {
       //   movieController.update(newData);

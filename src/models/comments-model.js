@@ -15,7 +15,7 @@ export default class CommentsModel {
       'comment': this.text,
       // 'author': `guest`,
       'date': new Date(),
-      'emotion': `smile`
+      'emotion': this.emoji
     };
   }
 

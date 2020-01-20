@@ -19,8 +19,6 @@ export default class FilterController {
   }
 
   render() {
-    // console.log('hiiiiiii2')
-
     const container = this._container;
     const allFilms = this._filmsModel.getFilms();
     // console.log(allFilms)

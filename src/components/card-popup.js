@@ -7,6 +7,14 @@ const getGenreMarkup = (genreSingle) => {
   );
 };
 
+const emojiList = {
+  DEFAULT: ``,
+  SMILE: `smile`,
+  GPUKE: `puke`,
+  SLEEPING: `sleeping`,
+  ANGRY: `angry`
+};
+
 const getCommentMarkup = (comment) => {
   const {id, text, author, date, emoji} = comment;
 
@@ -44,6 +52,10 @@ const getCommentMarkup = (comment) => {
 const getCardPopupTemplate = (film, comments, emoji) => {
   const {poster, name, isFavorite, isWatched, isWatchList, yourRating, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = film;
   let commentMarkup = ``;
+  // let yourEmoji = ``;
+  // if (emoji) {
+  //   yourEmoji = emoji;
+  // }
   let commentsLength = 0;
   const yourEmoji = emoji;
   if (comments && comments.length > 0) {
@@ -191,7 +203,7 @@ const getCardPopupTemplate = (film, comments, emoji) => {
               </ul>
 
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="${yourEmoji}" width="30" height="30" alt="emoji">` : ``}</div>
+                <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="./images/emoji/${yourEmoji}.png" width="30" height="30" alt="emoji">` : ``}</div>
 
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -231,18 +243,19 @@ export default class CardPopup extends AbstractSmartComponent {
     super();
     this._film = film;
     this._comments = comments;
-    // this._popupData = this._film;
+    this._emoji = ``;
+    // this._emoji = emoji;
     this._deleteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return getCardPopupTemplate(this._film, this._comments);
+    return getCardPopupTemplate(this._film, this._comments, this._emoji);
   }
 
   update(film, comments) {
     this._film = film;
     this._comments = comments;
-    // this._popupData = film;
+    // this._emoji = emoji;
     this.rerender();
     // this.recoveryListeners();
   }
@@ -314,6 +327,12 @@ export default class CardPopup extends AbstractSmartComponent {
 
   disableToggle() {
     this.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`readonly`, true);
+  }
+
+  setEmoji(emoji) {
+    this._emoji = emoji;
+    this.rerender();
+    this._emoji = ``;
   }
 
   // onDeleteClick(handler) {

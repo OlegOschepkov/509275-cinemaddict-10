@@ -1,5 +1,5 @@
-import FilmModel from "./models/film-model";
-import CommentsModel from "./models/comments-model";
+import FilmModel from "../models/film-model";
+import CommentsModel from "../models/comments-model";
 
 const Method = {
   GET: `GET`,
@@ -24,7 +24,7 @@ const checkStatus = (response) => {
 //   }
 // };
 
-const API = class {
+export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -33,7 +33,8 @@ const API = class {
   getFilms() {
     return this._load({url: `movies`})
       .then((response) => response.json())
-      .then(FilmModel.parseFilms);
+      .then(FilmModel.parseFilms)
+      // .then((films) => Promise.all(films.map((film) => this.getComments(film.id))));
   }
 
   getComments(id) {
@@ -52,6 +53,16 @@ const API = class {
       .then(FilmModel.parseFilm);
   }
 
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
@@ -64,6 +75,7 @@ const API = class {
 
   addComment(id, comment) {
     const commentsModel = new CommentsModel(comment);
+    console.log(JSON.stringify(commentsModel.toRAW()))
     return this._load({
       url: `comments/${id}`,
       method: Method.POST,
@@ -84,5 +96,3 @@ const API = class {
       .then(() => id);
   }
 };
-
-export default API;

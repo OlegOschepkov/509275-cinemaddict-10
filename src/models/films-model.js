@@ -66,15 +66,15 @@ export default class FilmsModel {
       return false;
     }
 
-    const thatFilm = this._films[index];
+    // const thatFilm = this._films[index];
 
     const safeText = he.encode(comment);
     const newComment = {
-      id: Math.random(),
+      // id: Math.random(),
       comment: safeText,
-      author: `Guest`,
+      // author: `Guest`,
       date: randomDate(new Date(2010, 0, 1), new Date(), false),
-      emotion: thatFilm.yourEmoji ? thatFilm.yourEmoji : ``
+      emotion: filmId.yourEmoji
     };
     // thatFilm.comments.unshift(newComment);
     // здесь отправить на сервер

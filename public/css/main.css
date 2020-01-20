@@ -1076,7 +1076,6 @@ button {
   padding-top: 50px;
   padding-bottom: 50px;
 }
-
 @keyframes shake {
   0%,
   100% {
@@ -1100,4 +1099,15 @@ button {
   }
 .shake {
   animation: shake 0.6s;
+  }
+.blocking {
+  pointer-events: none;
+  }
+.film-details__user-rating-score.blocking {
+  background-color: var(--text-color-poor);
+  }
+.film-details__comment-input.blocking {
+  -webkit-box-shadow: 0 0 3px 2px var(--text-color-poor);
+  -moz-box-shadow: 0 0 3px 2px var(--text-color-poor);
+  box-shadow: 0 0 3px 2px var(--text-color-poor);
   }
