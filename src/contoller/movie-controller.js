@@ -224,17 +224,17 @@ export default class MovieController {
     // console.log('shake');
     this._cardPopupComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     this._cardComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    // if (isComment) {
-    //   this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.add('error-comments');
-    // }
+    if (isComment) {
+      this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.add('error-comments');
+    }
     this.toggleDisable();
 
     setTimeout(() => {
       this._cardPopupComponent.getElement().style.animation = ``;
       this._cardComponent.getElement().style.animation = ``;
-      // if (isComment) {
-      //   this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.remove('error-comments');
-      // }
+      if (isComment) {
+        this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.remove('error-comments');
+      }
       this.toggleDisable();
 
     }, SHAKE_ANIMATION_TIMEOUT);

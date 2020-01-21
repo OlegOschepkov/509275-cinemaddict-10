@@ -34,12 +34,12 @@ export default class API {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(FilmModel.parseFilms)
-      // .then((films) => Promise.all(films.map((film) => this.getComments(film.id))));
   }
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(CommentsModel.parseComments) // вохможно лишняя
   }
 
   updateFilm(id, data) {

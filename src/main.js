@@ -1,6 +1,6 @@
 import Api from "./api/index";
-// import Store from './api/store.js';
-// import Provider from './api/provider.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 import FilterController from "./contoller/filter-controller";
 import BoardComponent from "./components/board";
 import FooterComponent from "./components/footer";
@@ -21,12 +21,12 @@ import FilmsModel from "./models/films-model";
 
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
-// const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic olegoschepkov`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const api = new Api(END_POINT, AUTHORIZATION);
-// const store = new Store(STORE_NAME, window.localStorage);
-// const apiWithProvider = new Provider(api, store);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
@@ -57,7 +57,7 @@ const boardBlock = new BoardComponent();
 
 placeElement(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     // films.map((it) => {
     //   api.getComments(it.id)
@@ -72,7 +72,7 @@ api.getFilms()
     const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()}, userBlock);
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
     statisticBlock.hide();
-    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, api);
+    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider);
     boardController.render();
     filterController.onStatsClick(boardController.toggleVisibility);
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);

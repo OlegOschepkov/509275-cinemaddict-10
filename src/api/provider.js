@@ -17,32 +17,16 @@ export default class Provider {
       return this._api.getFilms().then(
         (films) => {
           films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
-          // films.forEach((film) => {
-          //   return this._api.getComments(film.id).then(
-          //     (comments) => {
-          //       comments.forEach((comment) => film.comments = comment);
-          //       return films;
-          //     }
-          //   );
-          // });
           return films;
         }
       )
-      // .then((films) => {
-      //     films.forEach((film) => {
-      //       return this._api.getComments(film.id).then(
-      //         (comments) => {
-      //           comments.forEach((comment) => film.comments = comment);
-      //           return films;
-      //         }
-      //       );
-      //     });
-      //   });
     }
 
     const storeFilms = Object.values(this._store.getAll());
 
     this._isSynchronized = false;
+
+    // console.log(storeFilms)
 
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
@@ -50,18 +34,19 @@ export default class Provider {
   getComments(id) {
     if (this._isOnLine()) {
       return this._api.getComments(id).then(
-        (films) => {
-          films.forEach((film) => this._store.setItem(id, film.toRAW()));
-          return films;
+        (comments) => {
+          console.log(this._store.getAll()[id].comments)
+          comments.forEach((comment) => this._store.setItem(this._store.getAll()[id].comments, comment.toRAW()));
+          return comments;
         }
       );
     }
 
-    const storeFilms = Object.values(this._store.getAll());
+    const storeComments = Object.values(this._store.getAll());
 
     this._isSynchronized = false;
 
-    return Promise.resolve(CommentsModel.parseComments(storeFilms));
+    return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
   updateFilm(id, data) {
@@ -93,6 +78,7 @@ export default class Provider {
     }
 
     const fakeNewCommentId = nanoid();
+    console.log(comment)
     const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
     this._isSynchronized = false;
 

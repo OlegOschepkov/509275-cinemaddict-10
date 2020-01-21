@@ -1103,10 +1103,10 @@ button {
 .blocking {
   pointer-events: none;
   }
-.film-details__user-rating-score.blocking {
+.film-details__user-rating-score.error-comments {
   background-color: var(--text-color-poor);
   }
-.film-details__comment-input.blocking {
+.film-details__comment-input.error-comments {
   -webkit-box-shadow: 0 0 3px 2px var(--text-color-poor);
   -moz-box-shadow: 0 0 3px 2px var(--text-color-poor);
   box-shadow: 0 0 3px 2px var(--text-color-poor);
