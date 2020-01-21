@@ -225,7 +225,7 @@ export default class MovieController {
     this._cardPopupComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     this._cardComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     if (isComment) {
-      this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.add('error-comments');
+      this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.add(`error-comments`);
     }
     this.toggleDisable();
 
@@ -233,7 +233,7 @@ export default class MovieController {
       this._cardPopupComponent.getElement().style.animation = ``;
       this._cardComponent.getElement().style.animation = ``;
       if (isComment) {
-        this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.remove('error-comments');
+        this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.remove(`error-comments`);
       }
       this.toggleDisable();
 

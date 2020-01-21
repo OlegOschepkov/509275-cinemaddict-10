@@ -33,13 +33,13 @@ export default class API {
   getFilms() {
     return this._load({url: `movies`})
       .then((response) => response.json())
-      .then(FilmModel.parseFilms)
+      .then(FilmModel.parseFilms);
   }
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
       .then((response) => response.json())
-      .then(CommentsModel.parseComments) // вохможно лишняя
+      .then(CommentsModel.parseComments); // вохможно лишняя
   }
 
   updateFilm(id, data) {
@@ -75,7 +75,7 @@ export default class API {
 
   addComment(id, comment) {
     const commentsModel = new CommentsModel(comment);
-    console.log(JSON.stringify(commentsModel.toRAW()))
+    // console.log(JSON.stringify(commentsModel.toRAW()))
     return this._load({
       url: `comments/${id}`,
       method: Method.POST,
@@ -95,4 +95,4 @@ export default class API {
     })
       .then(() => id);
   }
-};
+}

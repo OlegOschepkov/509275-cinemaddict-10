@@ -7,13 +7,13 @@ const getGenreMarkup = (genreSingle) => {
   );
 };
 
-const emojiList = {
-  DEFAULT: ``,
-  SMILE: `smile`,
-  GPUKE: `puke`,
-  SLEEPING: `sleeping`,
-  ANGRY: `angry`
-};
+// const emojiList = {
+//   DEFAULT: ``,
+//   SMILE: `smile`,
+//   GPUKE: `puke`,
+//   SLEEPING: `sleeping`,
+//   ANGRY: `angry`
+// };
 
 const getCommentMarkup = (comments) => {
   const {id, comment, author, date, emotion} = comments;

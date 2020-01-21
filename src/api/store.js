@@ -18,10 +18,10 @@ export default class Store {
     const store = this.getAll();
 
     this._storage.setItem(
-      this._storeKey,
-      JSON.stringify(
-        Object.assign({}, store, {[key]: value})
-      )
+        this._storeKey,
+        JSON.stringify(
+            Object.assign({}, store, {[key]: value})
+        )
     );
   }
 
@@ -31,10 +31,10 @@ export default class Store {
     delete store[key];
 
     this._storage.setItem(
-      this._storeKey,
-      JSON.stringify(
-        Object.assign({}, store)
-      )
+        this._storeKey,
+        JSON.stringify(
+            Object.assign({}, store)
+        )
     );
   }
 }

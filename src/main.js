@@ -34,7 +34,7 @@ window.addEventListener(`load`, () => {
       // Действие, в случае успешной регистрации ServiceWorker
     }).catch(() => {
     // Действие, в случае ошибки при регистрации ServiceWorker
-  });
+    });
 });
 
 const bodyBlock = document.querySelector(`body`);
@@ -85,11 +85,11 @@ window.addEventListener(`online`, () => {
     apiWithProvider.sync()
       .then(() => {
         // Действие, в случае успешной синхронизации
-        console.log('successfully sync')
+        // console.log('successfully sync')
       })
       .catch(() => {
         // Действие, в случае ошибки синхронизации
-        console.log('failed sync')
+        // console.log('failed sync')
       });
   }
 });

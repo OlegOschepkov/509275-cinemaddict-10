@@ -164,7 +164,7 @@ export default class pageController {
               // filmModel.comments = comments;
               // movieController.update(filmModel);
               // this._filterController.update();
-            })
+            });
         })
         .catch(() => {
           movieController.shake(true);
@@ -190,7 +190,7 @@ export default class pageController {
               // filmModel.comments = comments;
               // movieController.update(filmModel);
               // this._filterController.update();
-            })
+            });
         })
         .catch(() => {
           movieController.shake(true);
@@ -211,7 +211,7 @@ export default class pageController {
                 filmModel.comments = comments;
                 movieController.update(filmModel);
                 this._filterController.update();
-              })
+              });
 
             // this._filterController.update();
 

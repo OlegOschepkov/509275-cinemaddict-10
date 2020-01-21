@@ -15,11 +15,11 @@ export default class Provider {
   getFilms() {
     if (this._isOnLine()) {
       return this._api.getFilms().then(
-        (films) => {
-          films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
-          return films;
-        }
-      )
+          (films) => {
+            films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
+            return films;
+          }
+      );
     }
 
     const storeFilms = Object.values(this._store.getAll());
@@ -34,11 +34,11 @@ export default class Provider {
   getComments(id) {
     if (this._isOnLine()) {
       return this._api.getComments(id).then(
-        (comments) => {
-          console.log(this._store.getAll()[id].comments)
-          comments.forEach((comment) => this._store.setItem(this._store.getAll()[id].comments, comment.toRAW()));
-          return comments;
-        }
+          (comments) => {
+            // console.log(this._store.getAll()[id].comments)
+            comments.forEach((comment) => this._store.setItem(this._store.getAll()[id].comments, comment.toRAW()));
+            return comments;
+          }
       );
     }
 
@@ -52,14 +52,14 @@ export default class Provider {
   updateFilm(id, data) {
     if (this._isOnLine()) {
       return this._api.updateFilm(id, data).then(
-        (newData) => {
-          this._store.setItem(newData.id, newData.toRAW());
-          return newData;
-        }
+          (newData) => {
+            this._store.setItem(newData.id, newData.toRAW());
+            return newData;
+          }
       );
     }
 
-    const fakeUpdatedFilm  = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
+    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
@@ -70,15 +70,15 @@ export default class Provider {
   addComment(id, comment) {
     if (this._isOnLine()) {
       return this._api.addComment(id, comment).then(
-        (newComment) => {
-          this._store.setItem(newComment.id, newComment.toRAW());
-          return newComment;
-        }
+          (newComment) => {
+            this._store.setItem(newComment.id, newComment.toRAW());
+            return newComment;
+          }
       );
     }
 
     const fakeNewCommentId = nanoid();
-    console.log(comment)
+    // console.log(comment)
     const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
     this._isSynchronized = false;
 
@@ -90,9 +90,9 @@ export default class Provider {
   deleteComment(id, comment) {
     if (this._isOnLine()) {
       return this._api.deleteComment(id, comment).then(
-        () => {
-          this._store.removeItem(id, comment);
-        }
+          () => {
+            this._store.removeItem(id, comment);
+          }
       );
     }
 
