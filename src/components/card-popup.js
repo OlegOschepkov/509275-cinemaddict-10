@@ -62,6 +62,7 @@ const getCardPopupTemplate = (film, comments, emoji) => {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
     commentsLength = comments.length;
   } else {
+
     // как то узнать есть ли сеть и тогда ноль, иначе заглушка.
   }
   // const genreList = genre.split(`, `);
@@ -195,10 +196,11 @@ const getCardPopupTemplate = (film, comments, emoji) => {
             </section>
           </div>
 
-
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
-              <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>
+            ${commentsLength ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` :
+            `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`
+            }
 
               <ul class="film-details__comments-list">
                   ${commentMarkup}

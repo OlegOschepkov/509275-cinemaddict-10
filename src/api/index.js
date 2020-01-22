@@ -39,10 +39,11 @@ export default class API {
   getComments(id) {
     return this._load({url: `comments/${id}`})
       .then((response) => response.json())
-      .then(CommentsModel.parseComments); // вохможно лишняя
+      .then(CommentsModel.parseComments);
   }
 
   updateFilm(id, data) {
+    // console.log(data)
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,

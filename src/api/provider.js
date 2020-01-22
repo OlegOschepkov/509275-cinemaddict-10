@@ -1,4 +1,4 @@
-// import nanoid from "nanoid";
+import nanoid from "nanoid";
 import FilmModel from "../models/film-model";
 import CommentsModel from "../models/comments-model";
 
@@ -27,7 +27,7 @@ export default class Provider {
     });
     const storeFilms = foo.map((it) => this._store.getAll()[it]);
     this._isSynchronized = false;
-
+    // console.log(this._store.getAll())
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
 
@@ -59,14 +59,11 @@ export default class Provider {
       );
     }
 
-    // console.log(Object.assign({}, data.toRAW(), {id}))
-
     const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
-
-    // console.log(fakeUpdatedFilm)
+    // console.log(this._store.getAll())
 
     return Promise.resolve(fakeUpdatedFilm);
   }
@@ -76,14 +73,13 @@ export default class Provider {
       return this._api.addComment(id, comment);
     }
 
-    // const fakeNewCommentId = nanoid();
-    // // console.log(comment)
-    // const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
-    // this._isSynchronized = false;
-    //
-    // this._store.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
-    //
-    // return Promise.resolve(fakeNewComment);
+    const fakeNewCommentId = nanoid();
+    const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
+    this._isSynchronized = false;
+
+    this._store.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
+
+    return Promise.resolve(fakeNewComment);
   }
 
   deleteComment(id, comment) {

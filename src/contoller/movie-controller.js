@@ -38,7 +38,7 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this.film = null;
     this._commentId = null;
-    this.comments = null;
+    this._comments = null;
   }
 
   renderCard(film, mode) {
@@ -50,12 +50,12 @@ export default class MovieController {
     this._cardPopupComponent = new CardPopupComponent(this.film);
 
     this._cardComponent.onShowPopupClick(() => {
-      if (this.comments === null) {
+      if (this._comments === null) {
         this._api.getComments(this.film.id)
           .then((comments) => {
             // const commentsModel = new CommentsModel(comments);
-            this.comments = CommentsModel.parseComments(comments);
-            this._cardPopupComponent.update(this.film, this.comments);
+            this._comments = CommentsModel.parseComments(comments);
+            this._cardPopupComponent.update(this.film, this._comments);
             this._openPopup();
           });
       } else {
@@ -66,7 +66,6 @@ export default class MovieController {
 
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
-      // console.log(this.film)
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatchList = !this.film.isWatchList;
       this._onDataChange(this, this.film, newFilm);

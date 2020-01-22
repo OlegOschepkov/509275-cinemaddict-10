@@ -119,7 +119,6 @@ export default class pageController {
   _renderFilms(films) {
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
     const newFilms = renderFilms(listContainer, films, this._onDataChange, this._onViewChange, this._api);
-    // console.log(films);
     this._showedFilms = this._showedFilms.concat(newFilms);
     this._showingFilmsCount = this._showedFilms.length;
   }
@@ -145,6 +144,7 @@ export default class pageController {
 
   _onDataChange(movieController, oldData, newData) {
     if (newData === null) {
+      console.log('newData === null')
       this._api.deleteComment(movieController.film.id, oldData)
         .then((filmId) => {
           this._api.getComments(filmId)
@@ -157,6 +157,8 @@ export default class pageController {
           movieController.shake(true);
         });
     } else if (oldData === null) {
+      console.log('oldData === null')
+
       this._api.addComment(movieController.film.id, this._filmsModel.addComment(newData, movieController))
         .then((filmId) => {
           this._api.getComments(filmId)
@@ -172,17 +174,16 @@ export default class pageController {
     } else {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
-          // console.log(filmModel)
-          const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+          this._filmsModel.updateFilm(oldData.id, filmModel);
 
-          if (isSuccess) {
-            this._api.getComments(filmModel.id)
-              .then((comments) => {
-                filmModel.comments = comments;
-                movieController.update(filmModel);
-                this._filterController.update();
-              });
-          }
+          // if (isSuccess) {
+          //   this._api.getComments(filmModel.id)
+          //     .then((comments) => {
+          //       filmModel.comments = comments;
+          //       movieController.update(filmModel);
+          //       this._filterController.update();
+          //     });
+          // }
         })
         .catch(() => {
           movieController.shake();
@@ -215,6 +216,8 @@ export default class pageController {
 
     this._removeFilms();
     this._renderFilms(sortedFilms);
+    console.log(this._films);
+
 
     if (sortType === SortType.DEFAULT) {
       this._renderLoadMoreButton();

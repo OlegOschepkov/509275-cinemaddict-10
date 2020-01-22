@@ -1111,3 +1111,8 @@ button {
   -moz-box-shadow: 0 0 3px 2px var(--text-color-poor);
   box-shadow: 0 0 3px 2px var(--text-color-poor);
   }
+.shake-infinite {
+  animation: shake 3s;
+  animation-iteration-count: infinite;
+  color: var(--text-color-poor);
+  }
