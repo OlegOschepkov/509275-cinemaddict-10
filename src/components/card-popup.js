@@ -1,5 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getHumanRadableDuration} from "../utils/utils";
+import debounce from "lodash/debounce";
+import moment from "moment";
+
+const DEBOUNCE_TIMEOUT = 300;
 
 const getGenreMarkup = (genreSingle) => {
   return (
@@ -18,6 +22,36 @@ const getGenreMarkup = (genreSingle) => {
 const getCommentMarkup = (comments) => {
   const {id, comment, author, date, emotion} = comments;
 
+  const time = {
+    days: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).days()),
+    hours: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).hours()),
+    minutes: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).minutes()),
+    seconds: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).seconds())
+  };
+
+  const humanize = (timeObj) => {
+    let humanizedString;
+    if (timeObj.days >= 2) {
+      humanizedString = `a few day ago`;
+    } else if (timeObj.days > 0 && timeObj.days < 2) {
+      humanizedString = `a day ago`;
+    } else if (timeObj.hours >= 2 && timeObj.hours < 24) {
+      humanizedString = `a few hour ago`;
+    } else if (timeObj.hours > 0 && timeObj.hours < 2) {
+      humanizedString = `a hour ago`;
+    } else if (timeObj.minutes > 2 && timeObj.minutes < 60) {
+      humanizedString = `a few minutes ago`;
+    } else if (timeObj.minutes > 1 && timeObj.minutes < 3) {
+      humanizedString = `a minute ago`;
+    } else if (timeObj.seconds > 0 && timeObj.seconds < 60) {
+      humanizedString = `now`;
+    }
+
+    return humanizedString;
+  };
+
+  const humanizedDate = humanize(time);
+
   return (
     `<li class="film-details__comment" data-id="${id}">
       ${emotion ? `<span class="film-details__comment-emoji">
@@ -27,7 +61,7 @@ const getCommentMarkup = (comments) => {
           <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
-             <span class="film-details__comment-day">${date}</span>
+             <span class="film-details__comment-day">${humanizedDate}</span>
              <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -286,39 +320,39 @@ export default class CardPopup extends AbstractSmartComponent {
 
   onWatchListClick(handler) {
     this._onWatchListClick = handler;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onFavoriteClick(handler) {
     this._onFavoriteClick = handler;
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onWatchedClick(handler) {
     this._onWatchedClick = handler;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onEmojiClick(handler) {
     this._onEmojiClick = handler;
-    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onYourRatingClick(handler) {
     this._onYourRatingClick = handler;
-    this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onSubmitHandler(handler) {
     this._ontSubmitHandler = handler;
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onDeleteButtonClickHandler(handler) {
     this._deleteButtonClickHandler = handler;
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
-        it.addEventListener(`click`, handler);
+        it.addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
       });
     }
   }
