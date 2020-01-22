@@ -56,11 +56,13 @@ const getCardPopupTemplate = (film, comments, emoji) => {
   // if (emoji) {
   //   yourEmoji = emoji;
   // }
-  let commentsLength = 0;
+  let commentsLength;
   const yourEmoji = emoji;
   if (comments && comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
     commentsLength = comments.length;
+  } else {
+    // как то узнать есть ли сеть и тогда ноль, иначе заглушка.
   }
   // const genreList = genre.split(`, `);
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);

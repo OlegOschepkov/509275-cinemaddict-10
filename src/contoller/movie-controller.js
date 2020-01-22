@@ -66,6 +66,7 @@ export default class MovieController {
 
     this._cardComponent.onWatchListClick((evt) => {
       evt.preventDefault();
+      // console.log(this.film)
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatchList = !this.film.isWatchList;
       this._onDataChange(this, this.film, newFilm);
@@ -103,6 +104,7 @@ export default class MovieController {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatched = !this.film.isWatched;
+      newFilm.isWatchedDate = new Date();
       this._onDataChange(this, this.film, newFilm);
     });
 

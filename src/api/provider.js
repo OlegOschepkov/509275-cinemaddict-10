@@ -1,4 +1,4 @@
-import nanoid from "nanoid";
+// import nanoid from "nanoid";
 import FilmModel from "../models/film-model";
 import CommentsModel from "../models/comments-model";
 
@@ -16,17 +16,17 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.getFilms().then(
           (films) => {
-            films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
+            films.forEach((film) => this._store.setItem(`film_${film.id}`, film.toRAW()));
             return films;
           }
       );
     }
 
-    const storeFilms = Object.values(this._store.getAll());
-
+    const foo = Object.keys(this._store.getAll()).filter(function (k) {
+      return ~k.indexOf(`film_`);
+    });
+    const storeFilms = foo.map((it) => this._store.getAll()[it]);
     this._isSynchronized = false;
-
-    // console.log(storeFilms)
 
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
@@ -35,15 +35,14 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.getComments(id).then(
           (comments) => {
-            // console.log(this._store.getAll()[id].comments)
-            comments.forEach((comment) => this._store.setItem(this._store.getAll()[id].comments, comment.toRAW()));
+            comments.forEach((comment) => comment.toRAW());
+            this._store.setItem(`comments_${id}`, comments);
             return comments;
           }
       );
     }
 
-    const storeComments = Object.values(this._store.getAll());
-
+    const storeComments = this._store.getAll()[`comments_${id}`];
     this._isSynchronized = false;
 
     return Promise.resolve(CommentsModel.parseComments(storeComments));
@@ -53,61 +52,62 @@ export default class Provider {
     if (this._isOnLine()) {
       return this._api.updateFilm(id, data).then(
           (newData) => {
+            // console.log(newData)
             this._store.setItem(newData.id, newData.toRAW());
             return newData;
           }
       );
     }
 
+    // console.log(Object.assign({}, data.toRAW(), {id}))
+
     const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
+
+    // console.log(fakeUpdatedFilm)
 
     return Promise.resolve(fakeUpdatedFilm);
   }
 
   addComment(id, comment) {
     if (this._isOnLine()) {
-      return this._api.addComment(id, comment).then(
-          (newComment) => {
-            this._store.setItem(newComment.id, newComment.toRAW());
-            return newComment;
-          }
-      );
+      return this._api.addComment(id, comment);
     }
 
-    const fakeNewCommentId = nanoid();
-    // console.log(comment)
-    const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
-    this._isSynchronized = false;
-
-    this._store.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
-
-    return Promise.resolve(fakeNewComment);
+    // const fakeNewCommentId = nanoid();
+    // // console.log(comment)
+    // const fakeNewComment = CommentsModel.parseComment(Object.assign({}, comment.toRAW(), {id: fakeNewCommentId}));
+    // this._isSynchronized = false;
+    //
+    // this._store.setItem(fakeNewComment.id, Object.assign({}, fakeNewComment.toRAW(), {offline: true}));
+    //
+    // return Promise.resolve(fakeNewComment);
   }
 
   deleteComment(id, comment) {
     if (this._isOnLine()) {
-      return this._api.deleteComment(id, comment).then(
-          () => {
-            this._store.removeItem(id, comment);
-          }
-      );
+      return this._api.deleteComment(id, comment);
     }
 
-    this._isSynchronized = false;
-    this._store.removeItem(id);
-
-    return Promise.resolve();
+    // this._isSynchronized = false;
+    // this._store.removeItem(id);
+    //
+    // return Promise.resolve();
   }
 
   sync() {
     if (this._isOnLine()) {
-      const storeFilms = Object.values(this._store.getAll());
+      const foo = Object.keys(this._store.getAll()).filter(function (k) {
+        return ~k.indexOf(`film_`);
+      });
+      const storeFilms = foo.map((it) => this._store.getAll()[it]);
+      // console.log(storeFilms)
 
       return this._api.sync(storeFilms)
         .then((response) => {
+          // console.log(response)
           // Удаляем из хранилища задачи, что были созданы
           // или изменены в оффлайне. Они нам больше не нужны
           storeFilms.filter((film) => film.offline).forEach((film) => {

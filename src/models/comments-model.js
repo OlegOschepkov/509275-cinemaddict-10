@@ -25,7 +25,9 @@ export default class CommentsModel {
 
   static parseComments(data) {
     // console.log(data.map(CommentsModel.parseComment))
-    if (data.length) {
+    if (!data) {
+      return {};
+    } else if (data.length) {
       return data.map(CommentsModel.parseComment);
     } else {
       return new CommentsModel(data);

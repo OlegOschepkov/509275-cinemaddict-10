@@ -5,6 +5,7 @@ export default class Store {
   }
 
   getAll() {
+    // console.log(JSON.parse(this._storage.getItem(this._storeKey)).film_0.id)
     try {
       return JSON.parse(this._storage.getItem(this._storeKey));
     } catch (err) {
@@ -16,6 +17,8 @@ export default class Store {
 
   setItem(key, value) {
     const store = this.getAll();
+
+    // console.log(key)
 
     this._storage.setItem(
         this._storeKey,
