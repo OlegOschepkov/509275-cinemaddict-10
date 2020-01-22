@@ -165,6 +165,9 @@ export default class pageController {
             });
         })
         .catch(() => {
+          // if (!movieController.yourEmoji) {
+          //
+          // }
           movieController.shake(true);
         });
 

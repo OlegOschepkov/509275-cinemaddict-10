@@ -1,6 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getHumanRadableDuration} from "../utils/utils";
+import debounce from 'lodash/debounce';
 // import {randomDuration} from "../utils/utils";
+
+const DEBOUNCE_TIMEOUT = 300;
 
 const getCardTemplate = (films) => {
   const {name, poster, description, rating, year, genre, duration, commentsQuantity, isFavorite, isWatched, isWatchList} = films;
@@ -70,16 +73,16 @@ export default class Card extends AbstractSmartComponent {
 
   onWatchListClick(handler) {
     this._onWatchListClick = handler;
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onFavoriteClick(handler) {
     this._onFavoriteClick = handler;
-    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   onWatchedClick(handler) {
     this._onWatchedClick = handler;
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 }
