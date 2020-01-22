@@ -26,13 +26,12 @@ export default class FilmModel {
     this.actors = data.film_info[`actors`];
     this.fullDate = moment(data.film_info.release[`date`]).format(`YYYY/MM/DD HH:MM`);
     this.country = data.film_info.release[`release_country`];
-    this.comments = [];
-    this.comments.id = data.comments.id;
-    this.comments.text = data.comments.comment;
-    this.comments.author = data.comments.author;
-    this.comments.date = data.comments.date;
-    this.comments.emoji = data.comments.emotion;
-
+    this.comments = data.comments;
+    // this.comments.id = data.comments.id;
+    // this.comments.text = data.comments.comment;
+    // this.comments.author = data.comments.author;
+    // this.comments.date = data.comments.date;
+    // this.comments.emoji = data.comments.emotion;
   }
 
   toRAW() {
@@ -62,16 +61,31 @@ export default class FilmModel {
         'watching_date': this.isWatchedDate,
         'favorite': this.isFavorite,
       },
-      'comments': []
+      'comments': this.comments
     };
   }
 
   static parseFilm(data) {
-    return new FilmModel(data);
+    if (data.film_info) {
+      return new FilmModel(data);
+    } else {
+      return false;
+    }
   }
 
   static parseFilms(data) {
-    return data.map(FilmModel.parseFilm);
+    // if(data.film_info) {
+    //
+    // }
+    // console.log(data);
+
+    if (!data) {
+      return {};
+    } else if (data.length) {
+      return data.map(FilmModel.parseFilm);
+    } else {
+      return new FilmModel(data);
+    }
   }
 
   // static parseComment(data) {

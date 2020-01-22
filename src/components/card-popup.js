@@ -7,16 +7,24 @@ const getGenreMarkup = (genreSingle) => {
   );
 };
 
-const getCommentMarkup = (comment) => {
-  const {id, text, author, date, emoji} = comment;
+// const emojiList = {
+//   DEFAULT: ``,
+//   SMILE: `smile`,
+//   GPUKE: `puke`,
+//   SLEEPING: `sleeping`,
+//   ANGRY: `angry`
+// };
+
+const getCommentMarkup = (comments) => {
+  const {id, comment, author, date, emotion} = comments;
 
   return (
     `<li class="film-details__comment" data-id="${id}">
-      ${emoji ? `<span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">
+      ${emotion ? `<span class="film-details__comment-emoji">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
         </span>` : ``}
         <div>
-          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
              <span class="film-details__comment-day">${date}</span>
@@ -44,11 +52,18 @@ const getCommentMarkup = (comment) => {
 const getCardPopupTemplate = (film, comments, emoji) => {
   const {poster, name, isFavorite, isWatched, isWatchList, yourRating, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = film;
   let commentMarkup = ``;
-  let commentsLength = 0;
+  // let yourEmoji = ``;
+  // if (emoji) {
+  //   yourEmoji = emoji;
+  // }
+  let commentsLength;
   const yourEmoji = emoji;
   if (comments && comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
     commentsLength = comments.length;
+  } else {
+
+    // как то узнать есть ли сеть и тогда ноль, иначе заглушка.
   }
   // const genreList = genre.split(`, `);
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
@@ -181,17 +196,16 @@ const getCardPopupTemplate = (film, comments, emoji) => {
             </section>
           </div>
 
-
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
-              <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>
+            ${commentsLength ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
 
               <ul class="film-details__comments-list">
                   ${commentMarkup}
               </ul>
 
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="${yourEmoji}" width="30" height="30" alt="emoji">` : ``}</div>
+                <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="./images/emoji/${yourEmoji}.png" width="30" height="30" alt="emoji">` : ``}</div>
 
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -231,18 +245,19 @@ export default class CardPopup extends AbstractSmartComponent {
     super();
     this._film = film;
     this._comments = comments;
-    // this._popupData = this._film;
+    this._emoji = ``;
+    // this._emoji = emoji;
     this._deleteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return getCardPopupTemplate(this._film, this._comments);
+    return getCardPopupTemplate(this._film, this._comments, this._emoji);
   }
 
   update(film, comments) {
     this._film = film;
     this._comments = comments;
-    // this._popupData = film;
+    // this._emoji = emoji;
     this.rerender();
     // this.recoveryListeners();
   }
@@ -314,6 +329,12 @@ export default class CardPopup extends AbstractSmartComponent {
 
   disableToggle() {
     this.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`readonly`, true);
+  }
+
+  setEmoji(emoji) {
+    this._emoji = emoji;
+    this.rerender();
+    this._emoji = ``;
   }
 
   // onDeleteClick(handler) {

@@ -1,4 +1,6 @@
-import API from "./api";
+import Api from "./api/index";
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 import FilterController from "./contoller/filter-controller";
 import BoardComponent from "./components/board";
 import FooterComponent from "./components/footer";
@@ -17,9 +19,23 @@ import FilmsModel from "./models/films-model";
 // import {Mode as MovieControllerMode} from "./contoller/movie-controller";
 // import {FilterComponent} from "./components/filter";
 
+const STORE_PREFIX = `cinemaaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic olegoschepkov`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
-const api = new API(END_POINT, AUTHORIZATION);
+const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      // Действие, в случае успешной регистрации ServiceWorker
+    }).catch(() => {
+    // Действие, в случае ошибки при регистрации ServiceWorker
+    });
+});
 
 const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
@@ -41,7 +57,7 @@ const boardBlock = new BoardComponent();
 
 placeElement(mainBlock, boardBlock, RenderPosition.BEFOREEND);
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     // films.map((it) => {
     //   api.getComments(it.id)
@@ -56,8 +72,28 @@ api.getFilms()
     const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()}, userBlock);
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
     statisticBlock.hide();
-    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, api);
+    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider);
     boardController.render();
     filterController.onStatsClick(boardController.toggleVisibility);
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
   });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (!apiWithProvider.getSynchronize()) {
+    apiWithProvider.sync()
+      .then(() => {
+        // Действие, в случае успешной синхронизации
+        // console.log('successfully sync')
+      })
+      .catch(() => {
+        // Действие, в случае ошибки синхронизации
+        // console.log('failed sync')
+      });
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
