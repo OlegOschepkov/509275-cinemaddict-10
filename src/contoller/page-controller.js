@@ -144,7 +144,6 @@ export default class pageController {
 
   _onDataChange(movieController, oldData, newData) {
     if (newData === null) {
-      console.log('newData === null')
       this._api.deleteComment(movieController.film.id, oldData)
         .then((filmId) => {
           this._api.getComments(filmId)
@@ -157,8 +156,6 @@ export default class pageController {
           movieController.shake(true);
         });
     } else if (oldData === null) {
-      console.log('oldData === null')
-
       this._api.addComment(movieController.film.id, this._filmsModel.addComment(newData, movieController))
         .then((filmId) => {
           this._api.getComments(filmId)
@@ -216,8 +213,6 @@ export default class pageController {
 
     this._removeFilms();
     this._renderFilms(sortedFilms);
-    console.log(this._films);
-
 
     if (sortType === SortType.DEFAULT) {
       this._renderLoadMoreButton();

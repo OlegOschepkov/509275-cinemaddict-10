@@ -198,9 +198,7 @@ const getCardPopupTemplate = (film, comments, emoji) => {
 
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
-            ${commentsLength ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` :
-            `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`
-            }
+            ${commentsLength ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
 
               <ul class="film-details__comments-list">
                   ${commentMarkup}

@@ -87,6 +87,8 @@ export default class Provider {
       return this._api.deleteComment(id, comment);
     }
 
+    return false; // заглушка
+
     // this._isSynchronized = false;
     // this._store.removeItem(id);
     //
