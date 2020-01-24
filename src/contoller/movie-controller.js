@@ -183,8 +183,8 @@ export default class MovieController {
   }
 
   update(newData, comments) {
-    console.log(this._cardComponent)
-    console.log(this._cardPopupComponent)
+    // console.log(this._cardComponent)
+    // console.log(this._cardPopupComponent)
     this._cardComponent.update(newData);
     if (!comments) {
       this._cardPopupComponent.update(newData, this._comments);

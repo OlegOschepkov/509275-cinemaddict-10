@@ -243,26 +243,26 @@ const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
                 <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="./images/emoji/${yourEmoji}.png" width="30" height="30" alt="emoji">` : ``}</div>
 
                 <label class="film-details__comment-label">
-                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${onlineCheck? `` : 'disabled'}></textarea>
+                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${onlineCheck ? `` : `disabled`}></textarea>
                 </label>
 
                 <div class="film-details__emoji-list">
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${onlineCheck? `` : 'disabled'}>
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-smile">
                     <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${onlineCheck? `` : 'disabled'}>
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-sleeping">
                     <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke" ${onlineCheck? `` : 'disabled'}>
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-gpuke">
                     <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${onlineCheck? `` : 'disabled'}>
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-angry">
                     <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                   </label>
@@ -378,7 +378,7 @@ export default class CardPopup extends AbstractSmartComponent {
     this._emoji = ``;
   }
 
-  setStatus (isOnline) {
+  setStatus(isOnline) {
     this._isOnline = isOnline;
   }
 }

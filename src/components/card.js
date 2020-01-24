@@ -13,7 +13,7 @@ const getCardTemplate = (films) => {
   const strippingDescription = (text) => {
     let newText;
     if (text.length >= 140) {
-      newText = text.substring(0, 139) + ` ...`
+      newText = text.substring(0, 139) + ` ...`;
     } else {
       newText = text;
     }

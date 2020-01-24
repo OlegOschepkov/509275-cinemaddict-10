@@ -20,7 +20,7 @@ const renderChart = (colorsCtx, films) => {
   if (films.length > 0) {
     genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
   } else {
-    return
+    genres = []; // temporaly
   }
 
   Chart.defaults.scale.ticks.beginAtZero = true;
@@ -103,7 +103,7 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const active = isActive;
   const userLvl = user;
   const filmsCount = getWatchedFilms(films).length;
-  console.log(user)
+  // console.log(user)
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
   const min = parseInt(countDuration % 60, 10);
   const hours = parseInt((countDuration / 60) % 24, 10);
@@ -112,7 +112,7 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
     const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
     favoriteGenre = getFavoriteGenre(genres);
   } else {
-    favoriteGenre = `none`
+    favoriteGenre = `none`;
   }
   // console.log(countDuration)
 
