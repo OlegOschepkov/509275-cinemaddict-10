@@ -24,7 +24,7 @@ export default class FilmModel {
     this.director = data.film_info[`director`];
     this.screenwriter = data.film_info[`writers`];
     this.actors = data.film_info[`actors`];
-    this.fullDate = moment(data.film_info.release[`date`]).format(`YYYY/MM/DD HH:MM`);
+    this.fullDate = moment(data.film_info.release[`date`]).format(`DD MMMM YYYY`);
     this.country = data.film_info.release[`release_country`];
     this.comments = data.comments;
     // this.comments.id = data.comments.id;

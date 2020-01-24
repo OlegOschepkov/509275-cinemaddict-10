@@ -175,13 +175,15 @@ export default class pageController {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
           this._filmsModel.updateFilm(oldData.id, filmModel);
+          movieController.update(filmModel);
+          this._filterController.update();
+
 
           // if (isSuccess) {
           //   this._api.getComments(filmModel.id)
           //     .then((comments) => {
-          //       filmModel.comments = comments;
-          //       movieController.update(filmModel);
-          //       this._filterController.update();
+          //       const newComments = CommentsModel.parseComments(comments);
+          //       movieController.update(movieController.film, newComments);
           //     });
           // }
         })

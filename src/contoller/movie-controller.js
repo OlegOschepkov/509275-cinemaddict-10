@@ -50,6 +50,7 @@ export default class MovieController {
     this._cardPopupComponent = new CardPopupComponent(this.film);
 
     this._cardComponent.onShowPopupClick(() => {
+      this._cardPopupComponent.setStatus(this._api._isOnLine());
       if (this._comments === null) {
         this._api.getComments(this.film.id)
           .then((comments) => {
@@ -82,6 +83,7 @@ export default class MovieController {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatched = !this.film.isWatched;
+      newFilm.isWatchedDate = new Date();
       this._onDataChange(this, this.film, newFilm);
     });
 
@@ -108,6 +110,7 @@ export default class MovieController {
     });
 
     this._cardPopupComponent.onYourRatingClick((evt) => {
+      evt.preventDefault();
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
         const newFilm = FilmModel.clone(this.film);
         newFilm.yourRating = parseInt(document.getElementById(evt.target.htmlFor).value, 10);
@@ -117,9 +120,10 @@ export default class MovieController {
     });
 
     this._cardPopupComponent.onEmojiClick((evt) => {
+      evt.preventDefault();
       const target = evt.target;
       if (target.tagName === `INPUT`) {
-        const emojiName = target.getAttribute(`id`).substring(6);
+        const emojiName = target.getAttribute(`value`);
         // const newFilm = FilmModel.clone(this.film);
         this.yourEmoji = `${emojiName}`;
         this._cardPopupComponent.setEmoji(`${emojiName}`);
@@ -142,6 +146,13 @@ export default class MovieController {
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
       // const newFilm = FilmModel.clone(this.film);
       this._onDataChange(this, this._commentId, null);
+    });
+
+    this._cardPopupComponent.onResetHandler((evt) => {
+      evt.preventDefault();
+      const newFilm = FilmModel.clone(this.film);
+      newFilm.yourRating = 0;
+      this._onDataChange(this, this.film, newFilm);
     });
 
     switch (mode) {
@@ -172,8 +183,14 @@ export default class MovieController {
   }
 
   update(newData, comments) {
+    console.log(this._cardComponent)
+    console.log(this._cardPopupComponent)
     this._cardComponent.update(newData);
-    this._cardPopupComponent.update(newData, comments);
+    if (!comments) {
+      this._cardPopupComponent.update(newData, this._comments);
+    } else {
+      this._cardPopupComponent.update(newData, comments);
+    }
   }
 
   _onViewChange() {
@@ -194,7 +211,7 @@ export default class MovieController {
     this._onViewChange();
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
-    this._cardPopupComponent.setCloseHandler(() => this._closePopup());
+    this._cardPopupComponent.onCloseHandler(() => this._closePopup());
     this._cardPopupComponent.recoveryListeners();
     this._mode = Mode.OPENED;
   }

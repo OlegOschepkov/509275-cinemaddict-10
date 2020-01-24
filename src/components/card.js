@@ -10,6 +10,17 @@ const getCardTemplate = (films) => {
   // const min = parseInt(duration % 60, 10);
   // const hours = parseInt((duration / 60) % 24, 10);
   // const durationHumanReadable = hours + `h ` + min + `min`;
+  const strippingDescription = (text) => {
+    let newText;
+    if (text.length >= 140) {
+      newText = text.substring(0, 139) + ` ...`
+    } else {
+      newText = text;
+    }
+    return newText;
+  };
+
+  const strippedDescription = strippingDescription(description);
   const durationHumanReadable = getHumanRadableDuration(duration);
 
   return `<article class="film-card">
@@ -21,7 +32,7 @@ const getCardTemplate = (films) => {
               <span class="film-card__genre">${genre}</span>
             </p>
             <img src="${poster}" alt="" class="film-card__poster">
-            <p class="film-card__description">${description}</p>
+            <p class="film-card__description">${strippedDescription}</p>
             <a class="film-card__comments">${commentsQuantity}</a>
             <form class="film-card__controls">
               <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>

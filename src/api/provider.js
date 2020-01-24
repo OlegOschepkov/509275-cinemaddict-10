@@ -65,7 +65,7 @@ export default class Provider {
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
     // console.log(this._store.getAll())
 
-    return Promise.resolve(fakeUpdatedFilm);
+    // return Promise.resolve(fakeUpdatedFilm);
   }
 
   addComment(id, comment) {

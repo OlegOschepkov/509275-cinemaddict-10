@@ -68,7 +68,7 @@ const replace = (newComponent, oldComponent) => {
 const getHumanRadableDuration = (duration) => {
   const min = parseInt(duration % 60, 10);
   const hours = parseInt((duration / 60) % 24, 10);
-  return hours + `h ` + min + `min`;
+  return hours + `h ` + min + `m`;
 };
 
 const FILMS_COUNT = 15;
