@@ -35,9 +35,9 @@ const getCardTemplate = (films) => {
             <p class="film-card__description">${strippedDescription}</p>
             <a class="film-card__comments">${commentsQuantity}</a>
             <form class="film-card__controls">
-              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
-              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
-              <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
             </form>
           </article>`;
 };
@@ -54,9 +54,8 @@ export default class Card extends AbstractSmartComponent {
 
   update(newdata) {
     // console.log(`card update`)
-    // не работает, так как подменяем _onDataChange в Moviecontroller на onDataChange из boardcontroller
     this._film = newdata;
-    this.getTemplate();
+    // this.getTemplate();
     this.rerender();
     // меняем старые данныена newdata
   }

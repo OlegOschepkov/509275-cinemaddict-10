@@ -47,7 +47,7 @@ export default class pageController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._onFilterChange = this._onFilterChange.bind(this);
-    this._filmsModel.onFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.onFilterChangeHandler(this._onFilterChange); // эта мешает открываться поапу
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
     this.toggleVisibility = this.toggleVisibility.bind(this);
     this.hidden = false;
@@ -117,6 +117,7 @@ export default class pageController {
   }
 
   _renderFilms(films) {
+    console.log('render page');
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
     const newFilms = renderFilms(listContainer, films, this._onDataChange, this._onViewChange, this._api);
     this._showedFilms = this._showedFilms.concat(newFilms);
@@ -174,8 +175,8 @@ export default class pageController {
     } else {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
-          this._filmsModel.updateFilm(oldData.id, filmModel);
           movieController.update(filmModel);
+          this._filmsModel.updateFilm(oldData.id, filmModel);
           this._filterController.update();
 
 
@@ -227,6 +228,7 @@ export default class pageController {
   }
 
   _onFilterChange() {
+    console.log('_onFilterChange')
     if (this.hidden) {
       this.hidden = false;
       this._showComponent();

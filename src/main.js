@@ -36,7 +36,6 @@ window.addEventListener(`load`, () => {
     // Действие, в случае ошибки при регистрации ServiceWorker
     });
 });
-
 const bodyBlock = document.querySelector(`body`);
 const headerBlock = document.querySelector(`.header`);
 const mainBlock = document.querySelector(`.main`);

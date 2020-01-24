@@ -42,6 +42,8 @@ export class FilterComponent extends AbstractSmartComponent {
   }
 
   onFilterChangeHandler(handler) {
+    console.log(handler)
+
     this._onFilterChangeHandler = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {

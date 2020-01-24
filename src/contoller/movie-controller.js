@@ -42,6 +42,7 @@ export default class MovieController {
   }
 
   renderCard(film, mode) {
+    console.log('render')
     this.film = film;
     const oldCard = this._cardComponent;
     const oldPopup = this._cardPopupComponent;
@@ -120,7 +121,6 @@ export default class MovieController {
     });
 
     this._cardPopupComponent.onEmojiClick((evt) => {
-      evt.preventDefault();
       const target = evt.target;
       if (target.tagName === `INPUT`) {
         const emojiName = target.getAttribute(`value`);
