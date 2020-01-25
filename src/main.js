@@ -9,8 +9,8 @@ import StatisticComponent from "./components/statistic";
 // import {generateFilters} from "./mock/filter";
 // import {generateFilms} from "./mock/films";
 // import {generateExtra} from "./mock/extra";
-import {user} from "./mock/user";
-import {getRandomIntegerNumber} from "./utils/utils";
+// import {user} from "./mock/user";
+// import {getRandomIntegerNumber} from "./utils/utils";
 import {placeElement, RenderPosition} from "./utils/render";
 // import SortComponent from "./components/sort";
 import BoardController from "./contoller/page-controller";
@@ -46,9 +46,9 @@ const filmsModel = new FilmsModel();
 
 const filterController = new FilterController(mainBlock, filmsModel);
 
-user.level = getRandomIntegerNumber(0, 25);
+// user.level = getRandomIntegerNumber(0, 25);
 
-const userBlock = new UserComponent(user.level);
+const userBlock = new UserComponent();
 
 placeElement(headerBlock, userBlock, RenderPosition.BEFOREEND);
 filterController.render();
@@ -68,10 +68,10 @@ apiWithProvider.getFilms()
     // console.log(films)
     filmsModel.setFilms(films);
     filterController._onDataChange();
-    const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()}, userBlock);
+    const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()});
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
     statisticBlock.hide();
-    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider);
+    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider, userBlock);
     boardController.render();
     filterController.onStatsClick(boardController.toggleVisibility);
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);

@@ -166,12 +166,12 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
 };
 
 export default class StatisticComponent extends AbstractSmartComponent {
-  constructor({films}, user) {
+  constructor({films}) {
     super();
 
     this._films = getWatchedFilms(films);
     this._filteredFilms = this._films;
-    this._level = user._level;
+    this._level = ``;
     this._active = `statistic-all-time`;
 
     this._colorsChart = null;
@@ -202,8 +202,9 @@ export default class StatisticComponent extends AbstractSmartComponent {
     }
   }
 
-  update(films) {
+  update(films, userLvl) {
     this._filteredFilms = getWatchedFilms(films);
+    this._level = userLvl;
   }
 
   rerender(films) {

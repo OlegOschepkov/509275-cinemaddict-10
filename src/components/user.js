@@ -1,4 +1,22 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {getLowest} from "../utils/utils";
+
+const userLevels = {
+  0: ``,
+  1: `novice`,
+  11: `fan`,
+  21: `movie buff`,
+};
+
+const user = {
+  _level: 0,
+  get level() {
+    return `${userLevels[this._level]}`;
+  },
+  set level(val) {
+    this._level = getLowest(userLevels, val);
+  }
+};
 
 const getUserTemplate = (level) => {
   return (
@@ -10,17 +28,27 @@ const getUserTemplate = (level) => {
 };
 
 export default class User extends AbstractSmartComponent {
-  constructor(level) {
+  constructor() {
     super();
-    this._level = level;
+    this._level = ``;
   }
 
   getTemplate() {
     return getUserTemplate(this._level);
   }
 
-  update(newData) {
-    this._level = newData;
+  setLevel(films) {
+    user.level = films.reduce((acc, it) => acc + it.isWatched, 0);
+    this._level = user.level;
+  }
+
+  update() {
     this.rerender();
   }
+
+  getLevel() {
+    return this._level;
+  }
+
+  recoveryListeners() {}
 }

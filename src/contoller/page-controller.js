@@ -10,6 +10,7 @@ import MovieController, {Mode as MovieControllerMode} from "./movie-controller";
 // import FilterController from "../contoller/filter-controller";
 import {generateExtra} from "../mock/extra";
 import CommentsModel from "../models/comments-model";
+// import User from "../components/user";
 // import StatisticComponent from "../components/statistic";
 
 const SHOWING_FILMS_COUNT_ON_START = 5;
@@ -27,11 +28,11 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
 };
 
 export default class pageController {
-  constructor(container, filmsModel, filter, statistics, api) {
+  constructor(container, filmsModel, filter, statistics, api, user) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._api = api;
-
+    this._user = user;
     this._films = [];
     this._showedFilms = [];
     this._movieControllersAll = [];
@@ -58,6 +59,9 @@ export default class pageController {
   render() {
     this._films = this._filmsModel.getFilms();
     const container = this._container.getElement();
+    this._user.setLevel(this._films);
+    this._user.update();
+    this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
 
     placeElement(container, this._sortComponent, RenderPosition.BEFOREEND);
 
@@ -177,7 +181,9 @@ export default class pageController {
           movieController.update(filmModel);
           // this._filterController.update();
           this._filterController.render();
-          this._statisticsBlock.update(this._filmsModel.getFilms());
+          this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
+          this._user.setLevel(this._filmsModel.getFilms());
+          this._user.update();
         })
         .catch(() => {
           // console.log(error);
