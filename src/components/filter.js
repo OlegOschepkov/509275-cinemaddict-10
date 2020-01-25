@@ -59,6 +59,7 @@ export class FilterComponent extends AbstractSmartComponent {
   update(newData, isActive) {
     this._filters = newData;
     this._active = isActive;
+    // console.log(this._active)
     this.getTemplate();
     this.rerender();
     // this.recoveryListeners();

@@ -202,8 +202,13 @@ export default class StatisticComponent extends AbstractSmartComponent {
     }
   }
 
+  update(films) {
+    this._filteredFilms = getWatchedFilms(films);
+  }
+
   rerender(films) {
-    this._filteredFilms = films;
+    this._filteredFilms = getWatchedFilms(films);
+    // console.log(films)
 
     super.rerender();
 

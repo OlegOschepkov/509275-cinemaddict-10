@@ -50,35 +50,33 @@ export default class FilterController {
     }
   }
 
-  // update() {
-  //   const allFilms = this._filmsModel.getFilms();
-  //
-  //   const filters = this._filters.map((filterType) => {
-  //     return {
-  //       name: filterType.name,
-  //       type: filterType.type,
-  //       count: getFilmsByFilter(allFilms, filterType.type).length,
-  //       checked: filterType.type === this._activeFilterType,
-  //       link: filterType.link,
-  //     };
-  //   });
-  //   this._filters = filters;
-  //
-  //   this._filterComponent.recoveryListeners(this._onFilterChange);
-  //
-  //   // this._filmsModel = newData;
-  //   this._filterComponent.update(filters, this._activeFilterType);
-  // }
+  update() {
+    const allFilms = this._filmsModel.getFilms();
+
+    const filters = this._filters.map((filterType) => {
+      return {
+        name: filterType.name,
+        type: filterType.type,
+        count: getFilmsByFilter(allFilms, filterType.type).length,
+        checked: filterType.type === this._activeFilterType,
+        link: filterType.link,
+      };
+    });
+    this._filters = filters;
+    // console.log(this._filters)
+
+    this._filterComponent.recoveryListeners(this._onFilterChange);
+
+    // this._filmsModel = newData;
+    this._filterComponent.update(filters, this._activeFilterType);
+  }
 
   _onFilterChange(filterType) {
-    if (filterType === FilterType.STATS) {
-      this._activeFilterType = filterType;
-      // this._filterComponent.update(this._filters, this._activeFilterType);
-    } else {
+    if (filterType !== FilterType.STATS) {
       this._filmsModel.setFilter(filterType);
-      this._activeFilterType = filterType;
-      // this._filterComponent.update(this._filters, this._activeFilterType);
     }
+    this._activeFilterType = filterType;
+    this._filterComponent.update(this._filters, this._activeFilterType);
   }
 
   _onDataChange() {
