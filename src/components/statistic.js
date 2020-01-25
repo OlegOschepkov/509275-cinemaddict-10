@@ -106,7 +106,7 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   // console.log(user)
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
   const min = parseInt(countDuration % 60, 10);
-  const hours = parseInt((countDuration / 60) % 24, 10);
+  const hours = Math.floor(countDuration / 60);
   let favoriteGenre;
   if (films.length > 0) {
     const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));

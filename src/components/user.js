@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const getUserTemplate = (level) => {
   return (
@@ -9,7 +9,7 @@ const getUserTemplate = (level) => {
   );
 };
 
-export default class User extends AbstractComponent {
+export default class User extends AbstractSmartComponent {
   constructor(level) {
     super();
     this._level = level;
@@ -17,5 +17,10 @@ export default class User extends AbstractComponent {
 
   getTemplate() {
     return getUserTemplate(this._level);
+  }
+
+  update(newData) {
+    this._level = newData;
+    this.rerender();
   }
 }
