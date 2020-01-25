@@ -84,7 +84,6 @@ export default class pageController {
         if (tag === `rating`) {
           if (this._films.reduce((acc, that) => acc + that[tag], 0) > 0) {
             placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
-
             const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i];
             if (this._films.every((elem) => elem[tag] === this._films[0][tag])) {
               const filmsShuffled = shuffle(this._films).slice(0, EXTRA_FILMS_COUNT);
@@ -102,8 +101,6 @@ export default class pageController {
             placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
             const row = shift > 0 ? 0 : i;
             const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][row];
-            // const extraListBlock = container.querySelector(`.films-list--extra`);
-            // const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
             if (this._films.every((elem) => elem[tag].length === this._films[0][tag])) {
               const filmsShuffled = shuffle(this._films).slice(0, EXTRA_FILMS_COUNT);
               const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
@@ -121,7 +118,6 @@ export default class pageController {
   }
 
   _renderFilms(films) {
-    // console.log('render page');
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
     const newFilms = renderFilms(listContainer, films, this._onDataChange, this._onViewChange, this._api);
     this._showedFilms = this._showedFilms.concat(newFilms);
@@ -168,6 +164,12 @@ export default class pageController {
               const newComments = CommentsModel.parseComments(comments);
               movieController.update(movieController.film, newComments);
             });
+          // this._api.getFilms()
+          //   .then((films) => {
+          //     this._removeFilms();
+          //     this._renderFilms(films)
+          //     movieController._openPopup()
+          //   })
         })
         .catch(() => {
           // console.log(error);
