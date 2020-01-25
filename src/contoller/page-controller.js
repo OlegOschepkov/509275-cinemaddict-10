@@ -117,7 +117,7 @@ export default class pageController {
   }
 
   _renderFilms(films) {
-    console.log('render page');
+    // console.log('render page');
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
     const newFilms = renderFilms(listContainer, films, this._onDataChange, this._onViewChange, this._api);
     this._showedFilms = this._showedFilms.concat(newFilms);
@@ -165,8 +165,8 @@ export default class pageController {
               movieController.update(movieController.film, newComments);
             });
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          // console.log(error);
 
           // if (!movieController.yourEmoji) {
           //
@@ -190,8 +190,8 @@ export default class pageController {
           //     });
           // }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          // console.log(error);
           movieController.shake();
         });
     }
