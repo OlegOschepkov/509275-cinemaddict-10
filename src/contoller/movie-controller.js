@@ -42,7 +42,6 @@ export default class MovieController {
   }
 
   renderCard(film, mode) {
-    console.log('render')
     this.film = film;
     const oldCard = this._cardComponent;
     const oldPopup = this._cardPopupComponent;
@@ -67,24 +66,32 @@ export default class MovieController {
     });
 
     this._cardComponent.onWatchListClick((evt) => {
+      console.log(this.film)
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatchList = !this.film.isWatchList;
+      console.log(newFilm)
       this._onDataChange(this, this.film, newFilm);
     });
 
     this._cardComponent.onFavoriteClick((evt) => {
+      console.log(this.film)
+
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isFavorite = !this.film.isFavorite;
+      console.log(newFilm)
       this._onDataChange(this, this.film, newFilm);
     });
 
     this._cardComponent.onWatchedClick((evt) => {
+      console.log(this.film)
+
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatched = !this.film.isWatched;
       newFilm.isWatchedDate = new Date();
+      console.log(newFilm)
       this._onDataChange(this, this.film, newFilm);
     });
 
@@ -183,6 +190,7 @@ export default class MovieController {
   }
 
   update(newData, comments) {
+    this.film = newData;
     // console.log(this._cardComponent)
     // console.log(this._cardPopupComponent)
     this._cardComponent.update(newData);

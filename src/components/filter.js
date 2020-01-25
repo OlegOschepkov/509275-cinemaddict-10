@@ -37,13 +37,10 @@ export class FilterComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    // console.log(this._active)
     return getFilterTemplate(this._filters, this._active);
   }
 
   onFilterChangeHandler(handler) {
-    console.log(handler)
-
     this._onFilterChangeHandler = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {

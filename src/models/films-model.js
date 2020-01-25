@@ -29,6 +29,7 @@ export default class FilmsModel {
 
   setFilms(films) {
     this._films = films;
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updateFilm(id, newFilm) {
@@ -40,7 +41,7 @@ export default class FilmsModel {
 
     this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
-    this._callHandlers(this._filterChangeHandlers);
+    // this._callHandlers(this._filterChangeHandlers); // ломает переокрывание  попапа
 
 
     return true;
@@ -57,6 +58,10 @@ export default class FilmsModel {
 
   onFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  onDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   addComment(comment, filmId) {

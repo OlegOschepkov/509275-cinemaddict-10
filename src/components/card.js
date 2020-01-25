@@ -52,9 +52,8 @@ export default class Card extends AbstractSmartComponent {
     return getCardTemplate(this._film);
   }
 
-  update(newdata) {
-    // console.log(`card update`)
-    this._film = newdata;
+  update(newData) {
+    this._film = newData;
     // this.getTemplate();
     this.rerender();
     // меняем старые данныена newdata

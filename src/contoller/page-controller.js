@@ -165,7 +165,9 @@ export default class pageController {
               movieController.update(movieController.film, newComments);
             });
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
+
           // if (!movieController.yourEmoji) {
           //
           // }
@@ -175,9 +177,9 @@ export default class pageController {
     } else {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
-          movieController.update(filmModel);
           this._filmsModel.updateFilm(oldData.id, filmModel);
-          this._filterController.update();
+          movieController.update(filmModel);
+          this._filterController.render();
 
 
           // if (isSuccess) {
@@ -188,7 +190,8 @@ export default class pageController {
           //     });
           // }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           movieController.shake();
         });
     }
@@ -228,7 +231,6 @@ export default class pageController {
   }
 
   _onFilterChange() {
-    console.log('_onFilterChange')
     if (this.hidden) {
       this.hidden = false;
       this._showComponent();

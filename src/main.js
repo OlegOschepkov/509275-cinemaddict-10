@@ -67,7 +67,7 @@ apiWithProvider.getFilms()
     // });
     // console.log(films)
     filmsModel.setFilms(films);
-    filterController.update();
+    filterController._onDataChange();
     const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()}, userBlock);
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
     statisticBlock.hide();
