@@ -35,6 +35,8 @@ export default class pageController {
     this._user = user;
     this._films = [];
     this._showedFilms = [];
+    this._showedExtraFilmsComments = [];
+    this._showedExtraFilmsRating = [];
     this._movieControllersAll = [];
     this._emptyListComponent = new EmptyListComponent();
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
@@ -51,8 +53,7 @@ export default class pageController {
     this._filmsModel.onFilterChangeHandler(this._onFilterChange); // эта мешает открываться поапу
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
     this.toggleVisibility = this.toggleVisibility.bind(this);
-    this.hidden = false;
-    // this._filterController.onStatsClick(this._toggleVisibility);
+    // this._filterController.onStatsClick(this.toggleVisibility);
     // this._creatingComment = null;
   }
 
@@ -76,45 +77,54 @@ export default class pageController {
 
       this._renderFilms(this._films.slice(0, this._showingFilmsCount));
 
-      const [...extras] = generateExtra(EXTRA_COUNT);
+      this._renderExtra(this._films);
+    }
+  }
 
-      let shift = 0;
-      extras.forEach((it, i) => {
-        const tag = it.extraFlag;
-        if (tag === `rating`) {
-          if (this._films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-            placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
-            const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i];
-            if (this._films.every((elem) => elem[tag] === this._films[0][tag])) {
-              const filmsShuffled = shuffle(this._films).slice(0, EXTRA_FILMS_COUNT);
-              const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
-              renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
-            } else {
-              const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
-              renderFilms(extraListContainer, this._films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._api);
-            }
+  _renderExtra(films) {
+    const container = this._container.getElement();
+    const [...extras] = generateExtra(EXTRA_COUNT);
+    this._removeExtraFilms();
+
+    let shift = 0;
+    extras.forEach((it, i) => {
+      const tag = it.extraFlag;
+      if (tag === `rating`) {
+        if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
+          const extraListComponent = new ExtraListComponent(it.extraName);
+          placeElement(container, extraListComponent, RenderPosition.BEFOREEND);
+          const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i];
+          if (films.every((elem) => elem[tag] === films[0][tag])) {
+            const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
           } else {
-            shift = shift + 1;
-          }
-        } else if (tag === `commentsQuantity`) {
-          if (this._films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-            placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
-            const row = shift > 0 ? 0 : i;
-            const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][row];
-            if (this._films.every((elem) => elem[tag].length === this._films[0][tag])) {
-              const filmsShuffled = shuffle(this._films).slice(0, EXTRA_FILMS_COUNT);
-              const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
-              renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
-            } else {
-              const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
-              renderFilms(extraListContainer, this._films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._api);
-            }
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
+            this._showedExtraFilmsRating = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
           }
         } else {
-          throw new Error(`Unknown type of extra-film-list`);
+          shift = shift + 1;
         }
-      });
-    }
+      } else if (tag === `commentsQuantity`) {
+        if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
+          placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
+          const row = shift > 0 ? 0 : i;
+          const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][row];
+          if (films.every((elem) => elem[tag].length === films[0][tag])) {
+            const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
+          } else {
+            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
+            this._showedExtraFilmsComments = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
+          }
+        }
+      } else {
+        throw new Error(`Unknown type of extra-film-list`);
+      }
+    });
   }
 
   _renderFilms(films) {
@@ -152,6 +162,12 @@ export default class pageController {
               const newComments = CommentsModel.parseComments(comments);
               movieController.update(movieController.film, newComments);
             });
+          this._api.getFilms()
+            .then((films) => {
+              this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
+              movieController.update(films.filter((it) => it.id === movieController.film.id)[0]);
+              this._renderExtra(films);
+            });
         })
         .catch(() => {
           movieController.shake(true);
@@ -164,12 +180,12 @@ export default class pageController {
               const newComments = CommentsModel.parseComments(comments);
               movieController.update(movieController.film, newComments);
             });
-          // this._api.getFilms()
-          //   .then((films) => {
-          //     this._removeFilms();
-          //     this._renderFilms(films)
-          //     movieController._openPopup()
-          //   })
+          this._api.getFilms()
+            .then((films) => {
+              this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
+              movieController.update(films.filter((it) => it.id === movieController.film.id)[0]);
+              this._renderExtra(films);
+            });
         })
         .catch(() => {
           // console.log(error);
@@ -182,7 +198,7 @@ export default class pageController {
           this._filmsModel.updateFilm(oldData.id, filmModel);
           movieController.update(filmModel);
           // this._filterController.update();
-          this._filterController.render();
+          this._filterController.update();
           this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
           this._user.setLevel(this._filmsModel.getFilms());
           this._user.update();
@@ -244,6 +260,13 @@ export default class pageController {
     this._showedFilms = [];
   }
 
+  _removeExtraFilms() {
+    this._showedExtraFilmsComments.forEach((filmsController) => filmsController.destroy());
+    this._showedExtraFilmsRating.forEach((filmsController) => filmsController.destroy());
+    this._showedExtraFilmsComments = [];
+    this._showedExtraFilmsRating = [];
+  }
+
   toggleVisibility() {
     // console.log('toggle');
     if (!this.hidden) {
@@ -262,7 +285,6 @@ export default class pageController {
 
   _hideComponent() {
     // console.log('_hideComponent');
-
     this._container.hide();
     this._statisticsBlock.show();
   }
