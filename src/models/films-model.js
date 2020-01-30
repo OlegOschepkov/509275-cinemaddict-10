@@ -1,6 +1,6 @@
 // import {FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
-import {randomDate} from "../utils/utils";
+import {getRandomDate} from "../utils/utils";
 import he from "he";
 import {FilterType} from "../components/filter";
 
@@ -25,6 +25,11 @@ export default class FilmsModel {
   getFilms() {
     // console.log(this._films)
     return this._films;
+  }
+
+  getFilm(id) {
+    // console.log(this._films)
+    return this._films[id];
   }
 
   setFilms(films) {
@@ -79,7 +84,7 @@ export default class FilmsModel {
       // id: Math.random(),
       comment: safeText,
       // author: `Guest`,
-      date: randomDate(new Date(2010, 0, 1), new Date(), false),
+      date: getRandomDate(new Date(2010, 0, 1), new Date(), false),
       emotion: filmId.yourEmoji
     };
     // thatFilm.comments.unshift(newComment);

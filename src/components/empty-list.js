@@ -8,7 +8,7 @@ const getEmptyListTemplate = () => {
   );
 };
 
-export default class NoFilms extends AbstractComponent {
+export default class EmptyList extends AbstractComponent {
   getTemplate() {
     return getEmptyListTemplate();
   }

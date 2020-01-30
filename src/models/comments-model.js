@@ -1,12 +1,12 @@
 // import FilmModel from "./film-model";
 
 export default class CommentsModel {
-  constructor(data) {
-    this.id = data.id;
-    this.comment = data.comment;
-    this.author = data.author;
-    this.date = data.date;
-    this.emotion = data.emotion;
+  constructor(comment) {
+    this.id = comment.id;
+    this.comment = comment.comment;
+    this.author = comment.author;
+    this.date = comment.date;
+    this.emotion = comment.emotion;
   }
 
   toRAW() {
@@ -19,18 +19,18 @@ export default class CommentsModel {
     };
   }
 
-  static parseComment(data) {
-    return new CommentsModel(data);
+  static parseComment(comment) {
+    return new CommentsModel(comment);
   }
 
-  static parseComments(data) {
+  static parseComments(comment) {
     // console.log(data.map(CommentsModel.parseComment))
-    if (!data) {
+    if (!comment) {
       return {};
-    } else if (data.length) {
-      return data.map(CommentsModel.parseComment);
+    } else if (comment.length) {
+      return comment.map(CommentsModel.parseComment);
     } else {
-      return new CommentsModel(data);
+      return new CommentsModel(comment);
     }
   }
 }

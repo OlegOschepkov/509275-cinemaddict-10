@@ -16,7 +16,7 @@ const getSortTemplate = (isActive) => {
   );
 };
 
-export default class Sort extends AbstractSmartComponent {
+export default class SortComponent extends AbstractSmartComponent {
   constructor() {
     super();
     this._currentSortType = SortType.DEFAULT;

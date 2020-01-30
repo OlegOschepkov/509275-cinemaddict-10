@@ -42,23 +42,23 @@ export default class API {
       .then(CommentsModel.parseComments);
   }
 
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     // console.log(data)
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(film.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
       .then(FilmModel.parseFilm);
   }
 
-  sync(data) {
+  sync(films) {
     return this._load({
       url: `movies/sync`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(films),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json());

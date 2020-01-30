@@ -86,37 +86,39 @@ export default class pageController {
     const [...extras] = generateExtra(EXTRA_COUNT);
     this._removeExtraFilms();
 
-    let shift = 0;
-    extras.forEach((it, i) => {
+    extras.forEach((it) => {
       const tag = it.extraFlag;
       if (tag === `rating`) {
         if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-          const extraListComponent = new ExtraListComponent(it.extraName);
-          placeElement(container, extraListComponent, RenderPosition.BEFOREEND);
-          const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i];
+          if(!this._extraListRating) {
+            this._extraListRating = new ExtraListComponent(it.extraName);
+          }
+          placeElement(container, this._extraListRating, RenderPosition.BEFOREEND);
+          // const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][i];
           if (films.every((elem) => elem[tag] === films[0][tag])) {
             const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
-            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
             renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
           } else {
-            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
             const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
             this._showedExtraFilmsRating = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
           }
-        } else {
-          shift = shift + 1;
         }
       } else if (tag === `commentsQuantity`) {
         if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-          placeElement(container, new ExtraListComponent(it.extraName), RenderPosition.BEFOREEND);
-          const row = shift > 0 ? 0 : i;
-          const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][row];
+          if (!this._extraListComments) {
+            this._extraListComments = new ExtraListComponent(it.extraName);
+          }
+          placeElement(container, this._extraListComments, RenderPosition.BEFOREEND);
+          // const row = shift > 0 ? 0 : i;
+          // const extraListBlock = [...container.querySelectorAll(`.films-list--extra`)][row];
           if (films.every((elem) => elem[tag].length === films[0][tag])) {
             const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
-            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
             renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
           } else {
-            const extraListContainer = extraListBlock.querySelector(`.films-list__container`);
+            const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
             const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
             this._showedExtraFilmsComments = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
           }
@@ -155,37 +157,42 @@ export default class pageController {
 
   _onDataChange(movieController, oldData, newData) {
     if (newData === null) {
+      let newComments;
       this._api.deleteComment(movieController.film.id, oldData)
         .then((filmId) => {
           this._api.getComments(filmId)
             .then((comments) => {
-              const newComments = CommentsModel.parseComments(comments);
-              movieController.update(movieController.film, newComments);
-            });
-          this._api.getFilms()
-            .then((films) => {
-              this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
-              movieController.update(films.filter((it) => it.id === movieController.film.id)[0]);
-              this._renderExtra(films);
-            });
+              newComments = CommentsModel.parseComments(comments);
+            })
+            .then(() => {
+              this._api.getFilms()
+                .then((films) => {
+                  this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
+                  movieController.update(this._filmsModel.getFilm(movieController.film.id), newComments);
+                  this._renderExtra(films);
+                });
+            })
         })
         .catch(() => {
           movieController.shake(true);
         });
     } else if (oldData === null) {
+      let newComments;
       this._api.addComment(movieController.film.id, this._filmsModel.addComment(newData, movieController))
         .then((filmId) => {
           this._api.getComments(filmId)
             .then((comments) => {
-              const newComments = CommentsModel.parseComments(comments);
-              movieController.update(movieController.film, newComments);
-            });
-          this._api.getFilms()
-            .then((films) => {
-              this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
-              movieController.update(films.filter((it) => it.id === movieController.film.id)[0]);
-              this._renderExtra(films);
-            });
+              newComments = CommentsModel.parseComments(comments);
+            })
+            .then(() => {
+            this._api.getFilms()
+              .then((films) => {
+                this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
+                movieController.update(this._filmsModel.getFilm(movieController.film.id), newComments);
+                this._renderExtra(films);
+              });
+          })
+
         })
         .catch(() => {
           // console.log(error);
@@ -196,6 +203,8 @@ export default class pageController {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
           this._filmsModel.updateFilm(oldData.id, filmModel);
+          console.log(filmModel)
+
           movieController.update(filmModel);
           // this._filterController.update();
           this._filterController.update();
@@ -209,6 +218,16 @@ export default class pageController {
         });
     }
   }
+
+  // _getFilms(movieController) {
+  //   this._api.getFilms()
+  //     .then((films) => {
+  //       this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
+  //       movieController.update(films.filter((it) => it.id === movieController.film.id)[0]);
+  //       this._renderExtra(films);
+  //     });
+  // }
+
 
   _onViewChange() {
     this._movieControllersAll.forEach((it) => {

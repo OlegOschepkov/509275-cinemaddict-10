@@ -50,7 +50,7 @@ export default class MovieController {
     this._cardPopupComponent = new CardPopupComponent(this.film);
 
     this._cardComponent.onShowPopupClick(() => {
-      this._cardPopupComponent.setStatus(this._api._isOnLine());
+      this._cardPopupComponent.setStatus(this._api.isOnLine());
       if (this._comments === null) {
         this._api.getComments(this.film.id)
           .then((comments) => {
@@ -194,7 +194,7 @@ export default class MovieController {
     // console.log(this._cardPopupComponent)
     this._cardComponent.update(newData);
     if (!comments) {
-      return;
+      this._cardPopupComponent.update(newData, this._comments);
     } else {
       this._cardPopupComponent.update(newData, comments);
     }

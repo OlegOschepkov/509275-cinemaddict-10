@@ -28,7 +28,7 @@ const getFilterTemplate = (filters, isActive) => {
   );
 };
 
-export class FilterComponent extends AbstractSmartComponent {
+export class Filter extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;

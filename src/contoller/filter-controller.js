@@ -1,5 +1,5 @@
 import {placeElement, RenderPosition} from "../utils/render";
-import {FilterComponent, FilterType} from "../components/filter";
+import {Filter, FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {generateFilters} from "../mock/filter";
 import {replace} from "../utils/utils";
@@ -39,7 +39,7 @@ export default class FilterController {
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent = new Filter(filters);
 
     this._filterComponent.onFilterChangeHandler(this._onFilterChange);
 

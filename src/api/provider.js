@@ -13,7 +13,7 @@ export default class Provider {
   }
 
   getFilms() {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.getFilms().then(
           (films) => {
             films.forEach((film) => this._store.setItem(`film_${film.id}`, film.toRAW()));
@@ -32,7 +32,7 @@ export default class Provider {
   }
 
   getComments(id) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.getComments(id).then(
           (comments) => {
             comments.forEach((comment) => comment.toRAW());
@@ -48,9 +48,9 @@ export default class Provider {
     return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
-  updateFilm(id, data) {
-    if (this._isOnLine()) {
-      return this._api.updateFilm(id, data).then(
+  updateFilm(id, film) {
+    if (this.isOnLine()) {
+      return this._api.updateFilm(id, film).then(
           (newData) => {
             // console.log(newData)
             this._store.setItem(newData.id, newData.toRAW());
@@ -59,7 +59,7 @@ export default class Provider {
       );
     }
 
-    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
+    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), {id}));
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
@@ -69,7 +69,7 @@ export default class Provider {
   }
 
   addComment(id, comment) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.addComment(id, comment);
     }
 
@@ -83,7 +83,7 @@ export default class Provider {
   }
 
   deleteComment(id, comment) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.deleteComment(id, comment);
     }
 
@@ -96,7 +96,7 @@ export default class Provider {
   }
 
   sync() {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       const foo = Object.keys(this._store.getAll()).filter(function (k) {
         return ~k.indexOf(`film_`);
       });
@@ -113,13 +113,13 @@ export default class Provider {
           });
 
           // Забираем из ответа синхронизированные задачи
-          const createdTasks = getSyncedData(response.created);
-          const updatedTasks = getSyncedData(response.updated);
+          const createdFilms = getSyncedData(response.created);
+          const updatedFilms = getSyncedData(response.updated);
 
           // Добавляем синхронизированные задачи в хранилище.
           // Хранилище должно быть актуальным в любой момент,
           // вдруг сеть пропадёт
-          [...createdTasks, ...updatedTasks].forEach((film) => {
+          [...createdFilms, ...updatedFilms].forEach((film) => {
             this._store.setItem(film.id, film);
           });
 
@@ -137,7 +137,7 @@ export default class Provider {
     return this._isSynchronized;
   }
 
-  _isOnLine() {
+  isOnLine() {
     return window.navigator.onLine;
   }
 }
