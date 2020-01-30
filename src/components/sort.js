@@ -45,14 +45,12 @@ export default class SortComponent extends AbstractSmartComponent {
       this._currentSortType = sortType;
       handler(this._currentSortType);
       this.update();
-      // this.rerender();
     });
   }
 
   update() {
     this.getTemplate();
     this.rerender();
-    // this.recoveryListeners();
   }
 
   recoveryListeners() {

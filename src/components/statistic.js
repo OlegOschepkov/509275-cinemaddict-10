@@ -3,9 +3,6 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
 import {getWatchedFilms} from "../utils/filter-utils";
-// import {getDuration, replace} from "../utils/utils";
-// import {placeElement, RenderPosition} from "../utils/render";
-// import {Mode} from "../contoller/movie-controller";
 
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
@@ -20,7 +17,7 @@ const renderChart = (colorsCtx, films) => {
   if (films.length > 0) {
     genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
   } else {
-    genres = []; // temporaly
+    genres = [];
   }
 
   Chart.defaults.scale.ticks.beginAtZero = true;
@@ -103,7 +100,6 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const active = isActive;
   const userLvl = user;
   const filmsCount = getWatchedFilms(films).length;
-  // console.log(user)
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
   const min = parseInt(countDuration % 60, 10);
   const hours = Math.floor(countDuration / 60);
@@ -114,7 +110,6 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   } else {
     favoriteGenre = `none`;
   }
-  // console.log(countDuration)
 
   return (
     `<section class="statistic">
@@ -180,7 +175,6 @@ export default class StatisticComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    // console.log(this._films)
     return createStatisticsTemplate({films: this._filteredFilms}, this._level, this._active);
   }
 
@@ -209,7 +203,6 @@ export default class StatisticComponent extends AbstractSmartComponent {
 
   rerender(films) {
     this._filteredFilms = getWatchedFilms(films);
-    // console.log(films)
 
     super.rerender();
 

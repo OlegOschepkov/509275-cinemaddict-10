@@ -11,14 +11,6 @@ const getGenreMarkup = (genreSingle) => {
   );
 };
 
-// const emojiList = {
-//   DEFAULT: ``,
-//   SMILE: `smile`,
-//   GPUKE: `puke`,
-//   SLEEPING: `sleeping`,
-//   ANGRY: `angry`
-// };
-
 const getCommentMarkup = (comments) => {
   const {id, comment, author, date, emotion} = comments;
 
@@ -69,38 +61,16 @@ const getCommentMarkup = (comments) => {
   );
 };
 
-// const parseFormData = (formData) => {
-//   const repeatingDays = DAYS.reduce((acc, day) => {
-//     acc[day] = false;
-//     return acc;
-//   }, {});
-//   const date = formData.get(`date`);
-//
-//   return {
-//     description: formData.get(`text`),
-//     emoji: formData.get(`emoji`),
-//     date: date,
-//   };
-// };
-
 const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
   const {poster, name, isFavorite, isWatched, isWatchList, yourRating, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = film;
   const onlineCheck = isOnline;
   let commentMarkup = ``;
-  // let yourEmoji = ``;
-  // if (emoji) {
-  //   yourEmoji = emoji;
-  // }
   let commentsLength;
   const yourEmoji = emoji;
   if (comments && comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
     commentsLength = comments.length;
-  } else {
-
-    // как то узнать есть ли сеть и тогда ноль, иначе заглушка.
   }
-  // const genreList = genre.split(`, `);
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
   const durationHumanReadable = getHumanRadableDuration(duration);
 
@@ -233,7 +203,7 @@ const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
 
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
-            ${onlineCheck ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
+            ${onlineCheck ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3> ` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
 
               <ul class="film-details__comments-list">
                   ${commentMarkup}
@@ -281,7 +251,6 @@ export default class CardPopup extends AbstractSmartComponent {
     this._film = film;
     this._comments = comments;
     this._emoji = ``;
-    // this._emoji = emoji;
     this._deleteButtonClickHandler = null;
   }
 
@@ -293,12 +262,9 @@ export default class CardPopup extends AbstractSmartComponent {
     this._film = film;
     this._comments = comments;
     this.rerender();
-    // this.recoveryListeners();
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`);
-    // console.log(this.getElement().querySelector(`.film-details__control-label--watchlist`), this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);

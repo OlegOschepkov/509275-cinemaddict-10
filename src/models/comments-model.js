@@ -1,5 +1,3 @@
-// import FilmModel from "./film-model";
-
 export default class CommentsModel {
   constructor(comment) {
     this.id = comment.id;
@@ -11,9 +9,7 @@ export default class CommentsModel {
 
   toRAW() {
     return {
-      // 'id': 11111111,
       'comment': this.comment,
-      // 'author': `guest`,
       'date': new Date(),
       'emotion': this.emotion
     };
@@ -24,7 +20,6 @@ export default class CommentsModel {
   }
 
   static parseComments(comment) {
-    // console.log(data.map(CommentsModel.parseComment))
     if (!comment) {
       return {};
     } else if (comment.length) {

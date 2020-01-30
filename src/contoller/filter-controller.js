@@ -3,9 +3,6 @@ import {Filter, FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {generateFilters} from "../mock/filter";
 import {replace} from "../utils/utils";
-// import StatisticComponent from "../components/abstract-component";
-// import {generateComments} from "../mock/comments";
-// import {generatePopup} from "../mock/popup";
 
 export default class FilterController {
   constructor(container, filmsModel) {
@@ -19,13 +16,11 @@ export default class FilterController {
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmsModel.onDataChangeHandler(this._onDataChange);
-    this.foo = null;
   }
 
   render() {
     const container = this._container;
     const allFilms = this._filmsModel.getFilms();
-    // console.log(allFilms)
     const filters = this._filters.map((filterType) => {
       return {
         name: filterType.name,
@@ -64,7 +59,6 @@ export default class FilterController {
       };
     });
     this._filters = filters;
-    // this._filterComponent.update(filters, this._activeFilterType);
   }
 
   _onFilterChange(filterType) {
@@ -81,7 +75,6 @@ export default class FilterController {
 
   onStatsClick(handler) {
     this._filterComponent.update(this._filters, this._activeFilterType);
-    // console.log(this._activeFilterType)
     this._filterComponent.onStatsClick(handler);
   }
 }

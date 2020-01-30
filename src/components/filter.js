@@ -10,7 +10,6 @@ export const FilterType = {
 
 const getFilterMarkup = (filter, isActive) => {
   const {name, count, link, type} = filter;
-  // const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
 
   return (
     `<a href="#${link}" data-type="${type}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
@@ -63,7 +62,6 @@ export class Filter extends AbstractSmartComponent {
     this._onStatsClick = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {
-      // console.log(this._active)
       evt.preventDefault();
       if (evt.target.dataset.type === FilterType.STATS) {
         handler();

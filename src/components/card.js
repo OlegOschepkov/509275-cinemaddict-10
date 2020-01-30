@@ -1,24 +1,22 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getHumanRadableDuration} from "../utils/utils";
 import debounce from 'lodash/debounce';
-// import {randomDuration} from "../utils/utils";
 
 const DEBOUNCE_TIMEOUT = 300;
 
+const strippingDescription = (text) => {
+  let newText;
+  if (text.length >= 140) {
+    newText = text.substring(0, 139) + ` ...`;
+  } else {
+    newText = text;
+  }
+  return newText;
+};
+
+
 const getCardTemplate = (films) => {
   const {name, poster, description, rating, year, genre, duration, commentsQuantity, isFavorite, isWatched, isWatchList} = films;
-  // const min = parseInt(duration % 60, 10);
-  // const hours = parseInt((duration / 60) % 24, 10);
-  // const durationHumanReadable = hours + `h ` + min + `min`;
-  const strippingDescription = (text) => {
-    let newText;
-    if (text.length >= 140) {
-      newText = text.substring(0, 139) + ` ...`;
-    } else {
-      newText = text;
-    }
-    return newText;
-  };
 
   const strippedDescription = strippingDescription(description);
   const durationHumanReadable = getHumanRadableDuration(duration);
@@ -54,13 +52,10 @@ export default class Card extends AbstractSmartComponent {
 
   update(newData) {
     this._film = newData;
-    // this.getTemplate();
     this.rerender();
-    // меняем старые данныена newdata
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`, this.getElement());
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._onWatchedClick);
@@ -74,10 +69,6 @@ export default class Card extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
-    // const popupButtons = [poster, title, commentsBtn];
-    // popupButtons.forEach((it) => {
-    //   it.addEventListener(`click`, this._onShowPopupClick);
-    // });
   }
 
   onWatchListClick(handler) {

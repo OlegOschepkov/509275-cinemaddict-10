@@ -1,8 +1,6 @@
-// import AbstractComponent from "./abstract-component";
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const getExtraListTemplate = (type) => {
-  // const {extraName} = type;
   return (
     `<section class="films-list--extra">
     <h2 class="films-list__title">${type}</h2>
@@ -22,7 +20,6 @@ export default class ExtraList extends AbstractSmartComponent {
   }
 
   update() {
-    // this._type = newType;
     this.getTemplate();
     this.rerender();
   }

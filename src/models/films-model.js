@@ -1,4 +1,3 @@
-// import {FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
 import {getRandomDate} from "../utils/utils";
 import he from "he";
@@ -23,12 +22,10 @@ export default class FilmsModel {
   }
 
   getFilms() {
-    // console.log(this._films)
     return this._films;
   }
 
   getFilm(id) {
-    // console.log(this._films)
     return this._films[id];
   }
 
@@ -46,8 +43,6 @@ export default class FilmsModel {
 
     this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
-    // this._callHandlers(this._filterChangeHandlers); // ломает переокрывание  попапа
-
 
     return true;
   }
@@ -58,7 +53,6 @@ export default class FilmsModel {
 
   setFilter(filterType) {
     this._activeFilterType = filterType;
-    // console.log(this._activeFilterType)
     this._callHandlers(this._filterChangeHandlers);
   }
 
@@ -77,18 +71,12 @@ export default class FilmsModel {
       return false;
     }
 
-    // const thatFilm = this._films[index];
-
     const safeText = he.encode(comment);
     const newComment = {
-      // id: Math.random(),
       comment: safeText,
-      // author: `Guest`,
       date: getRandomDate(new Date(2010, 0, 1), new Date(), false),
       emotion: filmId.yourEmoji
     };
-    // thatFilm.comments.unshift(newComment);
-    // здесь отправить на сервер
     return newComment;
   }
 
@@ -108,7 +96,6 @@ export default class FilmsModel {
     }
 
     thatFilm.comments = [].concat(thatFilm.comments.slice(0, indexComment), thatFilm.comments.slice(indexComment + 1));
-    // console.log(thatFilm.comments)
 
     return commentId;
   }

@@ -27,7 +27,6 @@ export default class Provider {
     });
     const storeFilms = foo.map((it) => this._store.getAll()[it]);
     this._isSynchronized = false;
-    // console.log(this._store.getAll())
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
 
@@ -52,7 +51,6 @@ export default class Provider {
     if (this.isOnLine()) {
       return this._api.updateFilm(id, film).then(
           (newData) => {
-            // console.log(newData)
             this._store.setItem(newData.id, newData.toRAW());
             return newData;
           }
@@ -63,7 +61,6 @@ export default class Provider {
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
-    // console.log(this._store.getAll())
 
     return Promise.resolve(fakeUpdatedFilm);
   }
@@ -87,12 +84,7 @@ export default class Provider {
       return this._api.deleteComment(id, comment);
     }
 
-    return false; // заглушка
-
-    // this._isSynchronized = false;
-    // this._store.removeItem(id);
-    //
-    // return Promise.resolve();
+    return false;
   }
 
   sync() {
@@ -101,29 +93,19 @@ export default class Provider {
         return ~k.indexOf(`film_`);
       });
       const storeFilms = foo.map((it) => this._store.getAll()[it]);
-      // console.log(storeFilms)
 
       return this._api.sync(storeFilms)
         .then((response) => {
-          // console.log(response)
-          // Удаляем из хранилища задачи, что были созданы
-          // или изменены в оффлайне. Они нам больше не нужны
           storeFilms.filter((film) => film.offline).forEach((film) => {
             this._store.removeItem(film.id);
           });
 
-          // Забираем из ответа синхронизированные задачи
           const createdFilms = getSyncedData(response.created);
           const updatedFilms = getSyncedData(response.updated);
-
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент,
-          // вдруг сеть пропадёт
           [...createdFilms, ...updatedFilms].forEach((film) => {
             this._store.setItem(film.id, film);
           });
 
-          // Помечаем, что всё синхронизировано
           this._isSynchronized = true;
 
           return Promise.resolve();

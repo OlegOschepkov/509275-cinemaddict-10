@@ -1,5 +1,4 @@
 import moment from "moment";
-// import CommentsModel from "./comments-model";
 
 export default class FilmModel {
   constructor(film) {
@@ -10,10 +9,9 @@ export default class FilmModel {
     this.rating = film.film_info[`total_rating`];
     this.releaseDate = film.film_info.release[`date`];
     this.year = moment(film.film_info.release[`date`]).format(`YYYY`);
-    this.duration = film.film_info[`runtime`]; // изменить формулы
+    this.duration = film.film_info[`runtime`];
     this.genre = film.film_info[`genre`];
     this.commentsQuantity = film.comments.length;
-    // filterTag
     this.isWatchList = film.user_details[`watchlist`];
     this.isFavorite = film.user_details[`favorite`];
     this.isWatched = film.user_details[`already_watched`];
@@ -27,11 +25,6 @@ export default class FilmModel {
     this.fullDate = moment(film.film_info.release[`date`]).format(`DD MMMM YYYY`);
     this.country = film.film_info.release[`release_country`];
     this.comments = film.comments;
-    // this.comments.id = data.comments.id;
-    // this.comments.text = data.comments.comment;
-    // this.comments.author = data.comments.author;
-    // this.comments.date = data.comments.date;
-    // this.comments.emoji = data.comments.emotion;
   }
 
   toRAW() {
@@ -74,11 +67,6 @@ export default class FilmModel {
   }
 
   static parseFilms(films) {
-    // if(data.film_info) {
-    //
-    // }
-    // console.log(data);
-
     if (!films) {
       return {};
     } else if (films.length) {
@@ -87,14 +75,6 @@ export default class FilmModel {
       return new FilmModel(films);
     }
   }
-
-  // static parseComment(data) {
-  //   return data.map(FilmModel.parseComments);
-  // }
-  //
-  // static parseComments(data) {
-  //   return data.map((it) => CommentsModel.parseComments(it));
-  // }
 
   static clone(film) {
     return new FilmModel(film.toRAW());

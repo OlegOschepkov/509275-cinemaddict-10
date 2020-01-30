@@ -16,19 +16,15 @@ export default class AbstractSmartComponent extends AbstractComponent {
 
   update() {
     throw new Error(`Abstract method not implemented: update`);
-
-    // сюда измененные данные
   }
 
   rerender() {
-    // console.log(this.getElement());
     const oldElement = this.getElement();
     const parent = oldElement.parentElement;
 
     this.removeElement();
 
     const newElement = this.getElement();
-    // console.log(newElement)
 
     parent.replaceChild(newElement, oldElement);
 
