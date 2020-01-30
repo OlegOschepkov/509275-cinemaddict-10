@@ -73,7 +73,7 @@ apiWithProvider.getFilms()
     statisticBlock.hide();
     const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider, userBlock);
     boardController.render();
-    filterController.onStatsClick(boardController.toggleVisibility);
+    // filterController.onStatsClick(boardController.toggleVisibility);
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
   });
 

@@ -19,6 +19,7 @@ export default class FilterController {
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmsModel.onDataChangeHandler(this._onDataChange);
+    this.foo = null;
   }
 
   render() {
@@ -63,13 +64,7 @@ export default class FilterController {
       };
     });
     this._filters = filters;
-    console.log(this.foo)
-
-    this._filterComponent.recoveryListeners(this._onFilterChange);
-    this._filterComponent.recoveryListeners(this.onStatsClick(this.foo));
-
-    // this._filmsModel = newData;
-    this._filterComponent.update(filters, this._activeFilterType);
+    // this._filterComponent.update(filters, this._activeFilterType);
   }
 
   _onFilterChange(filterType) {
@@ -81,11 +76,12 @@ export default class FilterController {
   }
 
   _onDataChange() {
-    this.render();
+    this.update();
   }
 
   onStatsClick(handler) {
-    this.foo = handler
-    this._filterComponent.onStatsClick(this.foo);
+    this._filterComponent.update(this._filters, this._activeFilterType);
+    // console.log(this._activeFilterType)
+    this._filterComponent.onStatsClick(handler);
   }
 }

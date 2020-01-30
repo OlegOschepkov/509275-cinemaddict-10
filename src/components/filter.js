@@ -33,7 +33,6 @@ export class Filter extends AbstractSmartComponent {
     super();
     this._filters = filters;
     this._active = FilterType.ALL;
-    // this._films = films;
   }
 
   getTemplate() {
@@ -45,24 +44,14 @@ export class Filter extends AbstractSmartComponent {
 
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-
-      // const filterName = getKeyByValue(evt.target.dataset.type);
-      if (evt.target.dataset.type !== FilterType.STATS) {
-        handler(evt.target.dataset.type);
-      }
-      // else if (evt.target.dataset.type === FilterType.STATS) {
-      //   console.log(`hi`)
-      // }
+      handler(evt.target.dataset.type);
     });
   }
 
   update(newData, isActive) {
     this._filters = newData;
     this._active = isActive;
-    // console.log(this._active)
-    this.getTemplate();
     this.rerender();
-    // this.recoveryListeners();
   }
 
   recoveryListeners() {
@@ -71,12 +60,10 @@ export class Filter extends AbstractSmartComponent {
   }
 
   onStatsClick(handler) {
-    console.log(handler)
-
     this._onStatsClick = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {
-      // console.log(handler)
+      // console.log(this._active)
       evt.preventDefault();
       if (evt.target.dataset.type === FilterType.STATS) {
         handler();

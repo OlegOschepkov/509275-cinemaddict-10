@@ -53,7 +53,7 @@ export default class pageController {
     this._filmsModel.onFilterChangeHandler(this._onFilterChange); // эта мешает открываться поапу
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
     this.toggleVisibility = this.toggleVisibility.bind(this);
-    // this._filterController.onStatsClick(this.toggleVisibility);
+    this._filterController.onStatsClick(this.toggleVisibility);
     // this._creatingComment = null;
   }
 
