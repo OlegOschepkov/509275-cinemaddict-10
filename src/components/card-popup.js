@@ -5,6 +5,27 @@ import moment from "moment";
 
 const DEBOUNCE_TIMEOUT = 300;
 
+const humanize = (timeObj) => {
+  let humanizedString;
+  if (timeObj.days >= 2) {
+    humanizedString = `a few day ago`;
+  } else if (timeObj.days > 0 && timeObj.days < 2) {
+    humanizedString = `a day ago`;
+  } else if (timeObj.hours >= 2 && timeObj.hours < 24) {
+    humanizedString = `a few hour ago`;
+  } else if (timeObj.hours > 0 && timeObj.hours < 2) {
+    humanizedString = `a hour ago`;
+  } else if (timeObj.minutes > 2 && timeObj.minutes < 60) {
+    humanizedString = `a few minutes ago`;
+  } else if (timeObj.minutes > 1 && timeObj.minutes < 3) {
+    humanizedString = `a minute ago`;
+  } else if (timeObj.seconds > 0 && timeObj.seconds < 60) {
+    humanizedString = `now`;
+  }
+
+  return humanizedString;
+};
+
 const getGenreMarkup = (genreSingle) => {
   return (
     `<span class="film-details__genre">${genreSingle}</span>`
@@ -19,27 +40,6 @@ const getCommentMarkup = (comments) => {
     hours: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).hours()),
     minutes: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).minutes()),
     seconds: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).seconds())
-  };
-
-  const humanize = (timeObj) => {
-    let humanizedString;
-    if (timeObj.days >= 2) {
-      humanizedString = `a few day ago`;
-    } else if (timeObj.days > 0 && timeObj.days < 2) {
-      humanizedString = `a day ago`;
-    } else if (timeObj.hours >= 2 && timeObj.hours < 24) {
-      humanizedString = `a few hour ago`;
-    } else if (timeObj.hours > 0 && timeObj.hours < 2) {
-      humanizedString = `a hour ago`;
-    } else if (timeObj.minutes > 2 && timeObj.minutes < 60) {
-      humanizedString = `a few minutes ago`;
-    } else if (timeObj.minutes > 1 && timeObj.minutes < 3) {
-      humanizedString = `a minute ago`;
-    } else if (timeObj.seconds > 0 && timeObj.seconds < 60) {
-      humanizedString = `now`;
-    }
-
-    return humanizedString;
   };
 
   const humanizedDate = humanize(time);

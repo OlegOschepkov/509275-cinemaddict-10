@@ -198,7 +198,9 @@ export default class MovieController {
     this._onViewChange();
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
-    this._cardPopupComponent.onCloseHandler(() => this._closePopup());
+    this._cardPopupComponent.onCloseHandler(() => {
+      return this._closePopup();
+    });
     this._cardPopupComponent.recoveryListeners();
     this._mode = Mode.OPENED;
   }
