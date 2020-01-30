@@ -63,9 +63,10 @@ export default class FilterController {
       };
     });
     this._filters = filters;
-    // console.log(this._filters)
+    console.log(this.foo)
 
     this._filterComponent.recoveryListeners(this._onFilterChange);
+    this._filterComponent.recoveryListeners(this.onStatsClick(this.foo));
 
     // this._filmsModel = newData;
     this._filterComponent.update(filters, this._activeFilterType);
@@ -84,6 +85,7 @@ export default class FilterController {
   }
 
   onStatsClick(handler) {
-    this._filterComponent.onStatsClick(handler);
+    this.foo = handler
+    this._filterComponent.onStatsClick(this.foo);
   }
 }

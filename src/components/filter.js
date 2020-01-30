@@ -71,6 +71,7 @@ export class Filter extends AbstractSmartComponent {
   }
 
   onStatsClick(handler) {
+    console.log(handler)
 
     this._onStatsClick = handler;
 
