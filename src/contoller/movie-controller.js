@@ -1,5 +1,4 @@
 import CardComponent from "../components/card";
-// import {generatePopup} from "../mock/popup";
 import CardPopupComponent from "../components/card-popup";
 import {placeElement, RenderPosition, remove} from "../utils/render";
 import {replace} from "../utils/utils";
@@ -17,13 +16,7 @@ export const EmptyComment = {
   date: null,
   emoji: [],
 };
-// const emojiList = {
-//   DEFAULT: ``,
-//   SMILE: `smile`,
-//   GPUKE: `puke`,
-//   SLEEPING: `sleeping`,
-//   ANGRY: `angry`
-// };
+
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export default class MovieController {
@@ -50,10 +43,10 @@ export default class MovieController {
     this._cardPopupComponent = new CardPopupComponent(this.film);
 
     this._cardComponent.onShowPopupClick(() => {
+      this._cardPopupComponent.setStatus(this._api.isOnLine());
       if (this._comments === null) {
         this._api.getComments(this.film.id)
           .then((comments) => {
-            // const commentsModel = new CommentsModel(comments);
             this._comments = CommentsModel.parseComments(comments);
             this._cardPopupComponent.update(this.film, this._comments);
             this._openPopup();
@@ -82,6 +75,7 @@ export default class MovieController {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.isWatched = !this.film.isWatched;
+      newFilm.isWatchedDate = new Date();
       this._onDataChange(this, this.film, newFilm);
     });
 
@@ -108,6 +102,7 @@ export default class MovieController {
     });
 
     this._cardPopupComponent.onYourRatingClick((evt) => {
+      evt.preventDefault();
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
         const newFilm = FilmModel.clone(this.film);
         newFilm.yourRating = parseInt(document.getElementById(evt.target.htmlFor).value, 10);
@@ -119,11 +114,9 @@ export default class MovieController {
     this._cardPopupComponent.onEmojiClick((evt) => {
       const target = evt.target;
       if (target.tagName === `INPUT`) {
-        const emojiName = target.getAttribute(`id`).substring(6);
-        // const newFilm = FilmModel.clone(this.film);
+        const emojiName = target.getAttribute(`value`);
         this.yourEmoji = `${emojiName}`;
         this._cardPopupComponent.setEmoji(`${emojiName}`);
-        // this._onDataChange(this, this.film, null);
       }
     });
 
@@ -140,8 +133,14 @@ export default class MovieController {
     this._cardPopupComponent.onDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
-      // const newFilm = FilmModel.clone(this.film);
       this._onDataChange(this, this._commentId, null);
+    });
+
+    this._cardPopupComponent.onResetHandler((evt) => {
+      evt.preventDefault();
+      const newFilm = FilmModel.clone(this.film);
+      newFilm.yourRating = 0;
+      this._onDataChange(this, this.film, newFilm);
     });
 
     switch (mode) {
@@ -172,8 +171,13 @@ export default class MovieController {
   }
 
   update(newData, comments) {
+    this.film = newData;
     this._cardComponent.update(newData);
-    this._cardPopupComponent.update(newData, comments);
+    if (!comments) {
+      this._cardPopupComponent.update(newData, this._comments);
+    } else {
+      this._cardPopupComponent.update(newData, comments);
+    }
   }
 
   _onViewChange() {
@@ -194,7 +198,9 @@ export default class MovieController {
     this._onViewChange();
     const mainBlock = document.querySelector(`.main`);
     placeElement(mainBlock, this._cardPopupComponent, RenderPosition.BEFOREEND);
-    this._cardPopupComponent.setCloseHandler(() => this._closePopup());
+    this._cardPopupComponent.onCloseHandler(() => {
+      return this._closePopup();
+    });
     this._cardPopupComponent.recoveryListeners();
     this._mode = Mode.OPENED;
   }
@@ -222,7 +228,6 @@ export default class MovieController {
   }
 
   shake(isComment) {
-    // console.log('shake');
     this._cardPopupComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     this._cardComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     if (isComment) {

@@ -5,19 +5,32 @@ import moment from "moment";
 
 const DEBOUNCE_TIMEOUT = 300;
 
+const humanize = (timeObj) => {
+  let humanizedString;
+  if (timeObj.days >= 2) {
+    humanizedString = `a few day ago`;
+  } else if (timeObj.days > 0 && timeObj.days < 2) {
+    humanizedString = `a day ago`;
+  } else if (timeObj.hours >= 2 && timeObj.hours < 24) {
+    humanizedString = `a few hour ago`;
+  } else if (timeObj.hours > 0 && timeObj.hours < 2) {
+    humanizedString = `a hour ago`;
+  } else if (timeObj.minutes > 2 && timeObj.minutes < 60) {
+    humanizedString = `a few minutes ago`;
+  } else if (timeObj.minutes > 1 && timeObj.minutes < 3) {
+    humanizedString = `a minute ago`;
+  } else if (timeObj.seconds > 0 && timeObj.seconds < 60) {
+    humanizedString = `now`;
+  }
+
+  return humanizedString;
+};
+
 const getGenreMarkup = (genreSingle) => {
   return (
     `<span class="film-details__genre">${genreSingle}</span>`
   );
 };
-
-// const emojiList = {
-//   DEFAULT: ``,
-//   SMILE: `smile`,
-//   GPUKE: `puke`,
-//   SLEEPING: `sleeping`,
-//   ANGRY: `angry`
-// };
 
 const getCommentMarkup = (comments) => {
   const {id, comment, author, date, emotion} = comments;
@@ -27,27 +40,6 @@ const getCommentMarkup = (comments) => {
     hours: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).hours()),
     minutes: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).minutes()),
     seconds: Math.round(moment.duration(new Date() - new Date(date), `milliseconds`).seconds())
-  };
-
-  const humanize = (timeObj) => {
-    let humanizedString;
-    if (timeObj.days >= 2) {
-      humanizedString = `a few day ago`;
-    } else if (timeObj.days > 0 && timeObj.days < 2) {
-      humanizedString = `a day ago`;
-    } else if (timeObj.hours >= 2 && timeObj.hours < 24) {
-      humanizedString = `a few hour ago`;
-    } else if (timeObj.hours > 0 && timeObj.hours < 2) {
-      humanizedString = `a hour ago`;
-    } else if (timeObj.minutes > 2 && timeObj.minutes < 60) {
-      humanizedString = `a few minutes ago`;
-    } else if (timeObj.minutes > 1 && timeObj.minutes < 3) {
-      humanizedString = `a minute ago`;
-    } else if (timeObj.seconds > 0 && timeObj.seconds < 60) {
-      humanizedString = `now`;
-    }
-
-    return humanizedString;
   };
 
   const humanizedDate = humanize(time);
@@ -69,37 +61,16 @@ const getCommentMarkup = (comments) => {
   );
 };
 
-// const parseFormData = (formData) => {
-//   const repeatingDays = DAYS.reduce((acc, day) => {
-//     acc[day] = false;
-//     return acc;
-//   }, {});
-//   const date = formData.get(`date`);
-//
-//   return {
-//     description: formData.get(`text`),
-//     emoji: formData.get(`emoji`),
-//     date: date,
-//   };
-// };
-
-const getCardPopupTemplate = (film, comments, emoji) => {
+const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
   const {poster, name, isFavorite, isWatched, isWatchList, yourRating, nameOrigin, pegi, rating, director, screenwriter, actors, fullDate, duration, country, description, genre} = film;
+  const onlineCheck = isOnline;
   let commentMarkup = ``;
-  // let yourEmoji = ``;
-  // if (emoji) {
-  //   yourEmoji = emoji;
-  // }
   let commentsLength;
   const yourEmoji = emoji;
   if (comments && comments.length > 0) {
     commentMarkup = comments.map((it) => getCommentMarkup(it)).join(`\n`);
     commentsLength = comments.length;
-  } else {
-
-    // как то узнать есть ли сеть и тогда ноль, иначе заглушка.
   }
-  // const genreList = genre.split(`, `);
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
   const durationHumanReadable = getHumanRadableDuration(duration);
 
@@ -126,7 +97,7 @@ const getCardPopupTemplate = (film, comments, emoji) => {
 
                   <div class="film-details__rating">
                     <p class="film-details__total-rating">${rating}</p>
-                    <p class="film-details__user-rating ${isWatched ? `` : `visually-hidden`}">Your rate ${yourRating}</p>
+                    <p class="film-details__user-rating ${isWatched && yourRating > 0 ? `` : `visually-hidden`}">Your rate ${yourRating}</p>
                   </div>
                 </div>
 
@@ -232,7 +203,7 @@ const getCardPopupTemplate = (film, comments, emoji) => {
 
           <div class="form-details__bottom-container">
             <section class="film-details__comments-wrap">
-            ${commentsLength ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
+            ${onlineCheck ? `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3> ` : `<h3 class="film-details__comments-title shake-infinite">Please check internet connection!</h3>`}
 
               <ul class="film-details__comments-list">
                   ${commentMarkup}
@@ -242,26 +213,26 @@ const getCardPopupTemplate = (film, comments, emoji) => {
                 <div for="add-emoji" class="film-details__add-emoji-label">${yourEmoji ? `<img src="./images/emoji/${yourEmoji}.png" width="30" height="30" alt="emoji">` : ``}</div>
 
                 <label class="film-details__comment-label">
-                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${onlineCheck ? `` : `disabled`}></textarea>
                 </label>
 
                 <div class="film-details__emoji-list">
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-smile">
                     <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-sleeping">
                     <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-gpuke">
                     <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${onlineCheck ? `` : `disabled`}>
                   <label class="film-details__emoji-label" for="emoji-angry">
                     <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                   </label>
@@ -280,32 +251,29 @@ export default class CardPopup extends AbstractSmartComponent {
     this._film = film;
     this._comments = comments;
     this._emoji = ``;
-    // this._emoji = emoji;
     this._deleteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return getCardPopupTemplate(this._film, this._comments, this._emoji);
+    return getCardPopupTemplate(this._film, this._comments, this._emoji, this._isOnline);
   }
 
   update(film, comments) {
     this._film = film;
     this._comments = comments;
-    // this._emoji = emoji;
     this.rerender();
-    // this.recoveryListeners();
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`);
-    // console.log(this.getElement().querySelector(`.film-details__control-label--watchlist`), this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onWatchedClick);
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._setCloseHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._onCloseHandler);
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._onEmojiClick);
     this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, this._onYourRatingClick);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._ontSubmitHandler);
+    this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, this._onResetHandler);
+
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
         it.addEventListener(`click`, this._deleteButtonClickHandler);
@@ -313,8 +281,8 @@ export default class CardPopup extends AbstractSmartComponent {
     }
   }
 
-  setCloseHandler(handler) {
-    this._setCloseHandler = handler;
+  onCloseHandler(handler) {
+    this._onCloseHandler = handler;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
@@ -348,6 +316,11 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
+  onResetHandler(handler) {
+    this._onResetHandler = handler;
+    this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+  }
+
   onDeleteButtonClickHandler(handler) {
     this._deleteButtonClickHandler = handler;
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
@@ -371,9 +344,8 @@ export default class CardPopup extends AbstractSmartComponent {
     this._emoji = ``;
   }
 
-  // onDeleteClick(handler) {
-  //   this._onDeleteClick = handler;
-  //   this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, handler);
-  // }
+  setStatus(isOnline) {
+    this._isOnline = isOnline;
+  }
 }
 

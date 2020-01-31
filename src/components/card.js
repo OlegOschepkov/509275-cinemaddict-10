@@ -1,15 +1,24 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getHumanRadableDuration} from "../utils/utils";
 import debounce from 'lodash/debounce';
-// import {randomDuration} from "../utils/utils";
 
 const DEBOUNCE_TIMEOUT = 300;
 
+const strippingDescription = (text) => {
+  let newText;
+  if (text.length >= 140) {
+    newText = text.substring(0, 139) + ` ...`;
+  } else {
+    newText = text;
+  }
+  return newText;
+};
+
+
 const getCardTemplate = (films) => {
   const {name, poster, description, rating, year, genre, duration, commentsQuantity, isFavorite, isWatched, isWatchList} = films;
-  // const min = parseInt(duration % 60, 10);
-  // const hours = parseInt((duration / 60) % 24, 10);
-  // const durationHumanReadable = hours + `h ` + min + `min`;
+
+  const strippedDescription = strippingDescription(description);
   const durationHumanReadable = getHumanRadableDuration(duration);
 
   return `<article class="film-card">
@@ -21,12 +30,12 @@ const getCardTemplate = (films) => {
               <span class="film-card__genre">${genre}</span>
             </p>
             <img src="${poster}" alt="" class="film-card__poster">
-            <p class="film-card__description">${description}</p>
+            <p class="film-card__description">${strippedDescription}</p>
             <a class="film-card__comments">${commentsQuantity}</a>
             <form class="film-card__controls">
-              <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
-              <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
-              <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
+              <button type="button" class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
             </form>
           </article>`;
 };
@@ -41,17 +50,12 @@ export default class Card extends AbstractSmartComponent {
     return getCardTemplate(this._film);
   }
 
-  update(newdata) {
-    // console.log(`card update`)
-    // не работает, так как подменяем _onDataChange в Moviecontroller на onDataChange из boardcontroller
-    this._film = newdata;
-    this.getTemplate();
+  update(newData) {
+    this._film = newData;
     this.rerender();
-    // меняем старые данныена newdata
   }
 
   recoveryListeners() {
-    // console.log(`recoveryListeners`, this.getElement());
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._onWatchListClick);
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._onFavoriteClick);
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._onWatchedClick);
@@ -65,10 +69,6 @@ export default class Card extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._onShowPopupClick);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._onShowPopupClick);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._onShowPopupClick);
-    // const popupButtons = [poster, title, commentsBtn];
-    // popupButtons.forEach((it) => {
-    //   it.addEventListener(`click`, this._onShowPopupClick);
-    // });
   }
 
   onWatchListClick(handler) {

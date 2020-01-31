@@ -6,7 +6,7 @@ const filterLinks = [
   `all`, `watchlist`, `history`, `favorites`, `stats`
 ];
 
-const filterType = [
+const filterTypes = [
   `ALL`,
   `WATCHLIST`,
   `WATCHED`,
@@ -19,7 +19,7 @@ const generateFilters = () => {
   return filterNames.map((it, i) => {
     return {
       name: it,
-      type: filterType[i],
+      type: filterTypes[i],
       link: filterLinks[i],
     };
   });

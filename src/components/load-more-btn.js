@@ -1,6 +1,8 @@
 import AbstractComponent from "./abstract-component";
 
-const getLoadMoreBtnTemplate = () => `<button class="films-list__show-more">Show more</button>`;
+const getLoadMoreBtnTemplate = () => {
+  return `<button class="films-list__show-more">Show more</button>`;
+};
 
 export default class LoadMoreButton extends AbstractComponent {
   getTemplate() {

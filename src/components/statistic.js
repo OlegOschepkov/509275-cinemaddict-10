@@ -3,9 +3,6 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
 import {getWatchedFilms} from "../utils/filter-utils";
-// import {getDuration, replace} from "../utils/utils";
-// import {placeElement, RenderPosition} from "../utils/render";
-// import {Mode} from "../contoller/movie-controller";
 
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
@@ -16,7 +13,12 @@ const calcUniqCountGenre = (films, genre) => {
 };
 
 const renderChart = (colorsCtx, films) => {
-  const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
+  let genres;
+  if (films.length > 0) {
+    genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
+  } else {
+    genres = [];
+  }
 
   Chart.defaults.scale.ticks.beginAtZero = true;
 
@@ -100,10 +102,14 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const filmsCount = getWatchedFilms(films).length;
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
   const min = parseInt(countDuration % 60, 10);
-  const hours = parseInt((countDuration / 60) % 24, 10);
-  const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
-  const favoriteGenre = getFavoriteGenre(genres);
-  // console.log(countDuration)
+  const hours = Math.floor(countDuration / 60);
+  let favoriteGenre;
+  if (films.length > 0) {
+    const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
+    favoriteGenre = getFavoriteGenre(genres);
+  } else {
+    favoriteGenre = `none`;
+  }
 
   return (
     `<section class="statistic">
@@ -155,12 +161,12 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
 };
 
 export default class StatisticComponent extends AbstractSmartComponent {
-  constructor({films}, user) {
+  constructor({films}) {
     super();
 
     this._films = getWatchedFilms(films);
     this._filteredFilms = this._films;
-    this._level = user._level;
+    this._level = ``;
     this._active = `statistic-all-time`;
 
     this._colorsChart = null;
@@ -169,7 +175,6 @@ export default class StatisticComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    // console.log(this._films)
     return createStatisticsTemplate({films: this._filteredFilms}, this._level, this._active);
   }
 
@@ -191,8 +196,13 @@ export default class StatisticComponent extends AbstractSmartComponent {
     }
   }
 
+  update(films, userLvl) {
+    this._filteredFilms = getWatchedFilms(films);
+    this._level = userLvl;
+  }
+
   rerender(films) {
-    this._filteredFilms = films;
+    this._filteredFilms = getWatchedFilms(films);
 
     super.rerender();
 

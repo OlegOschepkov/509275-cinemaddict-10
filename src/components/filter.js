@@ -10,7 +10,6 @@ export const FilterType = {
 
 const getFilterMarkup = (filter, isActive) => {
   const {name, count, link, type} = filter;
-  // const countMarkup = getCountMarkup(films.filter((it) => it.filterTag === name.toLowerCase()));
 
   return (
     `<a href="#${link}" data-type="${type}" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">
@@ -28,16 +27,14 @@ const getFilterTemplate = (filters, isActive) => {
   );
 };
 
-export class FilterComponent extends AbstractSmartComponent {
+export class Filter extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
     this._active = FilterType.ALL;
-    // this._films = films;
   }
 
   getTemplate() {
-    // console.log(this._active)
     return getFilterTemplate(this._filters, this._active);
   }
 
@@ -46,23 +43,14 @@ export class FilterComponent extends AbstractSmartComponent {
 
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-
-      // const filterName = getKeyByValue(evt.target.dataset.type);
-      if (evt.target.dataset.type !== FilterType.STATS) {
-        handler(evt.target.dataset.type);
-      }
-      // else if (evt.target.dataset.type === FilterType.STATS) {
-      //   console.log(`hi`)
-      // }
+      handler(evt.target.dataset.type);
     });
   }
 
   update(newData, isActive) {
     this._filters = newData;
     this._active = isActive;
-    this.getTemplate();
     this.rerender();
-    // this.recoveryListeners();
   }
 
   recoveryListeners() {
@@ -71,11 +59,9 @@ export class FilterComponent extends AbstractSmartComponent {
   }
 
   onStatsClick(handler) {
-
     this._onStatsClick = handler;
 
     this.getElement().addEventListener(`click`, (evt) => {
-      // console.log(handler)
       evt.preventDefault();
       if (evt.target.dataset.type === FilterType.STATS) {
         handler();

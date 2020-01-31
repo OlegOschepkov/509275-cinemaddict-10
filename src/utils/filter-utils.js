@@ -1,5 +1,3 @@
-// import {FilterType} from `../components/filter`;
-
 export const getFavoriteFilms = (films) => {
   return films.filter((film) => film.isFavorite);
 };
@@ -13,7 +11,6 @@ export const getWatchedFilms = (films) => {
 };
 
 export const getFilmsByFilter = (films, filterType) => {
-  // console.log((films.filter((films) => films.isWatchList)).length)
   switch (filterType) {
     case `ALL`:
       return films;
@@ -23,8 +20,6 @@ export const getFilmsByFilter = (films, filterType) => {
       return getWatchListFilms(films);
     case `WATCHED`:
       return getWatchedFilms(films);
-    // case FilterType.STATS:
-    //   return ??(films);
   }
   return films;
 };

@@ -1,37 +1,30 @@
 import moment from "moment";
-// import CommentsModel from "./comments-model";
 
 export default class FilmModel {
-  constructor(data) {
-    this.id = data[`id`];
-    this.name = data.film_info[`title`];
-    this.poster = data.film_info[`poster`];
-    this.description = data.film_info[`description`];
-    this.rating = data.film_info[`total_rating`];
-    this.releaseDate = data.film_info.release[`date`];
-    this.year = moment(data.film_info.release[`date`]).format(`YYYY`);
-    this.duration = data.film_info[`runtime`]; // изменить формулы
-    this.genre = data.film_info[`genre`];
-    this.commentsQuantity = data.comments.length;
-    // filterTag
-    this.isWatchList = data.user_details[`watchlist`];
-    this.isFavorite = data.user_details[`favorite`];
-    this.isWatched = data.user_details[`already_watched`];
-    this.isWatchedDate = data.user_details[`watching_date`];
-    this.nameOrigin = data.film_info[`alternative_title`];
-    this.pegi = data.film_info[`age_rating`];
-    this.yourRating = data.user_details[`personal_rating`];
-    this.director = data.film_info[`director`];
-    this.screenwriter = data.film_info[`writers`];
-    this.actors = data.film_info[`actors`];
-    this.fullDate = moment(data.film_info.release[`date`]).format(`YYYY/MM/DD HH:MM`);
-    this.country = data.film_info.release[`release_country`];
-    this.comments = data.comments;
-    // this.comments.id = data.comments.id;
-    // this.comments.text = data.comments.comment;
-    // this.comments.author = data.comments.author;
-    // this.comments.date = data.comments.date;
-    // this.comments.emoji = data.comments.emotion;
+  constructor(film) {
+    this.id = film[`id`];
+    this.name = film.film_info[`title`];
+    this.poster = film.film_info[`poster`];
+    this.description = film.film_info[`description`];
+    this.rating = film.film_info[`total_rating`];
+    this.releaseDate = film.film_info.release[`date`];
+    this.year = moment(film.film_info.release[`date`]).format(`YYYY`);
+    this.duration = film.film_info[`runtime`];
+    this.genre = film.film_info[`genre`];
+    this.commentsQuantity = film.comments.length;
+    this.isWatchList = film.user_details[`watchlist`];
+    this.isFavorite = film.user_details[`favorite`];
+    this.isWatched = film.user_details[`already_watched`];
+    this.isWatchedDate = film.user_details[`watching_date`];
+    this.nameOrigin = film.film_info[`alternative_title`];
+    this.pegi = film.film_info[`age_rating`];
+    this.yourRating = film.user_details[`personal_rating`];
+    this.director = film.film_info[`director`];
+    this.screenwriter = film.film_info[`writers`];
+    this.actors = film.film_info[`actors`];
+    this.fullDate = moment(film.film_info.release[`date`]).format(`DD MMMM YYYY`);
+    this.country = film.film_info.release[`release_country`];
+    this.comments = film.comments;
   }
 
   toRAW() {
@@ -65,38 +58,25 @@ export default class FilmModel {
     };
   }
 
-  static parseFilm(data) {
-    if (data.film_info) {
-      return new FilmModel(data);
+  static parseFilm(film) {
+    if (film.film_info) {
+      return new FilmModel(film);
     } else {
       return false;
     }
   }
 
-  static parseFilms(data) {
-    // if(data.film_info) {
-    //
-    // }
-    // console.log(data);
-
-    if (!data) {
+  static parseFilms(films) {
+    if (!films) {
       return {};
-    } else if (data.length) {
-      return data.map(FilmModel.parseFilm);
+    } else if (films.length) {
+      return films.map(FilmModel.parseFilm);
     } else {
-      return new FilmModel(data);
+      return new FilmModel(films);
     }
   }
 
-  // static parseComment(data) {
-  //   return data.map(FilmModel.parseComments);
-  // }
-  //
-  // static parseComments(data) {
-  //   return data.map((it) => CommentsModel.parseComments(it));
-  // }
-
-  static clone(data) {
-    return new FilmModel(data.toRAW());
+  static clone(film) {
+    return new FilmModel(film.toRAW());
   }
 }

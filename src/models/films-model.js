@@ -1,6 +1,5 @@
-// import {FilterType} from "../components/filter";
 import {getFilmsByFilter} from "../utils/filter-utils";
-import {randomDate} from "../utils/utils";
+import {getRandomDate} from "../utils/utils";
 import he from "he";
 import {FilterType} from "../components/filter";
 
@@ -23,12 +22,16 @@ export default class FilmsModel {
   }
 
   getFilms() {
-    // console.log(this._films)
     return this._films;
+  }
+
+  getFilm(id) {
+    return this._films[id];
   }
 
   setFilms(films) {
     this._films = films;
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updateFilm(id, newFilm) {
@@ -40,8 +43,6 @@ export default class FilmsModel {
 
     this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
-    this._callHandlers(this._filterChangeHandlers);
-
 
     return true;
   }
@@ -59,6 +60,10 @@ export default class FilmsModel {
     this._filterChangeHandlers.push(handler);
   }
 
+  onDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
   addComment(comment, filmId) {
     const index = this._films.findIndex((it) => it.id === filmId.film.id);
 
@@ -66,18 +71,12 @@ export default class FilmsModel {
       return false;
     }
 
-    // const thatFilm = this._films[index];
-
     const safeText = he.encode(comment);
     const newComment = {
-      // id: Math.random(),
       comment: safeText,
-      // author: `Guest`,
-      date: randomDate(new Date(2010, 0, 1), new Date(), false),
+      date: getRandomDate(new Date(2010, 0, 1), new Date(), false),
       emotion: filmId.yourEmoji
     };
-    // thatFilm.comments.unshift(newComment);
-    // здесь отправить на сервер
     return newComment;
   }
 
@@ -97,7 +96,6 @@ export default class FilmsModel {
     }
 
     thatFilm.comments = [].concat(thatFilm.comments.slice(0, indexComment), thatFilm.comments.slice(indexComment + 1));
-    // console.log(thatFilm.comments)
 
     return commentId;
   }

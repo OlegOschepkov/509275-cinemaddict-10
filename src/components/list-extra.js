@@ -1,7 +1,6 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const getExtraListTemplate = (type) => {
-  // const {extraName} = type;
   return (
     `<section class="films-list--extra">
     <h2 class="films-list__title">${type}</h2>
@@ -10,7 +9,7 @@ const getExtraListTemplate = (type) => {
   );
 };
 
-export default class Footer extends AbstractComponent {
+export default class ExtraList extends AbstractSmartComponent {
   constructor(type) {
     super();
     this._type = type;
@@ -19,4 +18,12 @@ export default class Footer extends AbstractComponent {
   getTemplate() {
     return getExtraListTemplate(this._type);
   }
+
+  update() {
+    this.getTemplate();
+    this.rerender();
+  }
+
+  recoveryListeners() {}
+
 }

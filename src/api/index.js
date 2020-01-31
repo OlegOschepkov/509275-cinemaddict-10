@@ -16,14 +16,6 @@ const checkStatus = (response) => {
   }
 };
 
-// const onError = (response) => {
-//   if (response.status >= 200 && response.status < 300) {
-//     return response;
-//   } else {
-//     throw new Error(`${response.status}: ${response.statusText}`);
-//   }
-// };
-
 export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -42,23 +34,22 @@ export default class API {
       .then(CommentsModel.parseComments);
   }
 
-  updateFilm(id, data) {
-    // console.log(data)
+  updateFilm(id, film) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(film.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
       .then(FilmModel.parseFilm);
   }
 
-  sync(data) {
+  sync(films) {
     return this._load({
       url: `movies/sync`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(films),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json());
@@ -76,7 +67,6 @@ export default class API {
 
   addComment(id, comment) {
     const commentsModel = new CommentsModel(comment);
-    // console.log(JSON.stringify(commentsModel.toRAW()))
     return this._load({
       url: `comments/${id}`,
       method: Method.POST,
@@ -84,14 +74,12 @@ export default class API {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(() => id);
-    // .then(CommentsModel.parseComments);
   }
 
   deleteComment(id, comment) {
     return this._load({
       url: `comments/${comment}`,
       method: Method.DELETE,
-      // body: JSON.stringify(comment),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(() => id);

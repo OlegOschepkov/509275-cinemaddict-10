@@ -13,7 +13,7 @@ export default class Provider {
   }
 
   getFilms() {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.getFilms().then(
           (films) => {
             films.forEach((film) => this._store.setItem(`film_${film.id}`, film.toRAW()));
@@ -27,12 +27,11 @@ export default class Provider {
     });
     const storeFilms = foo.map((it) => this._store.getAll()[it]);
     this._isSynchronized = false;
-    // console.log(this._store.getAll())
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
 
   getComments(id) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.getComments(id).then(
           (comments) => {
             comments.forEach((comment) => comment.toRAW());
@@ -48,28 +47,26 @@ export default class Provider {
     return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
-  updateFilm(id, data) {
-    if (this._isOnLine()) {
-      return this._api.updateFilm(id, data).then(
+  updateFilm(id, film) {
+    if (this.isOnLine()) {
+      return this._api.updateFilm(id, film).then(
           (newData) => {
-            // console.log(newData)
             this._store.setItem(newData.id, newData.toRAW());
             return newData;
           }
       );
     }
 
-    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, data.toRAW(), {id}));
+    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), {id}));
     this._isSynchronized = false;
 
     this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
-    // console.log(this._store.getAll())
 
     return Promise.resolve(fakeUpdatedFilm);
   }
 
   addComment(id, comment) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.addComment(id, comment);
     }
 
@@ -83,47 +80,32 @@ export default class Provider {
   }
 
   deleteComment(id, comment) {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       return this._api.deleteComment(id, comment);
     }
 
-    return false; // заглушка
-
-    // this._isSynchronized = false;
-    // this._store.removeItem(id);
-    //
-    // return Promise.resolve();
+    return false;
   }
 
   sync() {
-    if (this._isOnLine()) {
+    if (this.isOnLine()) {
       const foo = Object.keys(this._store.getAll()).filter(function (k) {
         return ~k.indexOf(`film_`);
       });
       const storeFilms = foo.map((it) => this._store.getAll()[it]);
-      // console.log(storeFilms)
 
       return this._api.sync(storeFilms)
         .then((response) => {
-          // console.log(response)
-          // Удаляем из хранилища задачи, что были созданы
-          // или изменены в оффлайне. Они нам больше не нужны
           storeFilms.filter((film) => film.offline).forEach((film) => {
             this._store.removeItem(film.id);
           });
 
-          // Забираем из ответа синхронизированные задачи
-          const createdTasks = getSyncedData(response.created);
-          const updatedTasks = getSyncedData(response.updated);
-
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент,
-          // вдруг сеть пропадёт
-          [...createdTasks, ...updatedTasks].forEach((film) => {
+          const createdFilms = getSyncedData(response.created);
+          const updatedFilms = getSyncedData(response.updated);
+          [...createdFilms, ...updatedFilms].forEach((film) => {
             this._store.setItem(film.id, film);
           });
 
-          // Помечаем, что всё синхронизировано
           this._isSynchronized = true;
 
           return Promise.resolve();
@@ -137,7 +119,7 @@ export default class Provider {
     return this._isSynchronized;
   }
 
-  _isOnLine() {
+  isOnLine() {
     return window.navigator.onLine;
   }
 }
