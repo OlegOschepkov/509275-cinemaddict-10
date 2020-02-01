@@ -47,7 +47,7 @@ apiWithProvider.getFilms()
     filterController._onDataChange();
     const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()});
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
-    statisticBlock.hide();
+    // statisticBlock.hide();
     const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider, userBlock);
     boardController.render();
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);

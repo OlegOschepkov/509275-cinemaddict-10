@@ -22,7 +22,7 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
   });
 };
 
-export default class pageController {
+export default class PageController {
   constructor(container, filmsModel, filter, statistics, api, user) {
     this._container = container;
     this._filmsModel = filmsModel;
@@ -104,7 +104,7 @@ export default class pageController {
             this._extraListComments = new ExtraListComponent(it.extraName);
           }
           placeElement(container, this._extraListComments, RenderPosition.BEFOREEND);
-          if (films.every((elem) => elem[tag].length === films[0][tag])) {
+          if (films.every((elem) => elem[tag] === films[0][tag])) {
             const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
             const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
             renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
@@ -124,6 +124,7 @@ export default class pageController {
     const listContainer = this._listComponent.getElement().querySelector(`.films-list__container`);
     const newFilms = renderFilms(listContainer, films, this._onDataChange, this._onViewChange, this._api);
     this._showedFilms = this._showedFilms.concat(newFilms);
+    this._movieControllersAll = this._movieControllersAll.concat(newFilms);
     this._showingFilmsCount = this._showedFilms.length;
   }
 
@@ -169,12 +170,12 @@ export default class pageController {
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
           this._filmsModel.updateFilm(oldData.id, filmModel);
-
           movieController.update(filmModel);
           this._filterController.update();
           this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
           this._user.setLevel(this._filmsModel.getFilms());
           this._user.update();
+          // this._onFilterChange();
         })
         .catch(() => {
           movieController.shake();
@@ -198,6 +199,7 @@ export default class pageController {
   }
 
   _onViewChange() {
+    console.log(this._movieControllersAll)
     this._movieControllersAll.forEach((it) => {
       it.setDefaultView();
     });
@@ -231,6 +233,7 @@ export default class pageController {
   }
 
   _onFilterChange() {
+    remove(this._loadMoreButtonComponent);
     if (this.hidden) {
       this.hidden = false;
       this._showComponent();

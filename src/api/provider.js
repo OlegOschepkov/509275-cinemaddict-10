@@ -22,10 +22,10 @@ export default class Provider {
       );
     }
 
-    const foo = Object.keys(this._store.getAll()).filter(function (k) {
-      return ~k.indexOf(`film_`);
+    const filmNames = Object.keys(this._store.getAll()).filter(function (k) {
+      return !k.indexOf(`film_`);
     });
-    const storeFilms = foo.map((it) => this._store.getAll()[it]);
+    const storeFilms = filmNames.map((it) => this._store.getAll()[it]);
     this._isSynchronized = false;
     return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
@@ -89,15 +89,17 @@ export default class Provider {
 
   sync() {
     if (this.isOnLine()) {
-      const foo = Object.keys(this._store.getAll()).filter(function (k) {
-        return ~k.indexOf(`film_`);
+      const filmNames = Object.keys(this._store.getAll()).filter(function (k) {
+        return !k.indexOf(`film_`);
       });
-      const storeFilms = foo.map((it) => this._store.getAll()[it]);
+      const storeFilms = filmNames.map((it) => this._store.getAll()[it]);
 
       return this._api.sync(storeFilms)
         .then((response) => {
-          storeFilms.filter((film) => film.offline).forEach((film) => {
-            this._store.removeItem(film.id);
+          storeFilms.forEach((film) => {
+            if (film.offline) {
+              this._store.removeItem(film.id);
+            }
           });
 
           const createdFilms = getSyncedData(response.created);

@@ -32,6 +32,38 @@ const getGenreMarkup = (genreSingle) => {
   );
 };
 
+const getRatingScoreMarkup = (rating) => {
+  return (
+    `               <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1" ${isWatched && yourRating === 1 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-1">1</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2" ${isWatched && yourRating === 2 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-2">2</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3" ${isWatched && yourRating === 3 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-3">3</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4" ${isWatched && yourRating === 4 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-4">4</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" ${isWatched && yourRating === 5 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-5">5</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6" ${isWatched && yourRating === 6 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-6">6</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7" ${isWatched && yourRating === 7 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-7">7</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8" ${isWatched && yourRating === 8 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-8">8</label>
+
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" ${isWatched && yourRating === 9 ? `checked` : ``}>
+                    <label class="film-details__user-rating-label" for="rating-9">9</label>
+`
+  );
+};
+
 const getCommentMarkup = (comments) => {
   const {id, comment, author, date, emotion} = comments;
 
@@ -168,31 +200,31 @@ const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
                   <p class="film-details__user-rating-feelings">How you feel it?</p>
 
                   <div class="film-details__user-rating-score">
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1" ${isWatched && yourRating === 1 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-1">1</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2" ${isWatched && yourRating === 2 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-2">2</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3" ${isWatched && yourRating === 3 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-3">3</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4" ${isWatched && yourRating === 4 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-4">4</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" ${isWatched && yourRating === 5 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-5">5</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6" ${isWatched && yourRating === 6 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-6">6</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7" ${isWatched && yourRating === 7 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-7">7</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8" ${isWatched && yourRating === 8 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-8">8</label>
 
-                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" checked>
+                    <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9" ${isWatched && yourRating === 9 ? `checked` : ``}>
                     <label class="film-details__user-rating-label" for="rating-9">9</label>
 
                   </div>

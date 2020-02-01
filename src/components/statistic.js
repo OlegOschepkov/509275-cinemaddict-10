@@ -14,12 +14,14 @@ const calcUniqCountGenre = (films, genre) => {
 
 const renderChart = (colorsCtx, films) => {
   let genres;
+  let countedGenres;
   if (films.length > 0) {
     genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
+    countedGenres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).map((genre) => calcUniqCountGenre(films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)), genre));
   } else {
     genres = [];
+    countedGenres = [];
   }
-
   Chart.defaults.scale.ticks.beginAtZero = true;
 
   return new Chart(colorsCtx, {
@@ -28,7 +30,7 @@ const renderChart = (colorsCtx, films) => {
     data: {
       labels: genres,
       datasets: [{
-        data: films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).map((genre) => calcUniqCountGenre(films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)), genre)),
+        data: countedGenres,
         backgroundColor: `#ffe125`
       }]
     },
@@ -108,7 +110,7 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
     const genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
     favoriteGenre = getFavoriteGenre(genres);
   } else {
-    favoriteGenre = `none`;
+    favoriteGenre = `-`;
   }
 
   return (
@@ -199,13 +201,12 @@ export default class StatisticComponent extends AbstractSmartComponent {
   update(films, userLvl) {
     this._filteredFilms = getWatchedFilms(films);
     this._level = userLvl;
+    this.rerender(this._filteredFilms);
+    this.hide()
   }
 
   rerender(films) {
-    this._filteredFilms = getWatchedFilms(films);
-
     super.rerender();
-
     this._renderCharts();
   }
 

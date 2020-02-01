@@ -133,6 +133,7 @@ export default class MovieController {
     this._cardPopupComponent.onDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
+      this.toggleDisableDelete(evt.target);
       this._onDataChange(this, this._commentId, null);
     });
 
@@ -165,6 +166,7 @@ export default class MovieController {
   }
 
   setDefaultView() {
+    console.log(this._mode)
     if (this._mode !== Mode.DEFAULT) {
       this._closePopup();
     }
@@ -180,9 +182,9 @@ export default class MovieController {
     }
   }
 
-  _onViewChange() {
-    this._mode = Mode.OPENED;
-  }
+  // _onViewChange() {
+  //   this._mode = Mode.OPENED;
+  // }
 
   _closePopup() {
     const mainBlock = document.querySelector(`.main`);
@@ -203,6 +205,7 @@ export default class MovieController {
     });
     this._cardPopupComponent.recoveryListeners();
     this._mode = Mode.OPENED;
+    console.log(this._mode)
   }
 
   _onEscKeyDown(evt) {
@@ -223,8 +226,16 @@ export default class MovieController {
   }
 
   toggleDisable() {
-    this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).classList.toggle(`blocking`);
+    this._cardPopupComponent.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`disabled`);
     this._cardPopupComponent.getElement().querySelector(`.film-details__user-rating-score`).classList.toggle(`blocking`);
+    this._cardPopupComponent.getElement().querySelector(`.film-details__emoji-list`).classList.toggle(`blocking`);
+  }
+
+  toggleDisableDelete(target) {
+    if (target.innerHTML === `Delete`) {
+      target.innerHTML = `Deleting...`;
+      target.classList.toggle(`blocking`);
+    }
   }
 
   shake(isComment) {

@@ -59,6 +59,7 @@ export default class FilterController {
       };
     });
     this._filters = filters;
+    this._filterComponent.update(this._filters)
   }
 
   _onFilterChange(filterType) {

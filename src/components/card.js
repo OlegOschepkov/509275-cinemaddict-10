@@ -3,11 +3,13 @@ import {getHumanRadableDuration} from "../utils/utils";
 import debounce from 'lodash/debounce';
 
 const DEBOUNCE_TIMEOUT = 300;
+const MAX_TEXT_LENGTH = 140;
+const MAX_STRIPPED_TEXT_LENGTH = 139;
 
 const strippingDescription = (text) => {
   let newText;
-  if (text.length >= 140) {
-    newText = text.substring(0, 139) + ` ...`;
+  if (text.length >= MAX_TEXT_LENGTH) {
+    newText = text.substring(0, MAX_STRIPPED_TEXT_LENGTH) + ` ...`;
   } else {
     newText = text;
   }
@@ -31,7 +33,7 @@ const getCardTemplate = (films) => {
             </p>
             <img src="${poster}" alt="" class="film-card__poster">
             <p class="film-card__description">${strippedDescription}</p>
-            <a class="film-card__comments">${commentsQuantity}</a>
+            <a class="film-card__comments">${commentsQuantity} comments</a>
             <form class="film-card__controls">
               <button type="button" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchList ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
               <button type="button" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
