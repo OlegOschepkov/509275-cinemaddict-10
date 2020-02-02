@@ -241,7 +241,7 @@ export default class CardPopup extends AbstractSmartComponent {
     this._film = film;
     this._comments = comments;
     this._emoji = ``;
-    this._deleteButtonClickHandler = null;
+    this._onDeleteButtonClickHandler = null;
   }
 
   getTemplate() {
@@ -266,7 +266,7 @@ export default class CardPopup extends AbstractSmartComponent {
 
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
-        it.addEventListener(`click`, this._deleteButtonClickHandler);
+        it.addEventListener(`click`, this._onDeleteButtonClickHandler);
       });
     }
   }
@@ -312,7 +312,7 @@ export default class CardPopup extends AbstractSmartComponent {
   }
 
   onDeleteButtonClickHandler(handler) {
-    this._deleteButtonClickHandler = handler;
+    this._onDeleteButtonClickHandler = handler;
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
         it.addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));

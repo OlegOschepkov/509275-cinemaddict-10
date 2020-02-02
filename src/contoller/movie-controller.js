@@ -181,10 +181,6 @@ export default class MovieController {
     }
   }
 
-  // _onViewChange() {
-  //   this._mode = Mode.OPENED;
-  // }
-
   _closePopup() {
     const mainBlock = document.querySelector(`.main`);
     if (this._cardPopupComponent) {

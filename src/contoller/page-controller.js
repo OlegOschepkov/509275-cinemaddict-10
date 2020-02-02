@@ -2,7 +2,7 @@ import ListComponent from "../components/list";
 import ExtraListComponent from "../components/list-extra";
 import LoadMoreBtnComponent from "../components/load-more-btn";
 import EmptyListComponent from "../components/empty-list";
-import SortComponent, {SortType} from "../components/sort.js";
+import {SortType} from "../components/sort.js";
 import {placeElement, RenderPosition, remove} from "../utils/render";
 import {shuffle} from "../utils/utils";
 import MovieController, {Mode as MovieControllerMode} from "./movie-controller";
@@ -23,7 +23,7 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
 };
 
 export default class PageController {
-  constructor(container, filmsModel, filter, statistics, api, user) {
+  constructor(container, filmsModel, filter, statistics, api, user, sort) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._api = api;
@@ -36,7 +36,7 @@ export default class PageController {
     this._emptyListComponent = new EmptyListComponent();
     this._showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
     this._listComponent = new ListComponent();
-    this._sortComponent = new SortComponent();
+    this._sortComponent = sort;
     this._statisticsBlock = statistics;
     this._filterController = filter;
     this._loadMoreButtonComponent = new LoadMoreBtnComponent();
@@ -57,8 +57,6 @@ export default class PageController {
     this._user.setLevel(this._films);
     this._user.update();
     this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
-
-    placeElement(container, this._sortComponent, RenderPosition.BEFOREEND);
 
     if (this._films.length === 0) {
       placeElement(container, this._emptyListComponent, RenderPosition.BEFOREEND);
@@ -133,7 +131,7 @@ export default class PageController {
       return;
     }
     placeElement(this._listComponent.getElement(), this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
-    this._loadMoreButtonComponent.setClickHandler(this._onLoadMoreButtonClick);
+    this._loadMoreButtonComponent.onClick(this._onLoadMoreButtonClick);
   }
 
   _onLoadMoreButtonClick() {

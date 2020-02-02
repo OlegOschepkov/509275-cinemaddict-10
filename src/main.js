@@ -6,9 +6,12 @@ import BoardComponent from "./components/board";
 import FooterComponent from "./components/footer";
 import UserComponent from "./components/user";
 import StatisticComponent from "./components/statistic";
-import {placeElement, RenderPosition} from "./utils/render";
+import {placeElement, remove, RenderPosition} from "./utils/render";
 import BoardController from "./contoller/page-controller";
 import FilmsModel from "./models/films-model";
+import LoadingList from "./components/list-is-loading";
+import List from "./components/list";
+import SortComponent from "./components/sort";
 
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
@@ -38,8 +41,12 @@ const userBlock = new UserComponent();
 placeElement(headerBlock, userBlock, RenderPosition.BEFOREEND);
 filterController.render();
 const boardBlock = new BoardComponent();
+const sortComponent = new SortComponent();
+const loadingList = new LoadingList();
 
 placeElement(mainBlock, boardBlock, RenderPosition.BEFOREEND);
+placeElement(boardBlock.getElement(), sortComponent, RenderPosition.BEFOREEND);
+placeElement(boardBlock.getElement(), loadingList, RenderPosition.BEFOREEND);
 
 apiWithProvider.getFilms()
   .then((films) => {
@@ -47,8 +54,8 @@ apiWithProvider.getFilms()
     filterController._onDataChange();
     const statisticBlock = new StatisticComponent({films: filmsModel.getFilms()});
     placeElement(mainBlock, statisticBlock, RenderPosition.BEFOREEND);
-    // statisticBlock.hide();
-    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider, userBlock);
+    remove(loadingList);
+    const boardController = new BoardController(boardBlock, filmsModel, filterController, statisticBlock, apiWithProvider, userBlock, sortComponent);
     boardController.render();
     placeElement(bodyBlock, new FooterComponent(films), RenderPosition.BEFOREEND);
   });
