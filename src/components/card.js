@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {getHumanRadableDuration} from "../utils/utils";
+import {getHumanReadableDuration} from "../utils/utils";
 import debounce from 'lodash/debounce';
 
 const DEBOUNCE_TIMEOUT = 300;
@@ -21,7 +21,7 @@ const getCardTemplate = (films) => {
   const {name, poster, description, rating, year, genre, duration, commentsQuantity, isFavorite, isWatched, isWatchList} = films;
 
   const strippedDescription = strippingDescription(description);
-  const durationHumanReadable = getHumanRadableDuration(duration);
+  const durationHumanReadable = getHumanReadableDuration(duration);
 
   return `<article class="film-card">
             <h3 class="film-card__title">${name}</h3>

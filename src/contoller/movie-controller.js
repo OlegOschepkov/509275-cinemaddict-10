@@ -105,7 +105,7 @@ export default class MovieController {
       evt.preventDefault();
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
         const newFilm = FilmModel.clone(this.film);
-        newFilm.yourRating = parseInt(document.getElementById(evt.target.htmlFor).value, 10);
+        newFilm.yourRating = parseInt(document.querySelector(`#` + evt.target.htmlFor).value, 10);
         this.toggleDisable();
         this._onDataChange(this, this.film, newFilm);
       }
@@ -114,7 +114,7 @@ export default class MovieController {
     this._cardPopupComponent.onEmojiClick((evt) => {
       const target = evt.target;
       if (target.tagName === `INPUT`) {
-        const emojiName = target.getAttribute(`value`);
+        const emojiName = target.value;
         this.yourEmoji = `${emojiName}`;
         this._cardPopupComponent.setEmoji(`${emojiName}`);
       }
@@ -166,7 +166,6 @@ export default class MovieController {
   }
 
   setDefaultView() {
-    console.log(this._mode)
     if (this._mode !== Mode.DEFAULT) {
       this._closePopup();
     }
@@ -205,7 +204,6 @@ export default class MovieController {
     });
     this._cardPopupComponent.recoveryListeners();
     this._mode = Mode.OPENED;
-    console.log(this._mode)
   }
 
   _onEscKeyDown(evt) {

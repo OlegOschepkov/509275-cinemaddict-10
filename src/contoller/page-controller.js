@@ -172,10 +172,11 @@ export default class PageController {
           this._filmsModel.updateFilm(oldData.id, filmModel);
           movieController.update(filmModel);
           this._filterController.update();
-          this._statisticsBlock.update(this._filmsModel.getFilms(), this._user.getLevel());
-          this._user.setLevel(this._filmsModel.getFilms());
+          this._films = this._filmsModel.getFilms();
+          this._user.setLevel(this._films);
+          this._statisticsBlock.update(this._films, this._user.getLevel());
           this._user.update();
-          // this._onFilterChange();
+          this._onFilterChange();
         })
         .catch(() => {
           movieController.shake();
@@ -199,7 +200,6 @@ export default class PageController {
   }
 
   _onViewChange() {
-    console.log(this._movieControllersAll)
     this._movieControllersAll.forEach((it) => {
       it.setDefaultView();
     });

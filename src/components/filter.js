@@ -49,7 +49,7 @@ export class Filter extends AbstractSmartComponent {
 
   update(newData, isActive) {
     this._filters = newData;
-    if(isActive) {
+    if (isActive) {
       this._active = isActive;
     }
     this.rerender();

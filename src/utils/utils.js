@@ -27,9 +27,9 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
-const getHumanRadableDuration = (duration) => {
-  const min = parseInt(duration % 60, 10);
-  const hours = parseInt((duration / 60) % 24, 10);
+const getHumanReadableDuration = (duration) => {
+  const min = duration % 60;
+  const hours = Math.floor(duration / 60);
   return hours + `h ` + min + `m`;
 };
 
@@ -41,4 +41,4 @@ const shuffle = (array) => {
   return array;
 };
 
-export {getLowest, getRandomDate, shuffle, replace, getHumanRadableDuration};
+export {getLowest, getRandomDate, shuffle, replace, getHumanReadableDuration};

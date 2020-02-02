@@ -16,8 +16,9 @@ const renderChart = (colorsCtx, films) => {
   let genres;
   let countedGenres;
   if (films.length > 0) {
-    genres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).filter(getUniqItems);
-    countedGenres = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)).map((genre) => calcUniqCountGenre(films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that)), genre));
+    const genresList = films.slice().map((it) => it.genre).reduce((it, that) => it.concat(that));
+    genres = genresList.filter(getUniqItems);
+    countedGenres = genresList.map((genre) => calcUniqCountGenre(genresList, genre));
   } else {
     genres = [];
     countedGenres = [];
@@ -76,14 +77,14 @@ const getFavoriteGenre = (genres) => {
   let maximumFrequency = 1;
   let counter = 0;
   let genre;
-  for (let i = 0; i < genres.length; i++) {
-    for (let j = i; j < genres.length; j++) {
-      if (genres[i] === genres[j]) {
+  for (let currentGenre of genres) {
+    for (let lookedGenre of genres) {
+      if (currentGenre === lookedGenre) {
         counter++;
       }
       if (maximumFrequency < counter) {
         maximumFrequency = counter;
-        genre = genres[i];
+        genre = currentGenre;
       }
     }
     counter = 0;
@@ -103,7 +104,7 @@ const createStatisticsTemplate = ({films}, user, isActive) => {
   const userLvl = user;
   const filmsCount = getWatchedFilms(films).length;
   const countDuration = films.slice().reduce((acc, it) => acc + it.duration, 0);
-  const min = parseInt(countDuration % 60, 10);
+  const min = countDuration % 60;
   const hours = Math.floor(countDuration / 60);
   let favoriteGenre;
   if (films.length > 0) {
@@ -201,11 +202,11 @@ export default class StatisticComponent extends AbstractSmartComponent {
   update(films, userLvl) {
     this._filteredFilms = getWatchedFilms(films);
     this._level = userLvl;
-    this.rerender(this._filteredFilms);
-    this.hide()
+    this.rerender();
+    this.hide();
   }
 
-  rerender(films) {
+  rerender() {
     super.rerender();
     this._renderCharts();
   }
