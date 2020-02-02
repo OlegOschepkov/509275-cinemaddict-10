@@ -10,7 +10,6 @@ import {placeElement, remove, RenderPosition} from "./utils/render";
 import BoardController from "./contoller/page-controller";
 import FilmsModel from "./models/films-model";
 import LoadingList from "./components/list-is-loading";
-import List from "./components/list";
 import SortComponent from "./components/sort";
 
 const STORE_PREFIX = `cinemaaddict-localstorage`;
