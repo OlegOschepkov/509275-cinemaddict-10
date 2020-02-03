@@ -23,11 +23,11 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
 };
 
 const prepareExtraFilms = (films, tag) => {
-  return shuffle(films).sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT)
+  return shuffle(films).sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
 };
 
 const shuffleExtraFilms = (films) => {
-  return shuffle(films).slice(0, EXTRA_FILMS_COUNT)
+  return shuffle(films).slice(0, EXTRA_FILMS_COUNT);
 };
 
 export default class PageController {
