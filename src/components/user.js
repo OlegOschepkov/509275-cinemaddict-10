@@ -37,6 +37,10 @@ export default class User extends AbstractSmartComponent {
     return getUserTemplate(this._level);
   }
 
+  getLevel() {
+    return this._level;
+  }
+
   setLevel(films) {
     user.level = films.reduce((acc, it) => acc + it.isWatched, 0);
     this._level = user.level;
@@ -44,10 +48,6 @@ export default class User extends AbstractSmartComponent {
 
   update() {
     this.rerender();
-  }
-
-  getLevel() {
-    return this._level;
   }
 
   recoveryListeners() {}

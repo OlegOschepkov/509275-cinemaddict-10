@@ -13,7 +13,7 @@ export default class Provider {
   }
 
   getFilms() {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       return this._api.getFilms().then(
           (films) => {
             films.forEach((film) => this._store.setItem(`film_${film.id}`, film.toRAW()));
@@ -31,7 +31,7 @@ export default class Provider {
   }
 
   getComments(id) {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       return this._api.getComments(id).then(
           (comments) => {
             comments.forEach((comment) => comment.toRAW());
@@ -47,8 +47,16 @@ export default class Provider {
     return Promise.resolve(CommentsModel.parseComments(storeComments));
   }
 
+  getSynchronize() {
+    return this._isSynchronized;
+  }
+
+  getIsOnLine() {
+    return window.navigator.onLine;
+  }
+
   updateFilm(id, film) {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       return this._api.updateFilm(id, film).then(
           (newData) => {
             this._store.setItem(newData.id, newData.toRAW());
@@ -66,7 +74,7 @@ export default class Provider {
   }
 
   addComment(id, comment) {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       return this._api.addComment(id, comment);
     }
 
@@ -80,7 +88,7 @@ export default class Provider {
   }
 
   deleteComment(id, comment) {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       return this._api.deleteComment(id, comment);
     }
 
@@ -88,7 +96,7 @@ export default class Provider {
   }
 
   sync() {
-    if (this.isOnLine()) {
+    if (this.getIsOnLine()) {
       const filmNames = Object.keys(this._store.getAll()).filter(function (k) {
         return !k.indexOf(`film_`);
       });
@@ -115,13 +123,5 @@ export default class Provider {
     }
 
     return Promise.reject(new Error(`Sync data failed`));
-  }
-
-  getSynchronize() {
-    return this._isSynchronized;
-  }
-
-  isOnLine() {
-    return window.navigator.onLine;
   }
 }

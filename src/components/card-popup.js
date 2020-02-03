@@ -248,10 +248,28 @@ export default class CardPopup extends AbstractSmartComponent {
     return getCardPopupTemplate(this._film, this._comments, this._emoji, this._isOnline);
   }
 
+  setEmoji(emoji) {
+    this._emoji = emoji;
+    this.rerender();
+    this._emoji = ``;
+  }
+
+  setStatus(isOnline) {
+    this._isOnline = isOnline;
+  }
+
   update(film, comments) {
     this._film = film;
     this._comments = comments;
     this.rerender();
+  }
+
+  removeElement() {
+    super.removeElement();
+  }
+
+  disableToggle() {
+    this.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`readonly`, true);
   }
 
   recoveryListeners() {
@@ -318,24 +336,6 @@ export default class CardPopup extends AbstractSmartComponent {
         it.addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
       });
     }
-  }
-
-  removeElement() {
-    super.removeElement();
-  }
-
-  disableToggle() {
-    this.getElement().querySelector(`.film-details__comment-input`).toggleAttribute(`readonly`, true);
-  }
-
-  setEmoji(emoji) {
-    this._emoji = emoji;
-    this.rerender();
-    this._emoji = ``;
-  }
-
-  setStatus(isOnline) {
-    this._isOnline = isOnline;
   }
 }
 
