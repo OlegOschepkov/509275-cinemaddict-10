@@ -87,7 +87,7 @@ const getCardPopupTemplate = (film, comments, emoji, isOnline) => {
     commentsLength = comments.length;
   }
   const genreMarkup = genre.map((it) => getGenreMarkup(it)).join(`\n`);
-  const ratingScoreMarkup = getRatingScoreMarkup(yourRating);
+  const ratingScoreMarkup = getRatingScoreMarkup(yourRating).join(`\n`);
   const durationHumanReadable = getHumanReadableDuration(duration);
 
   return (

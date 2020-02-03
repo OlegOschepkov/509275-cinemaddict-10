@@ -22,6 +22,14 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
   });
 };
 
+const prepareExtraFilms = (films, tag) => {
+  return shuffle(films).sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT)
+};
+
+const shuffleExtraFilms = (films) => {
+  return shuffle(films).slice(0, EXTRA_FILMS_COUNT)
+};
+
 export default class PageController {
   constructor(container, filmsModel, filter, statistics, api, user, sort) {
     this._container = container;
@@ -87,13 +95,11 @@ export default class PageController {
           }
           placeElement(container, this._extraListRating, RenderPosition.BEFOREEND);
           if (films.every((elem) => elem[tag] === films[0][tag])) {
-            const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
             const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
-            renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
+            renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
           } else {
             const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
-            const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
-            this._showedExtraFilmsRating = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
+            this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
           }
         }
       } else if (tag === `commentsQuantity`) {
@@ -103,13 +109,11 @@ export default class PageController {
           }
           placeElement(container, this._extraListComments, RenderPosition.BEFOREEND);
           if (films.every((elem) => elem[tag] === films[0][tag])) {
-            const filmsShuffled = shuffle(films).slice(0, EXTRA_FILMS_COUNT);
             const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
-            renderFilms(extraListContainer, filmsShuffled, this._onDataChange, this._onViewChange, this._api);
+            renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
           } else {
             const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
-            const filmList = films.slice().sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
-            this._showedExtraFilmsComments = renderFilms(extraListContainer, filmList, this._onDataChange, this._onViewChange, this._api);
+            this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
           }
         }
       } else {
