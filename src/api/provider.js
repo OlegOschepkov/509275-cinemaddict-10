@@ -65,7 +65,7 @@ export default class Provider {
       );
     }
 
-    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), ));
+    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), `film_${id}`));
     this._isSynchronized = false;
 
     this._store.setItem(`film_${id}`, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
