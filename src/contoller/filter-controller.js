@@ -37,7 +37,7 @@ export default class FilterController {
 
     this._filterComponent = new Filter(filters);
 
-    this._filterComponent.onFilterChangeHandler(this._onFilterChange);
+    this._filterComponent.onFilterChange(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);

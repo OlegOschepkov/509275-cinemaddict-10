@@ -51,9 +51,9 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
-    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._sortComponent.onSortTypeChange(this._onSortTypeChange);
     this._onFilterChange = this._onFilterChange.bind(this);
-    this._filmsModel.onFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.onFilterChange(this._onFilterChange);
     this._onLoadMoreButtonClick = this._onLoadMoreButtonClick.bind(this);
     this.toggleVisibility = this.toggleVisibility.bind(this);
     this._filterController.onStatsClick(this.toggleVisibility);
@@ -99,7 +99,9 @@ export default class PageController {
             renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
           } else {
             const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
-            this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+            this._showedExtraFilmsRating = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+            this._movieControllersAll = this._movieControllersAll.concat(this._showedExtraFilmsRating);
+
           }
         }
       } else if (tag === `commentsQuantity`) {
@@ -114,6 +116,7 @@ export default class PageController {
           } else {
             const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
             this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+            this._movieControllersAll = this._movieControllersAll.concat(this._showedExtraFilmsComments);
           }
         }
       } else {
@@ -169,16 +172,19 @@ export default class PageController {
           movieController.shake(true);
         });
     } else {
+      const oldFilms = this._filmsModel.getFilteredFilms();
       this._api.updateFilm(oldData.id, newData)
         .then((filmModel) => {
           this._filmsModel.updateFilm(oldData.id, filmModel);
+          this._films = this._filmsModel.getFilteredFilms();
           movieController.update(filmModel);
           this._filterController.update();
-          this._films = this._filmsModel.getFilms();
           this._user.setLevel(this._films);
           this._statisticsBlock.update(this._films, this._user.getLevel());
           this._user.update();
-          this._onFilterChange();
+          if (oldFilms.length !== this._films.length) {
+            this._onFilterChange();
+          }
         })
         .catch(() => {
           movieController.shake();

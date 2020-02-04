@@ -38,15 +38,6 @@ export class Filter extends AbstractSmartComponent {
     return getFilterTemplate(this._filters, this._active);
   }
 
-  onFilterChangeHandler(handler) {
-    this._onFilterChangeHandler = handler;
-
-    this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      handler(evt.target.dataset.type);
-    });
-  }
-
   update(newData, isActive) {
     this._filters = newData;
     if (isActive) {
@@ -56,8 +47,17 @@ export class Filter extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.onFilterChangeHandler(this._onFilterChangeHandler);
+    this.onFilterChange(this._onFilterChange);
     this.onStatsClick(this._onStatsClick);
+  }
+
+  onFilterChange(handler) {
+    this._onFilterChange = handler;
+
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler(evt.target.dataset.type);
+    });
   }
 
   onStatsClick(handler) {

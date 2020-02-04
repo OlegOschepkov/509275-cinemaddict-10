@@ -120,7 +120,7 @@ export default class MovieController {
       }
     });
 
-    this._cardPopupComponent.onSubmitHandler((evt) => {
+    this._cardPopupComponent.onSubmitClick((evt) => {
       if (evt.key === `Enter` && evt.ctrlKey) {
         evt.preventDefault();
         if (evt.target.value.length > 0) {
@@ -130,14 +130,14 @@ export default class MovieController {
       }
     });
 
-    this._cardPopupComponent.onDeleteButtonClickHandler((evt) => {
+    this._cardPopupComponent.onDeleteButtonClick((evt) => {
       evt.preventDefault();
       this._commentId = evt.target.closest(`.film-details__comment`).dataset.id;
       this.toggleDisableDelete(evt.target);
       this._onDataChange(this, this._commentId, null);
     });
 
-    this._cardPopupComponent.onResetHandler((evt) => {
+    this._cardPopupComponent.onResetClick((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this.film);
       newFilm.yourRating = 0;

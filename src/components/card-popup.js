@@ -241,7 +241,7 @@ export default class CardPopup extends AbstractSmartComponent {
     this._film = film;
     this._comments = comments;
     this._emoji = ``;
-    this._onDeleteButtonClickHandler = null;
+    this._onDeleteButtonClick = null;
   }
 
   getTemplate() {
@@ -280,11 +280,11 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, this._onEmojiClick);
     this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, this._onYourRatingClick);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._ontSubmitHandler);
-    this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, this._onResetHandler);
+    this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, this._onResetClick);
 
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
-        it.addEventListener(`click`, this._onDeleteButtonClickHandler);
+        it.addEventListener(`click`, this._onDeleteButtonClick);
       });
     }
   }
@@ -319,18 +319,18 @@ export default class CardPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__user-rating-score`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
-  onSubmitHandler(handler) {
+  onSubmitClick(handler) {
     this._ontSubmitHandler = handler;
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
-  onResetHandler(handler) {
-    this._onResetHandler = handler;
+  onResetClick(handler) {
+    this._onResetClick = handler;
     this.getElement().querySelector(`.film-details__watched-reset`).addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
-  onDeleteButtonClickHandler(handler) {
-    this._onDeleteButtonClickHandler = handler;
+  onDeleteButtonClick(handler) {
+    this._onDeleteButtonClick = handler;
     if (this.getElement().querySelector(`.film-details__comment-delete`)) {
       [...this.getElement().querySelectorAll(`.film-details__comment-delete`)].forEach((it) => {
         it.addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));

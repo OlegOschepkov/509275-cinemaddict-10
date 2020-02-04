@@ -59,16 +59,16 @@ export default class Provider {
     if (this.getIsOnLine()) {
       return this._api.updateFilm(id, film).then(
           (newData) => {
-            this._store.setItem(newData.id, newData.toRAW());
+            this._store.setItem(`film_${newData.id}`, newData.toRAW());
             return newData;
           }
       );
     }
 
-    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), {id}));
+    const fakeUpdatedFilm = FilmModel.parseFilms(Object.assign({}, film.toRAW(), ));
     this._isSynchronized = false;
 
-    this._store.setItem(id, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
+    this._store.setItem(`film_${id}`, Object.assign({}, fakeUpdatedFilm.toRAW(), {offline: true}));
 
     return Promise.resolve(fakeUpdatedFilm);
   }

@@ -213,7 +213,6 @@ export default class StatisticComponent extends AbstractSmartComponent {
 
   show() {
     super.show();
-
     this.rerender(this._films);
   }
 

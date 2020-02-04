@@ -56,14 +56,6 @@ export default class FilmsModel {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-  onFilterChangeHandler(handler) {
-    this._filterChangeHandlers.push(handler);
-  }
-
-  onDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
-
   addComment(comment, filmId) {
     const index = this._films.findIndex((it) => it.id === filmId.film.id);
 
@@ -88,7 +80,6 @@ export default class FilmsModel {
     }
 
     const thatFilm = this._films[index];
-
     const indexComment = thatFilm.comments.findIndex((comment) => comment.id === commentId);
 
     if (indexComment === -1) {
@@ -96,7 +87,14 @@ export default class FilmsModel {
     }
 
     thatFilm.comments = [].concat(thatFilm.comments.slice(0, indexComment), thatFilm.comments.slice(indexComment + 1));
-
     return commentId;
+  }
+
+  onFilterChange(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  onDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 }
