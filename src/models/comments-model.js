@@ -24,8 +24,7 @@ export default class CommentsModel {
       return {};
     } else if (comment.length) {
       return comment.map(CommentsModel.parseComment);
-    } else {
-      return new CommentsModel(comment);
     }
+    return new CommentsModel(comment);
   }
 }

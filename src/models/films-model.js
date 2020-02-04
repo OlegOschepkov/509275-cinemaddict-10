@@ -66,7 +66,7 @@ export default class FilmsModel {
     const safeText = he.encode(comment);
     const newComment = {
       comment: safeText,
-      date: getRandomDate(new Date(2010, 0, 1), new Date(), false),
+      date: getRandomDate(new Date(2010, 0, 1), new Date()),
       emotion: filmId.yourEmoji
     };
     return newComment;

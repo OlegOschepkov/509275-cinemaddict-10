@@ -69,16 +69,12 @@ export default class PageController {
     if (this._films.length === 0) {
       placeElement(container, this._emptyListComponent, RenderPosition.BEFOREEND);
       return;
-    } else {
-
-      placeElement(container, this._listComponent, RenderPosition.BEFOREEND);
-
-      this._renderLoadMoreButton();
-
-      this._renderFilms(this._films.slice(0, this._showingFilmsCount));
-
-      this._renderExtra(this._films);
     }
+
+    placeElement(container, this._listComponent, RenderPosition.BEFOREEND);
+    this._renderLoadMoreButton();
+    this._renderFilms(this._films.slice(0, this._showingFilmsCount));
+    this._renderExtra(this._films);
   }
 
   _renderExtra(films) {

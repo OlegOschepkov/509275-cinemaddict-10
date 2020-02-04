@@ -2,15 +2,9 @@ import moment from "moment";
 
 const getLowest = (object, val) => Object.keys(object).sort((a, b) => b - a).find((el) => el <= val);
 
-const getRandomDate = (start, end, option) => {
+const getRandomDate = (start, end) => {
   const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  if (option) {
-
-    return moment(date).format(`DD MMMM YYYY`);
-  } else {
-
-    return moment(date).format(`YYYY/MM/DD HH:MM`);
-  }
+  return moment(date).format(`YYYY/MM/DD HH:MM`);
 };
 
 const replace = (newComponent, oldComponent) => {

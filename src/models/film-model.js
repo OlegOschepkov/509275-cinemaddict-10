@@ -71,9 +71,8 @@ export default class FilmModel {
       return {};
     } else if (films.length) {
       return films.map(FilmModel.parseFilm);
-    } else {
-      return new FilmModel(films);
     }
+    return new FilmModel(films);
   }
 
   static clone(film) {
