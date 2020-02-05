@@ -82,38 +82,59 @@ export default class PageController {
     const [...extras] = generateExtra(EXTRA_COUNT);
     this._removeExtraFilms();
 
+    const extraFilmsRender = (it, tag) => {
+      let listType;
+      let showedFilms;
+      switch (tag) {
+        case `rating`:
+          listType = this._extraListRating;
+          break;
+        case `commentsQuantity`:
+          listType = this._extraListComments;
+          break;
+      }
+      if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
+        if (!listType) {
+          switch (tag) {
+            case `rating`:
+              listType = new ExtraListComponent(it.extraName);
+              break;
+            case `commentsQuantity`:
+              listType = new ExtraListComponent(it.extraName);
+              break;
+          }
+        }
+        placeElement(container, listType, RenderPosition.BEFOREEND);
+        if (films.every((elem) => elem[tag] === films[0][tag])) {
+          const extraListContainer = listType.getElement().querySelector(`.films-list__container`);
+          renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
+        } else {
+          const extraListContainer = listType.getElement().querySelector(`.films-list__container`);
+          switch (tag) {
+            case `rating`:
+              this._showedExtraFilmsRating = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+              showedFilms = this._showedExtraFilmsRating;
+              break;
+            case `commentsQuantity`:
+              this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+              showedFilms = this._showedExtraFilmsComments;
+              break;
+          }
+          showedFilms = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
+          this._movieControllersAll = this._movieControllersAll.concat(showedFilms);
+        }
+      }
+    };
+
     extras.forEach((it) => {
       const tag = it.extraFlag;
       if (tag === `rating`) {
         if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-          if (!this._extraListRating) {
-            this._extraListRating = new ExtraListComponent(it.extraName);
-          }
-          placeElement(container, this._extraListRating, RenderPosition.BEFOREEND);
-          if (films.every((elem) => elem[tag] === films[0][tag])) {
-            const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
-            renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
-          } else {
-            const extraListContainer = this._extraListRating.getElement().querySelector(`.films-list__container`);
-            this._showedExtraFilmsRating = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
-            this._movieControllersAll = this._movieControllersAll.concat(this._showedExtraFilmsRating);
-
-          }
+          extraFilmsRender(it, tag);
         }
       } else if (tag === `commentsQuantity`) {
         if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-          if (!this._extraListComments) {
-            this._extraListComments = new ExtraListComponent(it.extraName);
-          }
-          placeElement(container, this._extraListComments, RenderPosition.BEFOREEND);
-          if (films.every((elem) => elem[tag] === films[0][tag])) {
-            const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
-            renderFilms(extraListContainer, shuffleExtraFilms(films), this._onDataChange, this._onViewChange, this._api);
-          } else {
-            const extraListContainer = this._extraListComments.getElement().querySelector(`.films-list__container`);
-            this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
-            this._movieControllersAll = this._movieControllersAll.concat(this._showedExtraFilmsComments);
-          }
+          extraFilmsRender(it, tag);
         }
       } else {
         throw new Error(`Unknown type of extra-film-list`);

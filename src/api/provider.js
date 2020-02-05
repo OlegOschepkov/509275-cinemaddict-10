@@ -22,7 +22,7 @@ export default class Provider {
       );
     }
 
-    const filmNames = Object.keys(this._store.getAll()).filter(function (k) {
+    const filmNames = Object.keys(this._store.getAll()).filter((k) => {
       return !k.indexOf(`film_`);
     });
     const storeFilms = filmNames.map((it) => this._store.getAll()[it]);
@@ -97,7 +97,7 @@ export default class Provider {
 
   sync() {
     if (this.getIsOnLine()) {
-      const filmNames = Object.keys(this._store.getAll()).filter(function (k) {
+      const filmNames = Object.keys(this._store.getAll()).filter((k) => {
         return !k.indexOf(`film_`);
       });
       const storeFilms = filmNames.map((it) => this._store.getAll()[it]);

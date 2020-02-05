@@ -58,56 +58,33 @@ export default class MovieController {
     });
 
     this._cardComponent.onWatchListClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isWatchList = !this.film.isWatchList;
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `watchList`);
     });
 
     this._cardComponent.onFavoriteClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isFavorite = !this.film.isFavorite;
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `favorite`);
     });
 
     this._cardComponent.onWatchedClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isWatched = !this.film.isWatched;
-      newFilm.isWatchedDate = new Date();
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `watched`);
     });
 
     this._cardPopupComponent.onWatchListClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isWatchList = !this.film.isWatchList;
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `watchList`);
     });
 
     this._cardPopupComponent.onFavoriteClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isFavorite = !this.film.isFavorite;
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `favorite`);
     });
 
     this._cardPopupComponent.onWatchedClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.isWatched = !this.film.isWatched;
-      newFilm.isWatchedDate = new Date();
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `watched`);
     });
 
     this._cardPopupComponent.onYourRatingClick((evt) => {
       evt.preventDefault();
       if (evt.target.classList.contains(`film-details__user-rating-label`)) {
-        const newFilm = FilmModel.clone(this.film);
-        newFilm.yourRating = parseInt(document.querySelector(`#` + evt.target.htmlFor).value, 10);
-        this.toggleDisable();
-        this._onDataChange(this, this.film, newFilm);
+        this._onClick(evt, `rating`);
       }
     });
 
@@ -138,10 +115,7 @@ export default class MovieController {
     });
 
     this._cardPopupComponent.onResetClick((evt) => {
-      evt.preventDefault();
-      const newFilm = FilmModel.clone(this.film);
-      newFilm.yourRating = 0;
-      this._onDataChange(this, this.film, newFilm);
+      this._onClick(evt, `reset`);
     });
 
     switch (mode) {
@@ -211,6 +185,31 @@ export default class MovieController {
       }
       this._closePopup();
     }
+  }
+
+  _onClick(evt, type) {
+    evt.preventDefault();
+    const newFilm = FilmModel.clone(this.film);
+    switch (type) {
+      case `watchList`:
+        newFilm.isWatchList = !this.film.isWatchList;
+        break;
+      case `favorite`:
+        newFilm.isFavorite = !this.film.isFavorite;
+        break;
+      case `watched`:
+        newFilm.isWatched = !this.film.isWatched;
+        newFilm.isWatchedDate = new Date();
+        break;
+      case `reset`:
+        newFilm.yourRating = 0;
+        break;
+      case `rating`:
+        newFilm.yourRating = parseInt(document.querySelector(`#` + evt.target.htmlFor).value, 10);
+        this.toggleDisable();
+        break;
+    }
+    this._onDataChange(this, this.film, newFilm);
   }
 
   destroy() {
