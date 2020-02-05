@@ -23,11 +23,13 @@ const renderFilms = (filmListElement, films, onDataChange, onViewChange, api) =>
 };
 
 const prepareExtraFilms = (films, tag) => {
-  return shuffle(films).sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
+  const filmsCopy = films.slice();
+  return shuffle(filmsCopy).sort((a, b) => b[tag] - a[tag]).slice(0, EXTRA_FILMS_COUNT);
 };
 
 const shuffleExtraFilms = (films) => {
-  return shuffle(films).slice(0, EXTRA_FILMS_COUNT);
+  const filmsCopy = films.slice();
+  return shuffle(filmsCopy).slice(0, EXTRA_FILMS_COUNT);
 };
 
 export default class PageController {
@@ -207,7 +209,7 @@ export default class PageController {
           .then((filmModel) => {
             this._filmsModel.updateFilm(movieController.film.id, filmModel);
             movieController.update(filmModel, newComments);
-            this._films.splice(this._films.indexOf(this._films[filmModel.id]), 1, filmModel);
+            this._films = this._filmsModel.getFilms();
             this._renderExtra(this._films);
           });
       });
