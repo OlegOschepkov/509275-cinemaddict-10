@@ -85,24 +85,20 @@ export default class PageController {
     const extraFilmsRender = (it, tag) => {
       let listType;
       let showedFilms;
-      switch (tag) {
-        case `rating`:
-          listType = this._extraListRating;
-          break;
-        case `commentsQuantity`:
-          listType = this._extraListComments;
-          break;
-      }
       if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
-        if (!listType) {
-          switch (tag) {
-            case `rating`:
-              listType = new ExtraListComponent(it.extraName);
-              break;
-            case `commentsQuantity`:
-              listType = new ExtraListComponent(it.extraName);
-              break;
-          }
+        switch (tag) {
+          case `rating`:
+            if (!this._extraListRating) {
+              this._extraListRating = new ExtraListComponent(it.extraName);
+            }
+            listType = this._extraListRating;
+            break;
+          case `commentsQuantity`:
+            if (!this._extraListComments) {
+              this._extraListComments = new ExtraListComponent(it.extraName);
+            }
+            listType = this._extraListComments;
+            break;
         }
         placeElement(container, listType, RenderPosition.BEFOREEND);
         if (films.every((elem) => elem[tag] === films[0][tag])) {
@@ -120,7 +116,6 @@ export default class PageController {
               showedFilms = this._showedExtraFilmsComments;
               break;
           }
-          showedFilms = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
           this._movieControllersAll = this._movieControllersAll.concat(showedFilms);
         }
       }
