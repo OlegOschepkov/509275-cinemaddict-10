@@ -84,7 +84,6 @@ export default class PageController {
 
     const extraFilmsRender = (it, tag) => {
       let listType;
-      let showedFilms;
       if (films.reduce((acc, that) => acc + that[tag], 0) > 0) {
         switch (tag) {
           case `rating`:
@@ -109,14 +108,11 @@ export default class PageController {
           switch (tag) {
             case `rating`:
               this._showedExtraFilmsRating = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
-              showedFilms = this._showedExtraFilmsRating;
               break;
             case `commentsQuantity`:
               this._showedExtraFilmsComments = renderFilms(extraListContainer, prepareExtraFilms(films, tag), this._onDataChange, this._onViewChange, this._api);
-              showedFilms = this._showedExtraFilmsComments;
               break;
           }
-          this._movieControllersAll = this._movieControllersAll.concat(showedFilms);
         }
       }
     };
@@ -166,23 +162,22 @@ export default class PageController {
 
   _onDataChange(movieController, oldData, newData) {
     if (newData === null) {
-      let newComments;
       this._api.deleteComment(movieController.film.id, oldData)
         .then((filmId) => {
-          this._getFilms(movieController, filmId, newComments);
+          this._updateFilms(movieController, filmId);
         })
         .catch(() => {
           movieController.shake(true);
         });
     } else if (oldData === null) {
-      let newComments;
       this._api.addComment(movieController.film.id, this._filmsModel.addComment(newData, movieController))
         .then((filmId) => {
-          this._getFilms(movieController, filmId, newComments);
+          this._updateFilms(movieController, filmId);
         })
         .catch(() => {
           movieController.shake(true);
         });
+
     } else {
       const oldFilms = this._filmsModel.getFilteredFilms();
       this._api.updateFilm(oldData.id, newData)
@@ -204,23 +199,28 @@ export default class PageController {
     }
   }
 
-  _getFilms(movieController, filmId, updatedComments) {
+  _updateFilms(movieController, filmId) {
     this._api.getComments(filmId)
       .then((comments) => {
-        updatedComments = CommentsModel.parseComments(comments);
-      })
-      .then(() => {
-        this._api.getFilms()
-          .then((films) => {
-            this._filmsModel.updateFilm(movieController.film.id, films.filter((it) => it.id === movieController.film.id));
-            movieController.update(this._filmsModel.getFilm(movieController.film.id), updatedComments);
-            this._renderExtra(films);
+        const newComments = CommentsModel.parseComments(comments);
+        this._api.updateFilm(movieController.film.id, movieController.film)
+          .then((filmModel) => {
+            this._filmsModel.updateFilm(movieController.film.id, filmModel);
+            movieController.update(filmModel, newComments);
+            this._films.splice(this._films.indexOf(this._films[filmModel.id]), 1, filmModel);
+            this._renderExtra(this._films);
           });
       });
   }
 
   _onViewChange() {
     this._movieControllersAll.forEach((it) => {
+      it.setDefaultView();
+    });
+    this._showedExtraFilmsComments.forEach((it) => {
+      it.setDefaultView();
+    });
+    this._showedExtraFilmsRating.forEach((it) => {
       it.setDefaultView();
     });
   }
